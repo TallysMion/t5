@@ -154,3 +154,15 @@ double Item_Yi(void* i){
     Item *it;  it = (Item*) i;
     return it->type==RETANGULO ? getYRec(it->value) : getYCirc(it->value) - getRCirc(it->value); 
 }
+
+/*retorna o xf do item*/
+double Item_Xf(void* i){
+    Item *it;  it = (Item*) i;
+    return it->type==RETANGULO ? getXRec(it->value) + getWRec(it->value) : getXCirc(it->value) + getRCirc(it->value); 
+}
+
+/*retorna o yf do item*/
+double Item_Yf(void* i){
+    Item *it;  it = (Item*) i;
+    return it->type==RETANGULO ? getYRec(it->value) + getHRec(it->value) : getYCirc(it->value) + getRCirc(it->value); 
+}

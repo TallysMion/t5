@@ -35,5 +35,10 @@ double Item_Xi(Item i);
 /*retorna o yi do item*/
 double Item_Yi(Item i);
 
+/*retorna o xf do item*/
+double Item_Xf(Item i);
+
+/*retorna o yf do item*/
+double Item_Yf(Item i);
 
 #endif
