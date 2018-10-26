@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "../Config/config.h"
 #include "../Fila/fila.h"
-#include "../Comands/executeGeo.h"
-#include "../Comands/executeQry.h"
-#include "../Comands/executeEc.h"
-#include "../Comands/executePm.h"
+#include "../Comands/Geo/executeGeo.h"
+#include "../Comands/Qry/executeQry.h"
+#include "../Comands/Ec/executeEc.h"
+#include "../Comands/Pm/executePm.h"
 
 
 int main(int argc, const char *argv[]){

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../Fila/fila.h"
-#include "../Config/config.h"
+#include "../../Fila/fila.h"
+#include "../../Config/config.h"
 #include "comandsGeo.h"
 
 char *getCommandGeo(char* text){

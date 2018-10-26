@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../Config/config.h"
-#include "../Estabelecimento/estabelecimento.h"
+#include "../../Config/config.h"
+#include "../../Estabelecimento/estabelecimento.h"
 
 /*comando 't' do EC*/
 int newEstabType(char* text,Info *info){

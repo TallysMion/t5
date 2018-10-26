@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../Config/config.h"
-#include "../Circulo/circulo.h"
-#include "../Retangulo/retangulo.h"
-#include "../Anotacao/anotacao.h"
-#include "../Quadra/quadra.h"
-#include "../Radio-Base/radio-base.h"
-#include "../Semaforo/semaforo.h"
-#include "../Hidrante/hidrante.h"
-#include "../Item/item.h"
+#include "../../Config/config.h"
+#include "../../Circulo/circulo.h"
+#include "../../Retangulo/retangulo.h"
+#include "../../Anotacao/anotacao.h"
+#include "../../Quadra/quadra.h"
+#include "../../Radio-Base/radio-base.h"
+#include "../../Semaforo/semaforo.h"
+#include "../../Hidrante/hidrante.h"
+#include "../../Item/item.h"
 
 int setConfig(char *text,Info *info){
     char* aux;
