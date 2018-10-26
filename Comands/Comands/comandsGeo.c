@@ -129,8 +129,10 @@ int overlap(char *text, Info *info){
     if(Item_overlap(ij, ik) == 1){
         double x = Item_Xi(ij) < Item_Xi(ik) ? Item_Xi(ij) : Item_Xi(ik);
         double y = Item_Yi(ij) < Item_Yi(ik) ? Item_Yi(ij) : Item_Yi(ik);
-        double w = abs(Item_Xi(ij) - Item_Xi(ik));
-        double h = abs(Item_Yi(ij) - Item_Yi(ik));
+        double w = Item_Xf(ij) > Item_Xf(ik) ? Item_Xf(ij) : Item_Xf(ik);
+        double h = Item_Yf(ij) > Item_Yf(ik) ? Item_Yf(ij) : Item_Yf(ik);
+        w -= x;
+        h -= y;
         nt = createNotacao("red", w, h, x, y, "SOBREPOE");    
         insert_Fila(info->notsGeo, nt);
         insert_Fila(info->respGEO, "SIM\n");
