@@ -1,8 +1,8 @@
 #ifndef COMANDS_GEO_H
 #define COMANDS_GEO_H
 
-#include "../Config/config.h"
-#include "../Item/item.h"
+#include "../../Config/config.h"
+#include "../../Item/item.h"
 
 /*função nx - reconfigura o numero maximo de imagens*/
 int setConfig(char *text, Info *info);

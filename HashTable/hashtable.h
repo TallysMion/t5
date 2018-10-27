@@ -4,7 +4,7 @@
 typedef void* HashTable;
 
 //Cria uma hashtable com modulo = n, usando a função de hash func e o comparador compare
-HashTable create_hashtable(int modulo, int (*compare)(void*, char*), int hash(void*, int));
+HashTable create_hashtable(int modulo, int (*compare)(void*, void*), int hash(void*, int));
 
 //Insere um item na hashtable
 void insert_hashtable(HashTable hash, void* item);

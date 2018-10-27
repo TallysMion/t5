@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../Fila/fila.h"
-#include "../Config/config.h"
-//#include "../Aux/comandsPm.h"
+#include "../../Fila/fila.h"
+#include "../../Config/config.h"
+#include "comandsPm.h"
 
 char *getCommandPm(char* text){
     int i;
@@ -20,20 +20,28 @@ char *getCommandPm(char* text){
 }
 
 int executePm(char* text, Info *info){
-//     char *cmd;
-//     cmd = getCommandPm(text);
-//     /*printf("%s", text);*/
-//     if(strlen(cmd) == 0){
-//         return 0;
-//     }
+    char *cmd;
+    cmd = getCommandPm(text);
+    /*printf("%s", text);*/
+    if(strlen(cmd) == 0){
+        return 0;
+    }
 
-//      Exemplo para reconhecer comando
-//     if(!strcmp(cmd, "nx")){
-//         return setConfig(text, info);
-//     }
-//     
-//     free(cmd);
-    return 1;//return 0;
+    if(!strcmp(cmd, "p")){
+        return createPessoa(text, info);
+    }
+
+    if(!strcmp(cmd, "m")){
+        return setEndereco(text, info);
+    }
+
+    // Exemplo para reconhecer comando
+    // if(!strcmp(cmd, "nx")){
+    //     return setConfig(text, info);
+    // }
+    
+    free(cmd);
+    return 0;
 }
 
 void startPm(Fila comandos, Info *info){

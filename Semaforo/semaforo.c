@@ -131,8 +131,9 @@ int hashCodeSemaforo(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareSemaf(void* semaf, char* id){
-    Semaforo *sem;
+int HashCompareSemaf(void* semaf, void* id){
+    Semaforo *sem, *idS;
     sem = (Semaforo*) semaf;
-    return strcmp(sem->id, id);
+    idS = (Semaforo*) id;
+    return strcmp(sem->id, idS->id);
 }

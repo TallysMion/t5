@@ -31,6 +31,6 @@ int compareQuadra(void* hdA, void* hdB, int dim);
 int hashCodeQuadra(void* hdA, int Modulo);
 
 //Comparador para Hash
-int HashCompareQuadra(void* quad, char* id);
+int HashCompareQuadra(void* quad, void* id);
 
 #endif

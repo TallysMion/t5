@@ -131,8 +131,9 @@ int hashCodeQuadra(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareQuadra(void* quad, char* cep){
-    Quadra *qd;
+int HashCompareQuadra(void* quad, void* cep){
+    Quadra *qd, *id;
     qd = (Quadra*) quad;
-    return strcmp(qd->cep,cep);
+    id = (Quadra*) cep;
+    return strcmp(qd->cep,id->cep);
 }

@@ -129,7 +129,7 @@ int Estab_HashCode(void* estab, int modulo){
     return modulo < 0 ? hash : hash%modulo;
 }
 
-int Estab_HashCompare(void* estab, char* cnpj){
+int Estab_HashCompare(void* estab, void* cnpj){
     Estab *est;
     est = (Estab*) estab;
     return strcmp(est->cnpj, cnpj);
@@ -159,9 +159,10 @@ int Estab_Type_HashCode(void*  tip,int modulo){
     return modulo < 0 ? hash : hash%modulo;
 }
 
-int Estab_Type_HashCompare(void* tip, char* cod){
-    type *tp;
+int Estab_Type_HashCompare(void* tip, void* cod){
+    type *tp, *id;
     tp = (type*) tip;
-    return strcmp(tp->cod, cod);
+    id = (type*) cod;
+    return strcmp(tp->cod, id->cod);
 }
 

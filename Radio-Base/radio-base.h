@@ -34,6 +34,6 @@ int compareRadioB(void* hdA, void* hdB, int dim);
 int hashCodeRadioB(void* hdA, int Modulo);
 
 //Comparador para RadioB
-int HashCompareRadioB(void* rb, char* id);
+int HashCompareRadioB(void* rb, void* id);
 
 #endif

@@ -145,8 +145,9 @@ int hashCodeRadioB(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareRadioB(void* rb, char* id){
-    RadioB *radioB;
+int HashCompareRadioB(void* rb, void* id){
+    RadioB *radioB, *idR;
     radioB = (RadioB*) rb;
-    return strcmp(radioB->id, id);
+    idR = (RadioB*) id;
+    return strcmp(radioB->id, idR->id);
 }

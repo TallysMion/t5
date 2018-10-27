@@ -5,13 +5,13 @@
 
 typedef struct{
     int modulo;
-    int (*compare)(void*, char*);
+    int (*compare)(void*, void*);
     int (*hash)(void*, int);
     void **hashtable;
 } HashTable;
 
 //Cria uma hashtable com modulo = n, usando a função de hash func e o comparador compare
-void* create_hashtable(int modulo, int (*compare)(void*, char*), int (*hash)(void*, int)){
+void* create_hashtable(int modulo, int (*compare)(void*, void*), int (*hash)(void*, int)){
     HashTable *table;
     table = (HashTable*) calloc(1, sizeof(HashTable));
     table->modulo = modulo;
@@ -34,7 +34,7 @@ void insert_hashtable(void* hash, void* item){
 }
 
 //retorna um item da hashtable
-void* get_hashtable(void* hash, char* ident){
+void* get_hashtable(void* hash, void* ident){
     HashTable* table;
     table = (HashTable*) hash;
     int hashcode = table->hash(ident, table->modulo);    
