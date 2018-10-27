@@ -130,8 +130,9 @@ int hashCodeHidrante(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareHidrante(void* hid, char* id){
-    Hidrante *hidr;
+int HashCompareHidrante(void* hid, void* id){
+    Hidrante *hidr, *idH;
     hidr = (Hidrante*) hid;
-    return strcmp(hidr->id, id);
+    idH = (Hidrante*) id;
+    return strcmp(hidr->id, idH->id);
 }

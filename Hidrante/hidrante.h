@@ -30,6 +30,6 @@ int compareHidrante(void* hdA, void* hdB, int dim);
 int hashCodeHidrante(void* hdA, int Modulo);
 
 //Comparador para hash
-int HashCompareHidrante(void* hid, char* id);
+int HashCompareHidrante(void* hid, void* id);
 
 #endif

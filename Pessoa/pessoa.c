@@ -90,11 +90,13 @@ void Pessoa_Free(void* pes){
     free(pessoa->sobrenome);
     free(pessoa->sexo);
     free(pessoa->nasc);
-    free(pessoa->endereco->cep);
-    free(pessoa->endereco->face);
-    free(pessoa->endereco->num);
-    free(pessoa->endereco->comp);
-    free(pessoa->endereco);
+    if(pessoa->endereco != NULL){
+        free(pessoa->endereco->cep);
+        free(pessoa->endereco->face);
+        free(pessoa->endereco->num);
+        free(pessoa->endereco->comp);
+        free(pessoa->endereco);
+    }
     free(pessoa);
 }
 
@@ -121,8 +123,9 @@ int Pessoa_HashCode(void* pes, int modulo){
     return modulo < 0 ? hash : hash%modulo;
 }
 
-int Pessoa_HashCompare(void* pes, char* cpf){
-    Pessoa *pessoa;
+int Pessoa_HashCompare(void* pes, void* cpf){
+    Pessoa *pessoa, *id;
     pessoa = (Pessoa*) pes;
-    return strcmp(pessoa->cpf, cpf);
+    id = (Pessoa*) cpf;
+    return strcmp(pessoa->cpf, id->cpf);
 }

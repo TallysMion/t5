@@ -23,13 +23,13 @@ int Estab_compare(Estab estab1, Estab estab2, int dimension);
 int Estab_HashCode(Estab estab, int modulo);
 
 //Comparador para hash
-int Estab_HashCompare(void* estab, char* cnpj);
+int Estab_HashCompare(void* estab, void* cnpj);
 
 //Comparador para enderecos
 int Endereco_compare(void* end1, void* end2, int dimension);
 
 int Estab_Type_HashCode(void*  tip,int modulo);
 
-int Estab_Type_HashCompare(void* tip, char* cod);
+int Estab_Type_HashCompare(void* tip, void* cod);
 
 #endif

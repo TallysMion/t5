@@ -19,7 +19,7 @@ int newEstabType(char* text,Info *info){
 /*comando 'e' do EC*/
 int newEstab(char* text,Info *info){
     char *aux, *cnpj, *tipoCod, *cep, *face, *num, *nome;
-    type tipo;
+    type tipo, tipotemp;
     cnpj = (char*) calloc(55, sizeof(char));
     tipoCod = (char*) calloc(55, sizeof(char));
     cep = (char*) calloc(55, sizeof(char));
@@ -29,8 +29,9 @@ int newEstab(char* text,Info *info){
     aux = text; aux += 2;
 
     sscanf(aux, "%s %s %s %s %s %s", cnpj, tipoCod, cep, face, num, nome);
-    tipo = Estab_createType("tipoCod", "");
-    tipo = get_hashtable(info->bd->EstabelecimentoType, tipo);
+    tipotemp = Estab_createType(tipoCod, "");
+    tipo = get_hashtable(info->bd->EstabelecimentoType, tipotemp);
+    free(tipotemp);
     Estab estab = Estab_create(cnpj, tipo, cep, face, num, nome);
     KDT_insert(info->bd->EstabelecimentoTree, estab);
     insert_hashtable(info->bd->EstabHash, estab);
