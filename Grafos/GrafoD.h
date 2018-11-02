@@ -5,30 +5,39 @@ typedef void* GrafoD;
 typedef void* Aresta;   
 typedef void* Vertice;  
 typedef void* Lista;
+typedef void* KDT;
+typedef void* KTD_Value;
+typedef void* HASH;
 
 /*
 TAD Grafos direcionados
 */
 
-//função insere vertice
-GrafoD grafoD_criar(char *id, float x, float y);
+//cria estrutura grafo
+void* GRAFO_CREATE(int modulo);
+
+//cria e insere vertice
+void *grafoD_criar(GrafoD gd, char *id, float x, float y);
 
 //função insere uma aresta
-void grafoD_insereAresta(Vertice v1, Vertice v2, char *leftCEP, char *rightCEP, float size, float speed);
+void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed);
+
+//função retorna uma lista de adjacentes - destinos
+Lista grafoD_listaAdjacente(Vertice v1);
 
 //retorna true se a1 for adjacente a a2 e false se não for
 int grafoD_Adjacente(Vertice a1, Vertice a2);
 
-//função retorna uma lista de adjacentes - destinos
-Lista grafoD_listaAdjacente(GrafoD gd, Vertice v1);
+//compara "xy" grafo
+int compareGD(Vertice v1, Vertice v2, int dim);
 
-//função busca vértice por id
-Vertice busca_vertice(GrafoD gd, char *id);
+//compara cep encontrado com cep procurado - 1 p/ true(igual) e 0 p/ false(diferente)
+int compareH_CEP(HASH itemA, Aresta itemB);
 
-//função imprime grafo no SVG
-char *print_SVG(GrafoD gd);
+//compara id encontrado com id procurado
+int compareH_ID(HASH itemA, Vertice itemB);
 
-//função imprime caminho
-char *print_caminho(GrafoD caminho); 
+//hash encoding function
+int hashFunction(void *String, int n);
 
 #endif
