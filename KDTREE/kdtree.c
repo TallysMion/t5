@@ -92,31 +92,31 @@ void freeKDTree(void* tree){
     free(tree);
 }
 
-Lista getAllNode(void* node){
+Lista getAllNode(void* node, void* Lista){
     Node* no;
     no = (Node*) node;
-    Lista * ls;
-    ls = Lista_createLista();
     if(no == NULL){
-        return ls;
+        return Lista;
     }
     if(no->left != NULL){
-        Lista_insertAll(ls, getAllNode(no->left));
+       getAllNode(no->left, Lista);
     }
     if(no->value != NULL){
-        Lista_insert(ls, no->value);
+        Lista_insert(Lista, no->value);
     }
     if(no->Right != NULL){
-        Lista_insertAll(ls, getAllNode(no->Right));
+        getAllNode(no->Right, Lista);
     }
-    return ls;   
+    return Lista;   
 
 }
 
 Lista KDT_getAll(void* tree){
     Tree *tr;
     tr = (Tree*) tree;
-    return getAllNode(tr->no);
+    Lista * ls;
+    ls = Lista_createLista();
+    return getAllNode(tr->no, ls);
 }
 
 void* getValueNode(Tree* tree, Node* no, int dim, void* reference){
@@ -150,26 +150,35 @@ Lista removeValueNode(Tree* tree, Node* no, int dim, void* reference){
     if(no == NULL){
         return NULL;
     }
+    if(no->value == NULL){
+        return NULL;
+    }
     if(dim == tree->dimension){
         dim = 0;
     }
-
-    if(tree->compare(no->value, reference, dim) == 0){
-        Lista ls = Lista_createLista();
-        Lista_insertAll(ls, getAllNode(no->left));
-        Lista_insertAll(ls, getAllNode(no->Right));
+    int i = tree->compare(no->value, reference, dim);
+    Lista ls = Lista_createLista();
+    if(i == 0){
+        getAllNode(no->left, ls);
+        getAllNode(no->Right, ls);
         no->value = NULL;
         no->left = NULL;
         no->Right = NULL;
-        return ls;
     }
 
-    if(tree->compare(no->value, reference, dim) < 0){
-        return getValueNode(tree, no->left, dim, reference);
+    if(i < 0){
+        ls = removeValueNode(tree, no->left, dim, reference);
+        if(ls == NULL){
+            ls = removeValueNode(tree, no->Right, dim, reference);
+        }
     }
-    if(tree->compare(no->value, reference, dim) > 0){
-        return getValueNode(tree, no->Right, dim, reference);
+    if(i > 0){
+        ls = removeValueNode(tree, no->Right, dim, reference);
+        if(ls == NULL){
+            ls = removeValueNode(tree, no->left, dim, reference);
+        }
     }
+    return ls;
 
 }
 

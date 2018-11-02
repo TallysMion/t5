@@ -33,6 +33,25 @@ void insert_hashtable(void* hash, void* item){
     Lista_insert(*(table->hashtable + hashcode), item);
 }
 
+//Remove um item da hash
+void remove_hashtable(void* hash, void* item){
+    HashTable* table;
+    table = (HashTable*) hash;
+    int hashcode = table->hash(item, table->modulo);    
+    Lista list = *(table->hashtable + hashcode);
+    Posic t;
+    t=Lista_getFirst(list);
+    while(t != NULL){
+        void* aux;
+        aux = Lista_get(list,t);
+        if(table->compare(aux, item) == 0){
+            Lista_remove(list, t);
+            return;
+        }        
+        t = Lista_getNext(list, t);
+    }
+}
+
 //retorna um item da hashtable
 void* get_hashtable(void* hash, void* ident){
     HashTable* table;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../../Fila/fila.h"
 #include "../../Config/config.h"
-//#include "../Aux/comandsQry.h"
+#include "comandsQry.h"
 
 char *getCommandQry(char* text){
     int i;
@@ -20,51 +20,51 @@ char *getCommandQry(char* text){
 }
 
 int executeQry(char* text, Info *info){
-    // char *cmd;
-    // cmd = getCommandQry(text);
-    // /*printf("%s", text);*/
-    // if(strlen(cmd) == 0){
-    //     return 0;
-    // }
+    char *cmd;
+    cmd = getCommandQry(text);
+    /*printf("%s", text);*/
+    if(strlen(cmd) == 0){
+        return 0;
+    }
 
-    // if(!strcmp(cmd, "q?")){
-    //     reportRec(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "Q?")){
-    //     reportCirc(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "dq")){
-    //     deleteQuadrasRec(text, info); 
-    //     return 1;       
-    // }
-    // if(!strcmp(cmd, "dle")){
-    //     deleteUrbamEqRec(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "Dq")){
-    //     deleteQuadrasCirc(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "Dle")){
-    //     deleteUrbamEqCirc(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "cc")){
-    //     colorChange(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "crd?")){
-    //     equipOnCepOrId(text, info);
-    //     return 1;
-    // }
-    // if(!strcmp(cmd, "crb?")){
-    //     closestRBase(text, info);
-    //     return 1;
-    // }
-    // free(cmd);
-    return 1; //return 0;
+    if(!strcmp(cmd, "q?")){
+        reportRec(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "Q?")){
+        reportCirc(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "dq")){
+        deleteQuadrasRec(text, info); 
+        return 1;       
+    }
+    if(!strcmp(cmd, "dle")){
+        deleteUrbamEqRec(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "Dq")){
+        deleteQuadrasCirc(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "Dle")){
+        deleteUrbamEqCirc(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "cc")){
+        colorChange(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "crd?")){
+        equipOnCepOrId(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "crb?")){
+        closestRBase(text, info);
+        return 1;
+    }
+    free(cmd);
+    return 0;
 }
 
 void startQRY(Fila comandos, Info *info){
@@ -78,5 +78,5 @@ void startQRY(Fila comandos, Info *info){
         free(aux);
         i++;
     }
-    //closeQRY(info);
+    closeQRY(info);
 }
