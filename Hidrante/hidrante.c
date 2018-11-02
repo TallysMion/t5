@@ -109,9 +109,11 @@ int compareHidrante(void* hdA, void* hdB, int dim){
     hidB = (Hidrante*) hdB;
     dim = dim%2;
     if (dim == 0){
-        return hidA->x > hidB->x ? 1 : (hidA->x < hidB->x ? -1 : 0) ; 
+        if(!strcmp(hidA->id, hidB->id)) return 0;
+        return hidA->x > hidB->x ? 1 : (hidA->x <= hidB->x ? -1 : 0) ; 
     }else{
-        return hidA->y > hidB->y ? 1 : (hidA->y < hidB->y ? -1 : 0) ;
+        if(!strcmp(hidA->id, hidB->id)) return 0;
+        return hidA->y > hidB->y ? 1 : (hidA->y <= hidB->y ? -1 : 0) ;
     }
 }
 
