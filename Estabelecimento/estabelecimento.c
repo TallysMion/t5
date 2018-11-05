@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../Quadra/quadra.h"
+#include "../Retangulo/retangulo.h"
+#include "../Config/config.h"
+#include "../HashTable/hashtable.h"
 
 
 typedef struct{
@@ -194,4 +198,55 @@ int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2){
     est1 = (Endereco*) Endereco1;
     est2 = (Endereco*) Endereco2;
     return strcmp(est1->cep, est2->cep);
+}
+
+double* Estab_getCordGeo(void* estab, Info* info){
+    Estab* est;
+    double num;
+    est = (Estab*) estab;
+    double* result;
+    if(est->ende == NULL){
+        return NULL;
+    }
+    quadra temp = createQuadra(est->ende->cep, "", "", 0, 0, 0, 0);
+    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    sscanf(est->ende->num, "%lf", &num);
+    result = (double*) calloc(2, sizeof(double));
+    result[0] = getXRec(getRecQuad(quad));
+    result[1] = getYRec(getRecQuad(quad));
+
+    if(strcmp(est->ende->face, "N") == 0){
+        //x += num
+        result[0] += num;
+        //y += h
+        result[1] += getHRec(getRecQuad(quad));
+    }
+    if(strcmp(est->ende->face, "S") == 0){
+        //x += num
+        result[0] += num;
+    }
+    if(strcmp(est->ende->face, "L") == 0){
+        //y += num
+        result[1] += num;
+    }
+    if(strcmp(est->ende->face, "O") == 0){
+        //y += num
+        result[1] += num;
+        //x += w
+        result[0] += getWRec(getRecQuad(quad));
+    }
+    return result;
+}
+
+char* Estab_relatorio(void* estab){
+    Estab* est;
+    char* result;
+    result = (char*) calloc(510, sizeof(char));
+    est = (Estab*) estab;
+    if(est->ende == NULL){
+        sprintf(result, "%s - %s", est->nome, est->tipo->info);
+    }else{
+        sprintf(result, "%s - %s, %s %s, nº %s - %s", est->nome, est->tipo->info, est->ende->cep, est->ende->face, est->ende->num, est->ende->comp);
+    }
+    return result;
 }

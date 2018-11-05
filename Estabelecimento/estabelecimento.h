@@ -42,4 +42,8 @@ int Estab_Ende_HashCode(void* endereco, int modulo);
 
 int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2);
 
+double* Estab_getCordGeo(void* estab,void* info);
+
+char* Estab_relatorio(void* estab);
+
 #endif

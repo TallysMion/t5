@@ -1367,3 +1367,32 @@ void whoAreYou(char* text, Info* info){
         insert_Fila(info->notsQRY, nt);
     }
 }
+
+void whoAreYouEstab(char* text, Info* info){
+    char* temp;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    char *aux, *cnpj;
+    cnpj = (char*) calloc(55, sizeof(char));
+    aux = text; aux += 4;
+    sscanf(aux, "%s", cnpj);
+    Estab *e = Estab_create(cnpj, NULL, "", "", "", "");
+    Estab estab = get_hashtable(info->bd->EstabHash, e);
+    double* cord = Estab_getCordGeo(estab, info);
+    if(cord == NULL){
+       char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s\n", Estab_relatorio(estab));
+        insert_Fila(info->respQRY, result);
+    }else{
+        char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s (Cordenadas [%lf,%lf])\n", Estab_relatorio(estab), cord[0], cord[1]);
+        insert_Fila(info->respQRY, result);
+        Notation nt = createNotacao("PURPLE", 5, 0, cord[0], cord[1], cnpj);
+        insert_Fila(info->notsQRY, nt);
+    }
+}
+

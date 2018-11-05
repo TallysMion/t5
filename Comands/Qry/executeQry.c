@@ -74,7 +74,11 @@ int executeQry(char* text, Info *info){
     if(!strcmp(cmd, "dm?")){
         whoAreYou(text, info);
         return 1;
-    }        
+    }
+    if(!strcmp(cmd, "de?")){
+        whoAreYouEstab(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }

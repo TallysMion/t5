@@ -42,4 +42,7 @@
     /*Retorna um relatorio da pessoa, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
     void whoAreYou(char* text, Info* info);
 
+    /*Retorna um relatorio do Estabelecimento, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
+    void whoAreYouEstab(char* text,Info* info);
+
 #endif

@@ -1,40 +1,150 @@
-dm? 000.000.981-40
-Pedro_Bernardo, b04.5 L, nº 50 - - (Cordenadas [625.000000,420.000000])
-dm? 000.000.471-55
-Joao_Doortje, b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
-dm? 000.000.241-04
-Silvio_Ursula, b05.4 L, nº 30 - ap-677 (Cordenadas [490.000000,495.000000])
-dm? 000.001.151-77
-Dirk_Doortje, b05.5 N, nº 30 - ap-1198 (Cordenadas [655.000000,545.000000])
-dm? 000.000.281-00
-Daniel_Luiz_Felipe, b04.1 S, nº 90 - - (Cordenadas [175.000000,370.000000])
-dm? 000.000.201-17
-Amanda_Amanda, b05.1 O, nº 10 - ap-191 (Cordenadas [205.000000,475.000000])
-dm? 000.000.161-95
-Ernestina_Dirk, b02.3 S, nº 70 - ap-794 (Cordenadas [425.000000,180.000000])
-dm? 000.000.821-47
-Aad_Mart, b01.1 L, nº 40 - ap-928 (Cordenadas [85.000000,125.000000])
-dm? 000.000.151-13
-Flavio_Tiago, b02.4 L, nº 10 - - (Cordenadas [490.000000,190.000000])
-dm? 000.000.521-59
-Martijn_Laura, b03.5 S, nº 20 - - (Cordenadas [645.000000,275.000000])
-dm? 000.000.961-05
-Maayke_Joren, b01.4 N, nº 90 - ap-624 (Cordenadas [580.000000,165.000000])
-dm? 000.000.831-19
-Ana_Micaela, b02.4 O, nº 60 - - (Cordenadas [610.000000,240.000000])
-dm? 000.001.101-08
-Joana_Dorus, b04.4 O, nº 10 - - (Cordenadas [610.000000,380.000000])
-dm? 000.000.531-20
-Zelia_Isabella, b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
-dm? 000.001.351-00
-Maartje_Ankie, b04.1 L, nº 30 - - (Cordenadas [85.000000,400.000000])
-dm? 000.000.701-30
-Antonio_Hans, b02.5 N, nº 90 - ap-451 (Cordenadas [715.000000,260.000000])
-dm? 000.000.541-00
-Gisela_Joppe, b05.5 S, nº 60 - - (Cordenadas [685.000000,465.000000])
-dm? 000.000.291-73
-Larz_Valdir, b04.3 S, nº 30 - ap-1005 (Cordenadas [385.000000,370.000000])
-dm? 000.000.031-07
-Rafael_Geert, b04.1 S, nº 60 - - (Cordenadas [145.000000,370.000000])
-dm? 000.000.731-56
-Taisa_Paulo, b04.4 S, nº 40 - - (Cordenadas [530.000000,370.000000])
+de? 00000100/0001-29
+
+Esquadria_de_aluminio_M7-0 - Esquadria_de_aluminio, b04.1 S, nº 80 - (null) (Cordenadas [165.000000,370.000000])
+de? 00000101/0001-92
+
+Raio-x_M4-0 - Raio-x, b02.5 O, nº 20 - (null) (Cordenadas [745.000000,200.000000])
+de? 00000102/0001-56
+
+Posto_de_combustivel_M1-0 - Posto_de_combustivel, b01.4 N, nº 10 - (null) (Cordenadas [500.000000,165.000000])
+de? 00000103/0001-10
+
+Consultorio_medico_M5-0 - Consultorio_medico, b03.5 N, nº 20 - (null) (Cordenadas [645.000000,355.000000])
+de? 00000104/0001-83
+
+Advogado_M5-0 - Advogado, b03.5 N, nº 100 - (null) (Cordenadas [725.000000,355.000000])
+de? 00000105/0001-47
+
+Toldos_M3-0 - Toldos, b05.5 N, nº 100 - (null) (Cordenadas [725.000000,545.000000])
+de? 00000106/0001-00
+
+Escola_de_natacao_M2-0 - Escola_de_natacao, b01.4 S, nº 50 - (null) (Cordenadas [540.000000,85.000000])
+de? 00000107/0001-74
+
+Persianas_M5-0 - Persianas, b04.1 N, nº 10 - (null) (Cordenadas [95.000000,450.000000])
+de? 00000108/0001-38
+
+Eletricista_M1-0 - Eletricista, b02.4 O, nº 60 - (null) (Cordenadas [610.000000,240.000000])
+de? 00000109/0001-00
+
+Desentupidora_M6-0 - Desentupidora, b05.1 N, nº 90 - (null) (Cordenadas [175.000000,545.000000])
+de? 00000110/0001-83
+
+Pecas_de_fogao_M7-0 - Pecas_de_fogao, b04.4 S, nº 60 - (null) (Cordenadas [550.000000,370.000000])
+de? 00000111/0001-47
+
+Dedetizadora_M1-0 - Dedetizadora, b01.4 S, nº 90 - (null) (Cordenadas [580.000000,85.000000])
+de? 00000112/0001-00
+
+Desentupidora_M3-0 - Desentupidora, b04.5 S, nº 40 - (null) (Cordenadas [665.000000,370.000000])
+de? 00000113/0001-74
+
+Depilacao_M1-0 - Depilacao, b02.2 O, nº 30 - (null) (Cordenadas [340.000000,210.000000])
+de? 00000114/0001-38
+
+Fossa_septica_M1-0 - Fossa_septica, b04.5 L, nº 30 - (null) (Cordenadas [625.000000,400.000000])
+de? 00000115/0001-00
+
+Dedetizadora_M2-0 - Dedetizadora, b04.2 N, nº 90 - (null) (Cordenadas [310.000000,450.000000])
+de? 00000116/0001-65
+
+Brindes_M7-0 - Brindes, b01.3 O, nº 60 - (null) (Cordenadas [475.000000,145.000000])
+de? 00000117/0001-29
+
+Psicologo_M5-0 - Psicologo, b01.4 L, nº 20 - (null) (Cordenadas [490.000000,105.000000])
+de? 00000118/0001-92
+
+Livraria_M1-0 - Livraria, b04.1 O, nº 30 - (null) (Cordenadas [205.000000,400.000000])
+de? 00000119/0001-56
+
+Otica_M3-0 - Otica, b04.4 O, nº 40 - (null) (Cordenadas [610.000000,410.000000])
+de? 00000120/0001-38
+
+Locacao_de_cacambas_M3-0 - Locacao_de_cacambas, b05.1 N, nº 30 - (null) (Cordenadas [115.000000,545.000000])
+de? 00000121/0001-00
+
+Vidracaria_M2-0 - Vidracaria, b05.4 S, nº 100 - (null) (Cordenadas [590.000000,465.000000])
+de? 00000122/0001-65
+
+Ensino_fundamental_M6-0 - Ensino_fundamental, b01.5 S, nº 30 - (null) (Cordenadas [655.000000,85.000000])
+de? 00000123/0001-29
+
+Ensino_infantil_M2-0 - Ensino_infantil, b04.2 S, nº 20 - (null) (Cordenadas [240.000000,370.000000])
+de? 00000124/0001-92
+
+Consultorio_odontologico_M1-0 - Consultorio_odontologico, b02.3 N, nº 80 - (null) (Cordenadas [435.000000,260.000000])
+de? 00000125/0001-56
+
+Conserto_de_computadores_M1-0 - Conserto_de_computadores, b05.1 N, nº 100 - (null) (Cordenadas [185.000000,545.000000])
+de? 00000126/0001-10
+
+Buffet_de_casamento_M4-0 - Buffet_de_casamento, b04.3 O, nº 40 - (null) (Cordenadas [475.000000,410.000000])
+de? 00000127/0001-83
+
+Rede_de_protecao_M1-0 - Rede_de_protecao, b04.2 O, nº 60 - (null) (Cordenadas [340.000000,430.000000])
+de? 00000128/0001-47
+
+Locacao_de_cacambas_M7-0 - Locacao_de_cacambas, b01.2 L, nº 40 - (null) (Cordenadas [220.000000,125.000000])
+de? 00000129/0001-00
+
+Confeccao_de_uniformes_M1-0 - Confeccao_de_uniformes, b05.5 S, nº 50 - (null) (Cordenadas [675.000000,465.000000])
+de? 00000130/0001-92
+
+Otica_M4-0 - Otica, b05.5 N, nº 10 - (null) (Cordenadas [635.000000,545.000000])
+de? 00000131/0001-56
+
+Fossa_septica_M7-0 - Fossa_septica, b05.4 S, nº 70 - (null) (Cordenadas [560.000000,465.000000])
+de? 00000132/0001-10
+
+Confeitaria_M4-0 - Confeitaria, b03.3 N, nº 30 - (null) (Cordenadas [385.000000,355.000000])
+de? 00000133/0001-83
+
+Igreja_M5-0 - Igreja, b02.3 O, nº 20 - (null) (Cordenadas [475.000000,200.000000])
+de? 00000134/0001-47
+
+Dedetizadora_M4-0 - Dedetizadora, b01.4 O, nº 30 - (null) (Cordenadas [610.000000,115.000000])
+de? 00000135/0001-00
+
+Advogado_M6-0 - Advogado, b03.2 N, nº 60 - (null) (Cordenadas [280.000000,355.000000])
+de? 00000136/0001-74
+
+Otica_M4-1 - Otica, b04.3 N, nº 10 - (null) (Cordenadas [365.000000,450.000000])
+de? 00000137/0001-38
+
+Eletricista_M5-0 - Eletricista, b01.4 L, nº 40 - (null) (Cordenadas [490.000000,125.000000])
+de? 00000138/0001-00
+
+Cinema_M4-0 - Cinema, b04.1 S, nº 20 - (null) (Cordenadas [105.000000,370.000000])
+de? 00000139/0001-65
+
+Buteco_M5-0 - Buteco, b03.4 O, nº 10 - (null) (Cordenadas [610.000000,285.000000])
+de? 00000140/0001-47
+
+Restaurante_M4-0 - Restaurante, b03.3 L, nº 40 - (null) (Cordenadas [355.000000,315.000000])
+de? 00000141/0001-00
+
+Restaurante_M4-1 - Restaurante, b02.1 N, nº 60 - (null) (Cordenadas [145.000000,260.000000])
+de? 00000142/0001-74
+
+Auto_escola_M2-0 - Auto_escola, b01.2 N, nº 50 - (null) (Cordenadas [270.000000,165.000000])
+de? 00000143/0001-38
+
+Ensino_fundamental_M2-0 - Ensino_fundamental, b05.4 O, nº 20 - (null) (Cordenadas [610.000000,485.000000])
+de? 00000144/0001-00
+
+Floricultura_M1-0 - Floricultura, b05.2 O, nº 10 - (null) (Cordenadas [340.000000,475.000000])
+de? 00000145/0001-65
+
+Brindes_M2-0 - Brindes, b05.3 O, nº 30 - (null) (Cordenadas [475.000000,495.000000])
+de? 00000146/0001-29
+
+Extintores_M3-0 - Extintores, b01.3 N, nº 50 - (null) (Cordenadas [405.000000,165.000000])
+de? 00000147/0001-92
+
+Ensino_infantil_M4-0 - Ensino_infantil, b04.2 N, nº 40 - (null) (Cordenadas [260.000000,450.000000])
+de? 00000148/0001-56
+
+Cinema_M7-0 - Cinema, b04.1 S, nº 60 - (null) (Cordenadas [145.000000,370.000000])
+de? 00000149/0001-10
+
+Churracaria_M7-0 - Churracaria, b04.2 L, nº 20 - (null) (Cordenadas [220.000000,390.000000])
