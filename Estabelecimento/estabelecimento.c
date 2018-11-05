@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../Quadra/quadra.h"
+#include "../Retangulo/retangulo.h"
+#include "../Config/config.h"
+#include "../HashTable/hashtable.h"
 
 
 typedef struct{
@@ -58,7 +62,7 @@ Estab* Estab_create(char* cnpj, void* tip, char* cep, char* face, char* num, cha
 }
 
 //Retornar o Endereco
-Endereco* Estab_getEndereco(void* estab){
+void* Estab_getEndereco(void* estab){
     Estab* est;
     est = (Estab*) estab;
     return (void*) est->ende;
@@ -130,9 +134,10 @@ int Estab_HashCode(void* estab, int modulo){
 }
 
 int Estab_HashCompare(void* estab, void* cnpj){
-    Estab *est;
+    Estab *est, *est2;
     est = (Estab*) estab;
-    return strcmp(est->cnpj, cnpj);
+    est2 = (Estab*) cnpj;
+    return strcmp(est->cnpj, est2->cnpj);
 }
 
 int Endereco_compare(void* end1, void* end2, int dimension){
@@ -166,3 +171,105 @@ int Estab_Type_HashCompare(void* tip, void* cod){
     return strcmp(tp->cod, id->cod);
 }
 
+void* Estab_getEstabEndereco(void* endereco){
+    Endereco * end;
+    end = (Endereco*) endereco;
+    if(end->tipo == 1) return NULL;
+    return end->estab;
+}
+
+//hashCode - retorna o codigo do estabelecimento
+int Estab_Ende_HashCode(void* endereco, int modulo){
+    Endereco *end;
+    end = (Endereco*) endereco;
+    int x = strlen(end->cep);
+    int hash = 0;
+    char *aux = end->cep;
+    while(*aux != 0){
+        hash += x*(*aux);
+        aux++;
+        x--;
+    }
+    return modulo < 0 ? hash : hash%modulo;
+}
+
+int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2){
+    Endereco *est1, *est2;
+    est1 = (Endereco*) Endereco1;
+    est2 = (Endereco*) Endereco2;
+    return strcmp(est1->cep, est2->cep);
+}
+
+double* Estab_getCordGeo(void* estab, Info* info){
+    Estab* est;
+    double num;
+    est = (Estab*) estab;
+    double* result;
+    if(est->ende == NULL){
+        return NULL;
+    }
+    quadra temp = createQuadra(est->ende->cep, "", "", 0, 0, 0, 0);
+    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    sscanf(est->ende->num, "%lf", &num);
+    result = (double*) calloc(2, sizeof(double));
+    result[0] = getXRec(getRecQuad(quad));
+    result[1] = getYRec(getRecQuad(quad));
+
+    if(strcmp(est->ende->face, "N") == 0){
+        //x += num
+        result[0] += num;
+        //y += h
+        result[1] += getHRec(getRecQuad(quad));
+    }
+    if(strcmp(est->ende->face, "S") == 0){
+        //x += num
+        result[0] += num;
+    }
+    if(strcmp(est->ende->face, "L") == 0){
+        //y += num
+        result[1] += num;
+    }
+    if(strcmp(est->ende->face, "O") == 0){
+        //y += num
+        result[1] += num;
+        //x += w
+        result[0] += getWRec(getRecQuad(quad));
+    }
+    return result;
+}
+
+char* Estab_relatorio(void* estab){
+    Estab* est;
+    char* result;
+    result = (char*) calloc(510, sizeof(char));
+    est = (Estab*) estab;
+    if(est->ende == NULL){
+        sprintf(result, "%s - %s", est->nome, est->tipo->info);
+    }else{
+        sprintf(result, "%s - %s, %s %s, nº %s - %s", est->nome, est->tipo->info, est->ende->cep, est->ende->face, est->ende->num, est->ende->comp);
+    }
+    return result;
+}
+
+void* Estab_IdentEndereco(char* cep){
+    Endereco* end;
+    end = (Endereco*) calloc(1, sizeof(Endereco));
+    end->tipo = 0;
+    end->cep = cep;
+    end->face= NULL;
+    end->num = NULL;
+    end->comp= NULL;
+    end->estab = NULL;
+}
+
+char* Estab_getTipoCod(Estab* estab){
+    return estab->tipo->cod;
+}
+
+char* Estab_Tipo(Estab* estab){
+    return estab->tipo->info;
+}
+
+char* Estab_Name(Estab* estab){
+    return estab->nome;
+}

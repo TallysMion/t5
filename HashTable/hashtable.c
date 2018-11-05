@@ -52,7 +52,7 @@ void remove_hashtable(void* hash, void* item){
     }
 }
 
-//retorna um item da hashtable
+//retorna um item da hashtable, se houver mais de um identificado, retorna o primeiro
 void* get_hashtable(void* hash, void* ident){
     HashTable* table;
     table = (HashTable*) hash;
@@ -69,6 +69,27 @@ void* get_hashtable(void* hash, void* ident){
         t = Lista_getNext(list, t);
     }
     return NULL;
+
+}
+
+//retorna uma lista de Itens da hashtable, se houver mais de um identificado, retorna vai incluindo na lista
+Lista getList_hashtable(void* hash, void* ident){
+    HashTable* table;
+    table = (HashTable*) hash;
+    int hashcode = table->hash(ident, table->modulo);    
+    Lista list = *(table->hashtable + hashcode);
+    Lista result = Lista_createLista();
+    Posic t;
+    t=Lista_getFirst(list);
+    while(t != NULL){
+        void* aux;
+        aux = Lista_get(list,t);
+        if(table->compare(aux, ident) == 0){
+            Lista_insert(result, aux);
+        }        
+        t = Lista_getNext(list, t);
+    }
+    return result;
 
 }
 

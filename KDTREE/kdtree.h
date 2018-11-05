@@ -23,4 +23,7 @@ void*  KDT_getKTD_Value(KDT tree, KTD_Value reference);
 /*Remove um valor da arvore, com uma comparação iqual a referencia*/
 void   KDT_remove(KDT tree, KTD_Value reference);
 
+/*Retorna o item mais proximo da referencia*/
+void* closestNeibord(void* tree, void* reference);
+
 #endif

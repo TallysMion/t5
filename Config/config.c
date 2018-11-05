@@ -41,7 +41,6 @@ typedef struct database{
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
     KDT         PessoaTree;
-    KDT         Endereco;
     KDT         EstabelecimentoTree;
 
     HashTable   EstabelecimentoType;
@@ -52,6 +51,9 @@ typedef struct database{
     HashTable   *PessoaCepHash; /*cpf*/
     HashTable   *EstabHash; /*id*/
     HashTable   *cepQuadraHash; /*cep*/
+    HashTable   *enderecoEstab; /*cep*/
+    HashTable   *enderecoPessoa; /*cep*/
+
 }Database;
 
 typedef struct Info{
@@ -200,7 +202,6 @@ Info* configIn(int argc, const char *argv[]){
     result->bd->QuadrasTree         = KDT_create(compareQuadra   , 2);
     result->bd->RadioBaseTree       = KDT_create(compareRadioB   , 2);
     result->bd->PessoaTree          = KDT_create(Pessoa_compare  , 2);
-    result->bd->Endereco            = KDT_create(Endereco_compare, 2);
     result->bd->EstabelecimentoTree = KDT_create(Estab_compare   , 2);
 
     //HASHTABLE
@@ -212,6 +213,8 @@ Info* configIn(int argc, const char *argv[]){
     result->bd->PessoaCepHash       = create_hashtable(MODULOHASH, Pessoa_HashCompare,      Pessoa_HashCode);
     result->bd->EstabHash           = create_hashtable(MODULOHASH, Estab_HashCompare,       Estab_HashCode);
     result->bd->cepQuadraHash       = create_hashtable(MODULOHASH, HashCompareQuadra,       hashCodeQuadra);
+    result->bd->enderecoEstab       = create_hashtable(MODULOHASH, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
+    result->bd->enderecoPessoa      = create_hashtable(MODULOHASH, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
 
     //FILAS
     result->notsGeo     = create_Fila();
@@ -385,7 +388,6 @@ void freeConfig(Info *info){
     //freeTree(info->bd->EstabelecimentoTree);
     //freeTree(info->bd->HidrantesTree);
     //freeTree(info->bd->PessoaTree);
-    //freeTree(info->bd->Endereco);
     //freeTree(info->bd->QuadrasTree);
     //freeTree(info->bd->RadioBaseTree);
     //freeTree(info->bd->SemaforosTree);

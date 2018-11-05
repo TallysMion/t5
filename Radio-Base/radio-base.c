@@ -125,9 +125,9 @@ int compareRadioB(void* hdA, void* hdB, int dim){
     dim = dim%2;
     if(!strcmp(qdA->id, qdB->id)) return 0;
     if (dim == 0){
-        return qdA->x > qdB->x ? 1 : (qdA->x <= qdB->x ? -1 : 0) ; 
+        return qdA->x - qdB->x;
     }else{
-        return qdA->y > qdB->y ? 1 : (qdA->y <= qdB->y ? -1 : 0) ;
+        return qdA->y - qdB->y;
     }
 }
 

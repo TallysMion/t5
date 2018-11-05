@@ -25,4 +25,13 @@ int Pessoa_HashCode(Pessoa pes, int modulo);
 //Comparador para hashtable
 int Pessoa_HashCompare(void* pes, void* cpf);
 
+//retorna a struct da pessoa que mora aqui, se não for um endereco de pessoa, retorna NULL
+void* Pessoa_getPessoaEndereco(void* endereco);
+
+int Pessoa_Ende_HashCode(void* endereco, int modulo);
+int Pessoa_Ende_HashCompare(void* Endereco1, void* Endereco2);
+void* Pessoa_IdentEndereco(char* cep);
+char* Pessoa_relatorio(void* pessoa);
+double* Pessoa_getCordGeo(void* pessoa, void*quadra);
+
 #endif

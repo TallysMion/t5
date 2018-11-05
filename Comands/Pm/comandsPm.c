@@ -35,6 +35,6 @@ int setEndereco(char* text, Info* info){
     pessoa = get_hashtable(info->bd->PessoaCepHash, pessoatemp);
     Pessoa_Free(pessoatemp);
     Endereco end = Pessoa_SetEndereco(pessoa, cep, face, num, comp);
-    KDT_insert(info->bd->Endereco, end);
+    insert_hashtable(info->bd->enderecoPessoa, end);
     return 1;
 }

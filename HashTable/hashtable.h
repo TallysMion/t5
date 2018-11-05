@@ -13,12 +13,15 @@ void remove_hashtable(HashTable hash, void* item);
 void insert_hashtable(HashTable hash, void* item);
 
 //retorna um item da hashtable
-void* get_hashtable(HashTable hash, char* ident);
+void* get_hashtable(HashTable hash, void* ident);
 
 //retorna todos os itens da hashtable
 Lista getAll_hashtable(HashTable hash);
 
 //apaga a hashtable -> depende do free da lista -> causando leek de memoria
 void free_hashtable(HashTable hash);
+
+//retorna uma lista de Itens da hashtable, se houver mais de um identificado, retorna vai incluindo na lista
+Lista getList_hashtable(void* hash, void* ident);
 
 #endif

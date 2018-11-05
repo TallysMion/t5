@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "config.h": "c",
-        "estabelecimento.h": "c"
+        "estabelecimento.h": "c",
+        "quadra.h": "c"
     }
 }

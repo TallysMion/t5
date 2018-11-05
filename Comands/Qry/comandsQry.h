@@ -33,4 +33,35 @@
     /*Finaliza os Processos de QRY e imprime o arquivo de saida */
     void closeQRY(Info* info);
 
+    /*Imprime um relatorio dos moradores da quadra <m? 'cep'> */
+    void whoIsHere(char* text, Info* info);
+
+    /*Imprime um m? de todos as quadras inteiramente nessa area*/
+    void whoIsInThisArea(char* text, Info* info);
+
+    /*Imprime um relatorio da pessoa, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
+    void whoAreYou(char* text, Info* info);
+
+    /*Imprime um relatorio do Estabelecimento, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
+    void whoAreYouEstab(char* text,Info* info);
+
+    /*Mãe, no céu tem Pão? e Morreu...*/
+    void bread(char* text, Info* info);
+
+    /*Imprime um relatorio dos estabelecimentos existentes nessa quadra*/
+    void whatHaveHere(char* text, Info* info);
+
+    /*Imprime um relatorio dos estabelecimentos de um determinado tipo em uma area*/
+    void whatHaveInThisArea(char* text, Info* info);
+
+    /*Imprime um relatorio dos estabelecimentos existentes nessa quadra, ordenando os tipos*/
+    void whatHaveHere_typeOrder(char* text, Info* info);
+
+    /*Imprime um relatorio dos estabelecimentos existentes nessa area, ordenando os tipos*/
+    void whatHaveInThisArea_typeOrder(char* text, Info* info);
+
+    /*Marca um X no local, e faz uma linha entre o X e o hidrante mais proximo dele, 
+    faz um relatorio sobre o hidrante e a distancia entre ele e o X*/
+    void closestHidrant(char* text, Info* info);
+
 #endif

@@ -63,6 +63,46 @@ int executeQry(char* text, Info *info){
         closestRBase(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "m?")){
+        whoIsHere(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "mr?")){
+        whoIsInThisArea(text, info);
+        return 1;
+    }  
+    if(!strcmp(cmd, "dm?")){
+        whoAreYou(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "de?")){
+        whoAreYouEstab(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "rip")){
+        bread(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "ecq?")){
+        whatHaveHere(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "ecr?")){
+        whatHaveInThisArea(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "tecq?")){
+        whatHaveHere_typeOrder(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "tecr?")){
+        whatHaveInThisArea_typeOrder(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "hmpe?")){
+        closestHidrant(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }
