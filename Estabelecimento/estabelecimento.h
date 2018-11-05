@@ -13,6 +13,9 @@ type Estab_createType(char* cod, char* Info);
 //Mudança - Retorna Linha em SVG da mudança
 void Estab_changeEndereco(Estab estab,  char* cep, char* face, char* num);
 
+//retorna o endereco do estabelecimento
+void* Estab_getEndereco(void* estab);
+
 //free - Limpa a memoria
 void Estab_Free(Estab estab);
 
@@ -31,5 +34,12 @@ int Endereco_compare(void* end1, void* end2, int dimension);
 int Estab_Type_HashCode(void*  tip,int modulo);
 
 int Estab_Type_HashCompare(void* tip, void* cod);
+
+//retorna a struct da pessoa que mora aqui, se não for um endereco de pessoa, retorna NULL
+void* Estab_getEstabEndereco(void* endereco);
+
+int Estab_Ende_HashCode(void* endereco, int modulo);
+
+int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2);
 
 #endif

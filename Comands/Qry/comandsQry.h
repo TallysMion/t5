@@ -33,4 +33,13 @@
     /*Finaliza os Processos de QRY e imprime o arquivo de saida */
     void closeQRY(Info* info);
 
+    /*Retorna um relatorio dos moradores da quadra <m? 'cep'> */
+    void whoIsHere(char* text, Info* info);
+
+    /*Retorna um m? de todos as quadras inteiramente nessa area*/
+    void whoIsInThisArea(char* text, Info* info);
+
+    /*Retorna um relatorio da pessoa, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
+    void whoAreYou(char* text, Info* info);
+
 #endif

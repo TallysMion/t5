@@ -1,2 +1,40 @@
-crb?
-id: rbb02.5 e rbb03.5  -   Dist: 95.000000
+dm? 000.000.981-40
+Pedro_Bernardo, b04.5 L, nº 50 - - (Cordenadas [625.000000,420.000000])
+dm? 000.000.471-55
+Joao_Doortje, b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
+dm? 000.000.241-04
+Silvio_Ursula, b05.4 L, nº 30 - ap-677 (Cordenadas [490.000000,495.000000])
+dm? 000.001.151-77
+Dirk_Doortje, b05.5 N, nº 30 - ap-1198 (Cordenadas [655.000000,545.000000])
+dm? 000.000.281-00
+Daniel_Luiz_Felipe, b04.1 S, nº 90 - - (Cordenadas [175.000000,370.000000])
+dm? 000.000.201-17
+Amanda_Amanda, b05.1 O, nº 10 - ap-191 (Cordenadas [205.000000,475.000000])
+dm? 000.000.161-95
+Ernestina_Dirk, b02.3 S, nº 70 - ap-794 (Cordenadas [425.000000,180.000000])
+dm? 000.000.821-47
+Aad_Mart, b01.1 L, nº 40 - ap-928 (Cordenadas [85.000000,125.000000])
+dm? 000.000.151-13
+Flavio_Tiago, b02.4 L, nº 10 - - (Cordenadas [490.000000,190.000000])
+dm? 000.000.521-59
+Martijn_Laura, b03.5 S, nº 20 - - (Cordenadas [645.000000,275.000000])
+dm? 000.000.961-05
+Maayke_Joren, b01.4 N, nº 90 - ap-624 (Cordenadas [580.000000,165.000000])
+dm? 000.000.831-19
+Ana_Micaela, b02.4 O, nº 60 - - (Cordenadas [610.000000,240.000000])
+dm? 000.001.101-08
+Joana_Dorus, b04.4 O, nº 10 - - (Cordenadas [610.000000,380.000000])
+dm? 000.000.531-20
+Zelia_Isabella, b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
+dm? 000.001.351-00
+Maartje_Ankie, b04.1 L, nº 30 - - (Cordenadas [85.000000,400.000000])
+dm? 000.000.701-30
+Antonio_Hans, b02.5 N, nº 90 - ap-451 (Cordenadas [715.000000,260.000000])
+dm? 000.000.541-00
+Gisela_Joppe, b05.5 S, nº 60 - - (Cordenadas [685.000000,465.000000])
+dm? 000.000.291-73
+Larz_Valdir, b04.3 S, nº 30 - ap-1005 (Cordenadas [385.000000,370.000000])
+dm? 000.000.031-07
+Rafael_Geert, b04.1 S, nº 60 - - (Cordenadas [145.000000,370.000000])
+dm? 000.000.731-56
+Taisa_Paulo, b04.4 S, nº 40 - - (Cordenadas [530.000000,370.000000])

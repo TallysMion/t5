@@ -11,6 +11,8 @@
 #include "../../Radio-Base/radio-base.h"
 #include "../../Semaforo/semaforo.h"
 #include "../../Hidrante/hidrante.h"
+#include "../../Pessoa/pessoa.h"
+#include "../../Estabelecimento/estabelecimento.h"
 #include "../../Utils/Point.h"
 #include "../../Utils/proxPoint.h"
 #include "../../KDTREE/kdtree.h"
@@ -24,10 +26,6 @@ void reportRec(char* text,Info *info){
         strcpy(temp, text);
         insert_Fila(info->respQRY, temp);
         insert_Fila(info->respQRY, "\n");
-        
-        
-
-
         char *aux;
         double x, y , w, h;
         double xi, yi, xf, yf;
@@ -1263,3 +1261,109 @@ void closeQRY(Info* info){
 
 }
 
+char* moradoresQuadra(char* cep, Info* info){
+    void* ident = Pessoa_IdentEndereco(cep);
+    Lista enderecos = getList_hashtable(info->bd->enderecoPessoa, ident);
+    char *result;
+    result = (char*) calloc(Lista_lenght(enderecos)*510, sizeof(char));
+    strcpy(result, "");
+    void* t=Lista_getFirst(enderecos);
+    while(1){
+        void* temp = Lista_get(enderecos,t);
+        if(temp){
+            void* pessoa = Pessoa_getPessoaEndereco(temp);
+            if(pessoa!=NULL)
+                strcat(result, Pessoa_relatorio(pessoa));
+            t = Lista_getNext(enderecos, t);
+        }else{
+        break;
+        }
+    }
+    return result;
+}
+
+void whoIsHere(char* text, Info* info){
+    char* aux, *cep;
+    aux = (char*) calloc(strlen(text)+2, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    aux = text;
+    aux+=3;
+    cep = (char*) calloc(1, sizeof(char));
+    sscanf(aux, "%s", cep);
+    char* result;
+    result = moradoresQuadra(cep, info);
+    insert_Fila(info->respQRY, result);
+}
+
+void whoIsInThisArea(char* text, Info* info){
+    char* temp;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    char *aux;
+    double x, y , w, h;
+    double xi, yi, xf, yf;
+    void* i;
+    Posic t;
+
+    aux = text; aux += 4;
+    sscanf(aux, "%lf %lf %lf %lf", &x, &y, &w, &h);
+
+    /*info->quadras*/
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    t=Lista_getFirst(quadras);
+    while(1){
+        i = Lista_get(quadras,t);
+        if(i){
+
+            Item it = Lista_get(quadras, t);
+            rectangle rc = getRecQuad(it);                    
+
+            xi = getXRec(rc);
+            xf = xi + getWRec(rc);
+            yi = getYRec(rc);
+            yf = yi + getHRec(rc);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char* result;
+                result = moradoresQuadra(getCepQuad(it), info);
+                insert_Fila(info->respQRY, result);
+            }                    
+            
+            t = Lista_getNext(quadras, t);
+        }else{
+        break;
+        }
+    }
+}
+
+void whoAreYou(char* text, Info* info){
+    char* temp;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    char *aux, *cpf;
+    cpf = (char*) calloc(55, sizeof(char));
+    aux = text; aux += 4;
+    sscanf(aux, "%s", cpf);
+    Pessoa *p = Pessoa_create(cpf, "", "", "", "");
+    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    double* cord = Pessoa_getCordGeo(pessoa, info);
+    if(cord == NULL){
+       char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s\n", Pessoa_relatorio(pessoa));
+        insert_Fila(info->respQRY, result);
+    }else{
+        char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s (Cordenadas [%lf,%lf])\n", Pessoa_relatorio(pessoa), cord[0], cord[1]);
+        insert_Fila(info->respQRY, result);
+        Notation nt = createNotacao("RED", 5, 0, cord[0], cord[1], cpf);
+        insert_Fila(info->notsQRY, nt);
+    }
+}

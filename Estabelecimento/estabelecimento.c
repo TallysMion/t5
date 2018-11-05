@@ -58,7 +58,7 @@ Estab* Estab_create(char* cnpj, void* tip, char* cep, char* face, char* num, cha
 }
 
 //Retornar o Endereco
-Endereco* Estab_getEndereco(void* estab){
+void* Estab_getEndereco(void* estab){
     Estab* est;
     est = (Estab*) estab;
     return (void*) est->ende;
@@ -130,9 +130,10 @@ int Estab_HashCode(void* estab, int modulo){
 }
 
 int Estab_HashCompare(void* estab, void* cnpj){
-    Estab *est;
+    Estab *est, *est2;
     est = (Estab*) estab;
-    return strcmp(est->cnpj, cnpj);
+    est2 = (Estab*) cnpj;
+    return strcmp(est->cnpj, est2->cnpj);
 }
 
 int Endereco_compare(void* end1, void* end2, int dimension){
@@ -166,3 +167,31 @@ int Estab_Type_HashCompare(void* tip, void* cod){
     return strcmp(tp->cod, id->cod);
 }
 
+void* Estab_getEstabEndereco(void* endereco){
+    Endereco * end;
+    end = (Endereco*) endereco;
+    if(end->tipo == 1) return NULL;
+    return end->estab;
+}
+
+//hashCode - retorna o codigo do estabelecimento
+int Estab_Ende_HashCode(void* endereco, int modulo){
+    Endereco *end;
+    end = (Endereco*) endereco;
+    int x = strlen(end->cep);
+    int hash = 0;
+    char *aux = end->cep;
+    while(*aux != 0){
+        hash += x*(*aux);
+        aux++;
+        x--;
+    }
+    return modulo < 0 ? hash : hash%modulo;
+}
+
+int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2){
+    Endereco *est1, *est2;
+    est1 = (Endereco*) Endereco1;
+    est2 = (Endereco*) Endereco2;
+    return strcmp(est1->cep, est2->cep);
+}

@@ -34,7 +34,6 @@ typedef struct database{
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
     KDT         PessoaTree;
-    KDT         Endereco;
     KDT         EstabelecimentoTree;
 
     HashTable   EstabelecimentoType;
@@ -45,7 +44,8 @@ typedef struct database{
     HashTable   *PessoaCepHash; /*cpf*/
     HashTable   *EstabHash; /*id*/
     HashTable   *cepQuadraHash; /*cep*/
-
+    HashTable   *enderecoEstab; /*cep*/
+    HashTable   *enderecoPessoa; /*cep*/
 
 }Database;
 

@@ -63,6 +63,18 @@ int executeQry(char* text, Info *info){
         closestRBase(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "m?")){
+        whoIsHere(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "mr?")){
+        whoIsInThisArea(text, info);
+        return 1;
+    }  
+    if(!strcmp(cmd, "dm?")){
+        whoAreYou(text, info);
+        return 1;
+    }        
     free(cmd);
     return 0;
 }
