@@ -250,3 +250,18 @@ char* Estab_relatorio(void* estab){
     }
     return result;
 }
+
+void* Estab_IdentEndereco(char* cep){
+    Endereco* end;
+    end = (Endereco*) calloc(1, sizeof(Endereco));
+    end->tipo = 0;
+    end->cep = cep;
+    end->face= NULL;
+    end->num = NULL;
+    end->comp= NULL;
+    end->estab = NULL;
+}
+
+char* Estab_getTipoCod(Estab* estab){
+    return estab->tipo->cod;
+}

@@ -46,4 +46,8 @@ double* Estab_getCordGeo(void* estab,void* info);
 
 char* Estab_relatorio(void* estab);
 
+void* Estab_IdentEndereco(char* cep);
+
+char* Estab_getTipoCod(void* estab);
+
 #endif

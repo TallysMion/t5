@@ -1434,3 +1434,85 @@ void bread(char* text, Info* info){
     remove_hashtable(info->bd->enderecoPessoa, end);
 }
 
+
+char* estabsQuadra(char* cep, Info* info, char* tipo){
+    void* ident = Estab_IdentEndereco(cep);
+    Lista enderecos = getList_hashtable(info->bd->enderecoEstab, ident);
+    char *result;
+    result = (char*) calloc(Lista_lenght(enderecos)*510, sizeof(char));
+    strcpy(result, "");
+    void* t=Lista_getFirst(enderecos);
+    while(1){
+        void* temp = Lista_get(enderecos,t);
+        if(temp){
+            void* estab = Estab_getEstabEndereco(temp);
+            if(estab!=NULL && (tipo == NULL || strcmp(tipo, Estab_getTipoCod(estab)) == 0)){
+                strcat(result, Estab_relatorio(estab));
+                strcat(result, "\n");
+            }
+            t = Lista_getNext(enderecos, t);
+        }else{
+        break;
+        }
+    }
+    return result;
+}
+
+void whatHaveHere(char* text, Info* info){
+    char* aux, *cep;
+    aux = (char*) calloc(strlen(text)+2, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    aux = text;
+    aux+=5;
+    cep = (char*) calloc(1, sizeof(char));
+    sscanf(aux, "%s", cep);
+    char* result;
+    result = estabsQuadra(cep, info, NULL);
+    insert_Fila(info->respQRY, result);
+}
+
+void whatHaveInThisArea(char* text, Info* info){
+    char* temp;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    char *aux, *tipo;
+    double x, y , w, h;
+    double xi, yi, xf, yf;
+    void* i;
+    Posic t;
+    tipo = (char*) calloc(55, sizeof(char));
+
+    aux = text; aux += 5;
+    sscanf(aux, "%s %lf %lf %lf %lf", tipo, &x, &y, &w, &h);
+
+    /*info->quadras*/
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    t=Lista_getFirst(quadras);
+    while(1){
+        i = Lista_get(quadras,t);
+        if(i){
+
+            Item it = Lista_get(quadras, t);
+            rectangle rc = getRecQuad(it);                    
+
+            xi = getXRec(rc);
+            xf = xi + getWRec(rc);
+            yi = getYRec(rc);
+            yf = yi + getHRec(rc);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char* result;
+                result = estabsQuadra(getCepQuad(it), info, tipo);
+                insert_Fila(info->respQRY, result);
+            }                    
+            
+            t = Lista_getNext(quadras, t);
+        }else{
+        break;
+        }
+    }
+}

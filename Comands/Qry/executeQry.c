@@ -83,6 +83,15 @@ int executeQry(char* text, Info *info){
         bread(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "ecq?")){
+        whatHaveHere(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "ecr?")){
+        whatHaveInThisArea(text, info);
+        return 1;
+    }
+    
     free(cmd);
     return 0;
 }

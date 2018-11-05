@@ -1,5 +1,4 @@
-rip 000.000.701-30
-
-Antonio_Hans, b02.5 N, nº 90 - ap-451
-rip 000.000.701-30
-Esta pessoa não existe
+ecr? otc 0.0 0.0 2000 1000
+Otica_M4-0 - Otica, b05.5 N, nº 10 - (null)
+Otica_M3-0 - Otica, b04.4 O, nº 40 - (null)
+Otica_M4-1 - Otica, b04.3 N, nº 10 - (null)
