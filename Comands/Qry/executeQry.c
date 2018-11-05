@@ -79,6 +79,10 @@ int executeQry(char* text, Info *info){
         whoAreYouEstab(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "rip")){
+        bread(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }

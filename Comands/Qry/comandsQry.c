@@ -1396,3 +1396,41 @@ void whoAreYouEstab(char* text, Info* info){
     }
 }
 
+/*Mãe, no céu tem Pão? e Morreu...*/
+void bread(char* text, Info* info){
+    char *aux, *cpf;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    cpf = (char*) calloc(55, sizeof(char));
+    aux = text; aux += 4;
+    sscanf(aux, "%s", cpf);
+    Pessoa *p = Pessoa_create(cpf, "", "", "", "");
+    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    if(pessoa == NULL){
+        insert_Fila(info->respQRY, "Esta pessoa não existe\n");
+        return;
+    }
+    double* cord = Pessoa_getCordGeo(pessoa, info);
+    if(cord == NULL){
+       char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s\n", Pessoa_relatorio(pessoa));
+        insert_Fila(info->respQRY, result);
+    }else{
+        char* result;
+        result = (char*) calloc(255, sizeof(char));
+        sprintf(result, "%s\n", Pessoa_relatorio(pessoa));
+        insert_Fila(info->respQRY, result);
+        Notation nt = createNotacao("RED", 0, 1, cord[0], cord[1], cpf);
+        insert_Fila(info->notsQRY, nt);
+    }
+    //remove
+    remove_hashtable(info->bd->PessoaCepHash, pessoa);
+    KDT_remove(info->bd->PessoaTree, pessoa);
+    void* end = Pessoa_getEndereco(pessoa);
+    if(end != NULL)
+    remove_hashtable(info->bd->enderecoPessoa, end);
+}
+

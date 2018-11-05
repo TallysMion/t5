@@ -7,13 +7,11 @@
 #include "../Comands/Ec/executeEc.h"
 #include "../Comands/Pm/executePm.h"
 
-
 int main(int argc, const char *argv[]){
     //configurações
     Info *info;
     Fila comandos;    
-    info = configIn(argc, argv);
-    
+    info = configIn(argc, argv);    
 
     comandos = getCommandsForGEO(info);    
     if(comandos)

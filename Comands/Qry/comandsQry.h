@@ -45,4 +45,7 @@
     /*Retorna um relatorio do Estabelecimento, incluindo a cordenada geografica, e imprime uma marcação no mapa*/
     void whoAreYouEstab(char* text,Info* info);
 
+    /*Mãe, no céu tem Pão? e Morreu...*/
+    void bread(char* text, Info* info);
+
 #endif
