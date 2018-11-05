@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "../Lista/lista.h"
+#include <math.h>
 
 typedef struct No{
     void* value;
@@ -203,4 +204,53 @@ void KDT_remove(void* tree, void*reference){
         }
     }   
 
+}
+
+double distKDT(Tree* tr, void* valueA, void* valueB){
+    int i;
+    double dist = 0;
+    for(i = 0; i < tr->dimension; i++){
+        dist = dist + pow(tr->compare(valueA, valueB, i),2);
+    }
+    return sqrt(dist);
+}
+
+void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* dis, int dim){
+    if(n == NULL)
+    return;
+    double distAtual = distKDT(tr, reference, n->value);
+    if (distAtual < *dis){
+        *dis = distAtual;
+        *item = n->value;
+    }
+    if(tr->compare(n->value, reference, dim+1) < 0){
+        closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim+1)) < *dis){
+            closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        }
+    }else{
+        closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim+1)) < *dis){
+            closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        }
+    }
+
+}
+
+void* closestNeibord(void* tree, void* reference){
+    Tree *tr;
+    tr = (Tree*) tree;
+    Node *n;
+    n = (Node*) tr->no;
+    if(n == NULL){
+        return NULL;
+    } 
+    void** item;
+    item = (void**) calloc(1, sizeof(void*));
+    *item = n->value;
+    double *dis;
+    dis = (double*) calloc(1, sizeof(double));
+    *dis = distKDT(tr, reference, n->value);
+    closestNeibordNode(n, tr, reference , item, dis, 0);
+    return *item;
 }

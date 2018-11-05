@@ -50,4 +50,8 @@ void* Estab_IdentEndereco(char* cep);
 
 char* Estab_getTipoCod(void* estab);
 
+char* Estab_Tipo(Estab* estab);
+
+char* Estab_Name(Estab* estab);
+
 #endif

@@ -54,4 +54,14 @@
     /*Imprime um relatorio dos estabelecimentos de um determinado tipo em uma area*/
     void whatHaveInThisArea(char* text, Info* info);
 
+    /*Imprime um relatorio dos estabelecimentos existentes nessa quadra, ordenando os tipos*/
+    void whatHaveHere_typeOrder(char* text, Info* info);
+
+    /*Imprime um relatorio dos estabelecimentos existentes nessa area, ordenando os tipos*/
+    void whatHaveInThisArea_typeOrder(char* text, Info* info);
+
+    /*Marca um X no local, e faz uma linha entre o X e o hidrante mais proximo dele, 
+    faz um relatorio sobre o hidrante e a distancia entre ele e o X*/
+    void closestHidrant(char* text, Info* info);
+
 #endif

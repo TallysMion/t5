@@ -68,6 +68,25 @@ void* Lista_insert(void* lista, void* item){
     return (void*) ps;
 }
 
+void Lista_insertLista(Lista* list, Lista* list2){
+    Lista *lista, *lista2;
+    lista = (Lista*) list;
+    lista2= (Lista*) list2;
+    if(lista->size == 0){
+        lista->size = lista2->size;
+        lista->inicio = lista2->inicio;
+        lista->fim = lista2->fim;
+        return;
+    }
+    if(lista2->size == 0){
+        return;
+    }
+    lista->size += lista2->size;
+    lista->fim->next = lista2->inicio;
+    lista2->inicio->prev = lista->fim;
+    lista->fim = lista2->fim;
+}
+
 //remove um item da lista
 void Lista_remove(void* lista, void* p){
     Posic *pos;

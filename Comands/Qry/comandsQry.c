@@ -1516,3 +1516,164 @@ void whatHaveInThisArea(char* text, Info* info){
         }
     }
 }
+
+char* estabsQuadra_typeOrderPrint(Lista estabs){
+        char *result;
+        result = (char*) calloc(Lista_lenght(estabs)*510, sizeof(char));
+        strcpy(result, "");
+        while(Lista_lenght(estabs) > 0){
+        void* t=Lista_getFirst(estabs);
+        char* control;
+        control = Estab_getTipoCod(Lista_get(estabs,t));
+        strcat(result, Estab_Tipo(Lista_get(estabs,t)));
+        strcat(result, ":\n");
+        while(1){
+            void* temp = Lista_get(estabs,t);
+            if(temp){
+                char * testAux = Estab_getTipoCod(temp);
+                if(strcmp(control, testAux) == 0){
+                    strcat(result, Estab_Name(temp));
+                    strcat(result, "\n");
+                    void* taux = Lista_getNext(estabs, t);
+                    Lista_remove(estabs, t);
+                    t = taux;
+                    continue;
+                }
+                t = Lista_getNext(estabs, t);
+            }else{
+            break;
+            }
+        }
+    }
+    return result;
+}
+
+Lista estabsQuadra_typeOrder(char* cep, Info* info, char* tipo){
+    void* ident = Estab_IdentEndereco(cep);
+    Lista enderecos = getList_hashtable(info->bd->enderecoEstab, ident);
+    Lista estabs = Lista_createLista();
+    void* t=Lista_getFirst(enderecos);
+    while(1){
+        void* temp = Lista_get(enderecos,t);
+        if(temp){
+            void* estab = Estab_getEstabEndereco(temp);
+            if(estab!=NULL && (tipo == NULL || strcmp(tipo, Estab_getTipoCod(estab)) == 0)){
+                Lista_insert(estabs, estab);
+            }
+            t = Lista_getNext(enderecos, t);
+        }else{
+        break;
+        }
+    }
+    return estabs;
+}
+
+void whatHaveHere_typeOrder(char* text, Info* info){
+    char* aux, *cep;
+    aux = (char*) calloc(strlen(text)+2, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    aux = text;
+    aux+=6;
+    cep = (char*) calloc(1, sizeof(char));
+    sscanf(aux, "%s", cep);
+    char* result;
+    result = estabsQuadra_typeOrderPrint(estabsQuadra_typeOrder(cep, info, NULL));
+    insert_Fila(info->respQRY, result);
+}
+
+void whatHaveInThisArea_typeOrder(char* text, Info* info){
+    char* temp;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    char *aux;
+    double x, y , w, h;
+    double xi, yi, xf, yf;
+    void* i;
+    Posic t;
+
+    aux = text; aux += 6;
+    sscanf(aux, "%lf %lf %lf %lf",&x, &y, &w, &h);
+
+    /*info->quadras*/
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    t=Lista_getFirst(quadras);
+    Lista estabs;
+    estabs = Lista_createLista();
+    while(1){
+        i = Lista_get(quadras,t);
+        if(i){
+
+            Item it = Lista_get(quadras, t);
+            rectangle rc = getRecQuad(it);                    
+
+            xi = getXRec(rc);
+            xf = xi + getWRec(rc);
+            yi = getYRec(rc);
+            yf = yi + getHRec(rc);
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                Lista_insertLista(estabs, estabsQuadra_typeOrder(getCepQuad(it), info, NULL));   
+            }   
+            t = Lista_getNext(quadras, t);
+        }else{
+        break;
+        }
+    }
+    char* result;
+    result = estabsQuadra_typeOrderPrint(estabs);                 
+    insert_Fila(info->respQRY, result);
+}
+
+void closestHidrant(char* text, Info* info){
+    char* temp, *aux, *cep, *face;
+    double num;
+    Notation nt;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    aux = text; aux += 6;
+    cep  = (char*) calloc(55, sizeof(char));
+    face = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s %lf",cep, face, &num);
+
+    double x,y;
+    quadra q = createQuadra(cep, "", "", 0, 0, 0, 0);
+    quadra qd = get_hashtable(info->bd->cepQuadraHash, q);
+    freeQuad(q);
+    x = getXRec(getRecQuad(qd));
+    y = getYRec(getRecQuad(qd));
+    if(strcmp(face, "N") == 0){
+        x += num;
+        y += getHRec(getRecQuad(qd));
+    }
+    if(strcmp(face, "S") == 0){
+        x += num;
+    }
+    if(strcmp(face, "L") == 0){
+        y += num;
+    }
+    if(strcmp(face, "O") == 0){
+        y += num;
+        x += getWRec(getRecQuad(qd));
+    }
+    nt = createNotacao("RED", 0, 0, x, y, "X");
+    insert_Fila(info->notsQRY, nt);
+
+    hidrante hidr = createHidrante("", "", "", x, y);
+    hidrante hd = closestNeibord(info->bd->HidrantesTree, hidr);
+    free(hidr);
+    nt = createNotacao("RED", x*(-1), y*(-1), getXCirc(getCircHidr(hd))*(-1), getYCirc(getCircHidr(hd))*(-1), "");
+    insert_Fila(info->notsQRY, nt);
+    double dist = sqrt( abs(x - getXRec(getCircHidr(hd)))^2 + abs(y - getYRec(getCircHidr(hd)))^2);
+    char* result;
+    result = (char*) calloc(255, sizeof(char));
+    sprintf(result, "%s, dist: %lf", reportHidrante(hd), dist);
+    insert_Fila(info->respQRY, result);
+
+    // Linha nt = createNotacao("RED", x*(-1), y*(-1), x1*(-1), y1*(-1), "");
+
+}

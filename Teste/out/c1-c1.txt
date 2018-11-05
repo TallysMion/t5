@@ -1,4 +1,2 @@
-ecr? otc 0.0 0.0 2000 1000
-Otica_M4-0 - Otica, b05.5 N, nº 10 - (null)
-Otica_M3-0 - Otica, b04.4 O, nº 40 - (null)
-Otica_M4-1 - Otica, b04.3 N, nº 10 - (null)
+hmpe? b01.3 S 40
+Hidrante - ID: hnb01.3 - X: 415.000000, Y: 165.000000, dist: 13.379088

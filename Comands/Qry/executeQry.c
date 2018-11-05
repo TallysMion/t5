@@ -91,7 +91,18 @@ int executeQry(char* text, Info *info){
         whatHaveInThisArea(text, info);
         return 1;
     }
-    
+    if(!strcmp(cmd, "tecq?")){
+        whatHaveHere_typeOrder(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "tecr?")){
+        whatHaveInThisArea_typeOrder(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "hmpe?")){
+        closestHidrant(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }

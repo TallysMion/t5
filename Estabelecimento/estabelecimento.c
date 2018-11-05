@@ -265,3 +265,11 @@ void* Estab_IdentEndereco(char* cep){
 char* Estab_getTipoCod(Estab* estab){
     return estab->tipo->cod;
 }
+
+char* Estab_Tipo(Estab* estab){
+    return estab->tipo->info;
+}
+
+char* Estab_Name(Estab* estab){
+    return estab->nome;
+}
