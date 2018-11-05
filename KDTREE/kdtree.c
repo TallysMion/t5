@@ -225,12 +225,12 @@ void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* d
     }
     if(tr->compare(n->value, reference, dim+1) < 0){
         closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
-        if(abs(tr->compare(n->value, reference, dim+1)) < *dis){
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
             closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
         }
     }else{
         closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
-        if(abs(tr->compare(n->value, reference, dim+1)) < *dis){
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
             closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
         }
     }

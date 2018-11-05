@@ -1,2 +1,2 @@
-hmpe? b01.3 S 40
-Hidrante - ID: hnb01.3 - X: 415.000000, Y: 165.000000, dist: 13.379088
+hmpe? b03.3 N 0
+Hidrante - ID: hob03.2 - X: 340.000000, Y: 315.000000, dist: 18.303005
