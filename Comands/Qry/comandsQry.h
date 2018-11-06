@@ -76,4 +76,8 @@
 
     /*Uma pessoa ta de mudança, faz um relatorio no txt, e imprime uma linha no svg*/
     void mudancaEstab(char* text, Info* info);
+
+    /*Desapropria uma região*/
+    void desapropriar(char* text, Info* info);
+
 #endif

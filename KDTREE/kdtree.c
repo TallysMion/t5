@@ -128,13 +128,13 @@ void* getValueNode(Tree* tree, Node* no, int dim, void* reference){
         dim = 0;
     }
 
-    if(tree->compare(no->value, reference, dim) == 0){
+    if(tree->compare(no->value, reference, dim) == 0 && tree->compare(no->value, reference, dim+1) == 0){
         return no->value;
     }
     if(tree->compare(no->value, reference, dim) < 0){
         return getValueNode(tree, no->left, dim, reference);
     }
-    if(tree->compare(no->value, reference, dim) > 0){
+    if(tree->compare(no->value, reference, dim) >= 0){
         return getValueNode(tree, no->Right, dim, reference);
     }
 
@@ -159,7 +159,7 @@ Lista removeValueNode(Tree* tree, Node* no, int dim, void* reference){
     }
     int i = tree->compare(no->value, reference, dim);
     Lista ls = Lista_createLista();
-    if(i == 0){
+    if(i == 0 && tree->compare(no->value, reference, dim+1) == 0 ){
         getAllNode(no->left, ls);
         getAllNode(no->Right, ls);
         no->value = NULL;
@@ -168,15 +168,15 @@ Lista removeValueNode(Tree* tree, Node* no, int dim, void* reference){
     }
 
     if(i < 0){
-        ls = removeValueNode(tree, no->left, dim, reference);
+        ls = removeValueNode(tree, no->left, dim+1, reference);
         if(ls == NULL){
-            ls = removeValueNode(tree, no->Right, dim, reference);
+            ls = removeValueNode(tree, no->Right, dim+1, reference);
         }
     }
-    if(i > 0){
-        ls = removeValueNode(tree, no->Right, dim, reference);
+    if(i >= 0){
+        ls = removeValueNode(tree, no->Right, dim+1, reference);
         if(ls == NULL){
-            ls = removeValueNode(tree, no->left, dim, reference);
+            ls = removeValueNode(tree, no->left, dim+1, reference);
         }
     }
     return ls;

@@ -296,17 +296,7 @@ void* Lista_getPrevious(void* lista, void* p){
 
 //testar
 void Lista_insertAll(void* lista, void* lista2){
-    void *t, *temp;
-    t = Lista_getFirst(lista2);
-    while(1){
-        temp = Lista_get(lista2,t);
-        if(temp){
-            Lista_insert(lista, temp);
-            t = Lista_getNext(lista2, t);
-        }else{
-        break;
-        }
-    }
+    Lista_insertLista(lista, lista2);
 }
 
 

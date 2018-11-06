@@ -397,6 +397,7 @@ void deleteUrbamEqRec(char* text,Info* info){
 
         /*hidrantes*/
         Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+        Lista_lenght(hidrantes);
         t=Lista_getFirst(hidrantes);
         while(hd){
             i = Lista_get(hidrantes,t);
@@ -1814,3 +1815,203 @@ void mudancaEstab(char* text, Info* info){
     }
     
 }
+
+void desapropriar(char* text, Info* info){
+    char *aux;
+    double x, y, w, h;
+    double xi, yi, xf, yf;
+    void* i, *t, *ident;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    aux = text; aux += 4;
+    sscanf(aux, "%lf %lf %lf %lf", &x, &y, &w, &h);
+
+    Notation nt = createNotacao("BLUE", w, h, x, y, "");
+    insert_Fila(info->notsQRY, nt);
+
+    //apagar quadra e tudo que esta nela, estabelecimentos e desapropriar pessoas(não matar)
+    //apaga quadras
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    i=Lista_getFirst(quadras);
+    while(1){
+        void* cont = Lista_get(quadras,i);
+        if(cont){
+
+            Item it = Lista_get(quadras, i);
+            rectangle rc = getRecQuad(it);                    
+
+            xi = getXRec(rc);
+            xf = xi + getWRec(rc);
+            yi = getYRec(rc);
+            yf = yi + getHRec(rc);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                Lista enderecos;
+                //deleta estabelecimentos
+                ident = Estab_IdentEndereco(getCepQuad(it));
+                enderecos = getList_hashtable(info->bd->enderecoEstab, ident);
+
+                t = Lista_getFirst(enderecos);
+                while(1){
+                    void* temp = Lista_get(enderecos, t);
+                    if(temp){
+                        Estab estab = Estab_getEstabEndereco(temp);
+                        char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                        sprintf(temp1, "%s\n", Estab_relatorio(estab));
+                        insert_Fila(info->respQRY, temp1);
+
+                        void* temp = Lista_getNext(enderecos, t);
+                        KDT_remove(info->bd->EstabelecimentoTree, estab);
+                        remove_hashtable(info->bd->EstabHash, estab);
+                        Lista_remove(enderecos, t);
+                        t = temp;
+                        continue;
+                    }else{
+                        break;
+                    }
+                    t = Lista_getNext(enderecos, t);
+                }
+
+
+                //desapropria pessoas
+                ident = Pessoa_IdentEndereco(getCepQuad(it));
+                enderecos = getList_hashtable(info->bd->enderecoPessoa, ident);
+                t = Lista_getFirst(enderecos);
+                while(1){
+                    void* temp = Lista_get(enderecos, t);
+                    if(temp){
+                        Pessoa pess = Pessoa_getPessoaEndereco(temp);
+                        char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                        sprintf(temp1, "%s\n", Pessoa_relatorio(pess));
+                        insert_Fila(info->respQRY, temp1);
+
+                        void* temp = Lista_getNext(enderecos, t);
+                        KDT_remove(info->bd->PessoaTree, pess);
+                        remove_hashtable(info->bd->PessoaCepHash, pess);
+                        Lista_remove(enderecos, t);
+                        t = temp;
+                        continue;
+                    }else{
+                        break;
+                    }
+                    t = Lista_getNext(enderecos, t);
+                }
+
+
+                char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                sprintf(temp1, "%s\n", getCepQuad(it));
+                insert_Fila(info->respQRY, temp1);
+
+                void* temp = Lista_getNext(quadras, i);
+                KDT_remove(info->bd->QuadrasTree, it);
+                remove_hashtable(info->bd->cepQuadraHash, it);
+                Lista_remove(quadras, i);
+                i = temp;
+                continue;  
+            }else{              
+                i = Lista_getNext(quadras, i);
+            }
+        }else{
+        break;
+        }
+    }
+
+    //apaga hidrantes
+    Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+    t=Lista_getFirst(hidrantes);
+    while(1){
+        i = Lista_get(hidrantes,t);
+        if(i){
+            
+            Item it = Lista_get(hidrantes, t);
+            circulo circ = getCircHidr(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Hidr. -  id: %s  -  x: %lf  -  y: %lf\n", getIdHidr(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(hidrantes, t);
+                Lista_remove(hidrantes, t);
+                KDT_remove(info->bd->HidrantesTree, it);
+                remove_hashtable(info->bd->HidrantesHash, it);
+                t = temp; 
+            }else{
+                t = Lista_getNext(hidrantes, t);
+            }
+        }else{
+        break;
+        }
+    }
+    //apaga radioB
+    Lista radios = KDT_getAll(info->bd->RadioBaseTree);
+    t=Lista_getFirst(radios);
+    while(1){
+        i = Lista_get(radios,t);
+        if(i){
+            
+            Item it = Lista_get(radios, t);
+            circulo circ = getCircRadioB(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Radios. -  id: %s  -  x: %lf  -  y: %lf\n", getIdRadioB(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(radios, t);
+                Lista_remove(radios, t);
+                KDT_remove(info->bd->RadioBaseTree, it);
+                remove_hashtable(info->bd->RadioBaseHash, it);
+                t = temp; 
+            }else{
+                t = Lista_getNext(radios, t);
+            }
+        }else{
+        break;
+        }
+    }
+    //apaga semaforos
+    Lista semaforos = KDT_getAll(info->bd->SemaforosTree);
+    t=Lista_getFirst(semaforos);
+    while(1){
+        i = Lista_get(semaforos,t);
+        if(i){
+            
+            Item it = Lista_get(semaforos, t);
+            circulo circ = getCircSemaf(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Semaf. -  id: %s  -  x: %lf  -  y: %lf\n", getIdSemaf(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(semaforos, t);
+                Lista_remove(semaforos, t);
+                KDT_remove(info->bd->SemaforosTree, it);
+                remove_hashtable(info->bd->SemaforosHash, it);
+                t = temp;  
+            }else{
+                t = Lista_getNext(semaforos, t);
+            }                
+            
+        }else{
+        break;
+        }
+    }
+
+}
+

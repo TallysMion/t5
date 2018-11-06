@@ -119,6 +119,10 @@ int executeQry(char* text, Info *info){
         mudancaEstab(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "dpr")){
+        desapropriar(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }
