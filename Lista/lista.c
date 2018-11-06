@@ -68,7 +68,7 @@ void* Lista_insert(void* lista, void* item){
     return (void*) ps;
 }
 
-void Lista_insertLista(Lista* list, Lista* list2){
+void Lista_insertLista(void* list, void* list2){
     Lista *lista, *lista2;
     lista = (Lista*) list;
     lista2= (Lista*) list2;

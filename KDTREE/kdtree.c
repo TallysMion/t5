@@ -158,13 +158,15 @@ Lista removeValueNode(Tree* tree, Node* no, int dim, void* reference){
         dim = 0;
     }
     int i = tree->compare(no->value, reference, dim);
-    Lista ls = Lista_createLista();
+    Lista ls;
     if(i == 0 && tree->compare(no->value, reference, dim+1) == 0 ){
+        ls = Lista_createLista();
         getAllNode(no->left, ls);
         getAllNode(no->Right, ls);
         no->value = NULL;
         no->left = NULL;
         no->Right = NULL;
+        return ls;
     }
 
     if(i < 0){

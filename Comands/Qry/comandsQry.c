@@ -1099,7 +1099,7 @@ void closestRBase(char* text,Info* info){
 
 void closeQRY(Info* info){
     int i;
-    char* path, *aux;
+    char* path, *aux, *aux2;
     FILE *arqSVG_QRY, *arqTXT;
 
     void *auxN, *auxF, *t, *temp; 
@@ -1115,11 +1115,11 @@ void closeQRY(Info* info){
     aux = info->q;
     while(*aux){
         if(*aux == '/'){
-            info->q = aux+1;
+            aux2 = aux+1;
         }
         aux++;
     }
-    sprintf(path, "%s-%s", path, info->q);
+    sprintf(path, "%s-%s", path, aux2);
     aux = path;
     aux += strlen(path);
     while(*aux != '.')aux--;
@@ -1284,6 +1284,8 @@ void whoIsHere(char* text, Info* info){
     char* result;
     result = moradoresQuadra(cep, info);
     insert_Fila(info->respQRY, result);
+    insert_Fila(info->respQRY, "\n");
+    
 }
 
 void whoIsInThisArea(char* text, Info* info){
@@ -1341,6 +1343,10 @@ void whoAreYou(char* text, Info* info){
     sscanf(aux, "%s", cpf);
     Pessoa *p = Pessoa_create(cpf, "", "", "", "");
     Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    if(pessoa == NULL){
+        insert_Fila(info->respQRY, "Pessoa não encontrada\n");
+        return;
+    }
     double* cord = Pessoa_getCordGeo(pessoa, info);
     if(cord == NULL){
        char* result;
@@ -1369,6 +1375,10 @@ void whoAreYouEstab(char* text, Info* info){
     sscanf(aux, "%s", cnpj);
     Estab *e = Estab_create(cnpj, NULL, "", "", "", "");
     Estab estab = get_hashtable(info->bd->EstabHash, e);
+    if(estab == NULL){
+        insert_Fila(info->respQRY, "Estabelecimento não encontrado\n");
+        return;
+    }
     double* cord = Estab_getCordGeo(estab, info);
     if(cord == NULL){
        char* result;
