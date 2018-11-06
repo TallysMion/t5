@@ -1,2 +1,8 @@
-hmpe? b03.3 N 0
-Hidrante - ID: hob03.2 - X: 340.000000, Y: 315.000000, dist: 18.303005
+mudec 00000130/0001-92 b04.3 O 40
+
+Otica_M4-0 - Otica, b05.5 N, nº 10 --> Novo Endereco: b04.3 O, nº 40
+mudec 00000130/0001-92 b05.1 O 10
+
+Otica_M4-0 - Otica, b04.3 O, nº 40 --> Novo Endereco: b05.1 O, nº 10
+mudec 00000135/0001-00 b05.1 N 100
+Advogado_M6-0 - Advogado, b03.2 N, nº 60 --> Novo Endereco: b05.1 N, nº 100

@@ -191,8 +191,9 @@
 <circle cx="399.500000" cy="724.000000" r="2.500000" fill="darkorange" stroke="black" stroke-width="5" style="opacity:0.7"/>
 <circle cx="393.000000" cy="730.500000" r="2.500000" fill="darkorange" stroke="black" stroke-width="5" style="opacity:0.7"/>
 <circle cx="399.500000" cy="730.500000" r="2.500000" fill="darkorange" stroke="black" stroke-width="5" style="opacity:0.7"/>
-<text x="355.000000" y="350.000000" style="font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:34; fill:'RED';">X</text>
-<line x1="355.000000" y1="355.000000" x2="340.000000" y2="315.000000" stroke-width="2" stroke="RED" />
+<line x1="635.000000" y1="545.000000" x2="475.000000" y2="410.000000" stroke-width="5" stroke="PURPLE" stroke-dasharray="5,5"/>
+<line x1="475.000000" y1="410.000000" x2="205.000000" y2="475.000000" stroke-width="5" stroke="PURPLE" stroke-dasharray="5,5"/>
+<line x1="280.000000" y1="355.000000" x2="185.000000" y2="545.000000" stroke-width="5" stroke="PURPLE" stroke-dasharray="5,5"/>
 <rect x="625.000000" y="465.000000" width="120.000000" height="80.000000" fill="black" stroke="black" stroke-width="5" style="opacity:0.7"/><text x="628.000000" y="537.000000" style="font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:34; fill:'BLACK';">b05.5</text>
 <rect x="625.000000" y="370.000000" width="120.000000" height="80.000000" fill="black" stroke="black" stroke-width="5" style="opacity:0.7"/><text x="628.000000" y="442.000000" style="font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:34; fill:'BLACK';">b04.5</text>
 <rect x="490.000000" y="370.000000" width="120.000000" height="80.000000" fill="black" stroke="black" stroke-width="5" style="opacity:0.7"/><text x="493.000000" y="442.000000" style="font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:34; fill:'BLACK';">b04.4</text>

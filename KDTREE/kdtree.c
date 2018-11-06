@@ -219,7 +219,7 @@ void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* d
     if(n == NULL)
     return;
     double distAtual = distKDT(tr, reference, n->value);
-    if (distAtual < *dis){
+    if (distAtual < *dis && distAtual > 0){
         *dis = distAtual;
         *item = n->value;
     }

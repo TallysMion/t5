@@ -11,7 +11,7 @@ Estab Estab_create(char* cnpj, type tipo, char* cep, char* face, char* num, char
 type Estab_createType(char* cod, char* Info);
 
 //Mudança - Retorna Linha em SVG da mudança
-void Estab_changeEndereco(Estab estab,  char* cep, char* face, char* num);
+void* Estab_changeEndereco(Estab estab,  char* cep, char* face, char* num);
 
 //retorna o endereco do estabelecimento
 void* Estab_getEndereco(void* estab);

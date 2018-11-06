@@ -36,7 +36,7 @@ char* createNotacaoSvg(Notation anot){
     value = (Anotacao *) anot;
     result = (char*) calloc(555, sizeof(char));
     if(value->w < 0 || value->h < 0 || value->x < 0 || value->y <0){
-        sprintf(result, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke-width=\"2\" stroke=\"%s\" />",
+        sprintf(result, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke-width=\"5\" stroke=\"%s\" stroke-dasharray=\"5,5\"/>",
         value->w*(-1), value->h*(-1), value->x*(-1), value->y*(-1), value->cor1);    
     }else{
         if(value->w == 0 && value->h == 0){
