@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include"kdtree.h"
+#include "../KDTREE/kdtree.h"
+#include "../HashTable/hashtable.h"
 
 typedef void* GrafoD;   
 typedef void* Aresta;   
 typedef void* Vertice;  
-typedef void* Lista;
-typedef void* KDT;
-typedef void* KTD_Value;
-typedef void* KDTREE;
-typedef void* HASH;
 
 typedef struct VerticeV{
     char *id;
@@ -30,23 +26,101 @@ typedef struct ArestaP{
 }ArestaP;
 
 typedef struct Grafo{
-    KDTREE vertices;
-    HASH left;
-    HASH right;
-    HASH ID;
+    KDT vertices;
+    HashTable left;
+    HashTable right;
+    HashTable ID;
 }Grafo;
 
 //-------------------------------------------------------------------------------------------------------------
 
+//compara "xy" grafo
+int compareGD(Vertice v1, Vertice v2, int dim){
+
+    VerticeV *V1;
+    VerticeV *V2;
+    int cmp;
+
+    V1 = (VerticeV *) v1;
+    V2 = (VerticeV *) v2;
+    cmp = dim % 2;
+
+    if(dim==0){
+       return V1->x > V2->x ? 1 : (V1->x < V2->x ? -1 : 0);
+    }else{
+        return V1->y > V2->y ? 1 : (V1->y < V2->y ? -1 : 0);
+    }
+}
+
+//compara cep encontrado com cep procurado - 1 p/ true(igual) e 0 p/ false(diferente)
+int compareH_CEP(HashTable itemA, Aresta itemB){
+
+    ArestaP *found, *search;
+    int i;
+
+    found = (ArestaP *) itemA;
+    search = (ArestaP *) itemB;
+
+    i = strcmp(found->cepL,search->cepL);
+    if(i==0){
+        return 1;
+    }
+    i = strcmp(found->cepL,search->cepR);
+    if(i==0){
+        return 1;
+    }
+    i = strcmp(found->cepR,search->cepR);
+    if(i==0){
+        return 1;
+    }
+    i = strcmp(found->cepR,search->cepL);
+    if(i==0){
+        return 1;
+    }
+
+    return 0;
+} 
+
+//compara id encontrado com id procurado
+int compareH_ID(HashTable itemA, Vertice itemB){
+
+    VerticeV *found, *search;
+
+    found = (VerticeV *) itemA;
+    search = (VerticeV *) itemB;
+
+    return strcmp(found->id,search->id);
+
+} 
+
+//hash encoding function
+int hashFunction(void *String, int n){
+
+    char *string;
+    int tam, hash;
+
+    string = (char *) String;
+
+    tam = strlen(string);
+    hash = 0;
+
+    while(*string != 0){
+        hash += tam*(*string);
+        string++;
+        tam--;
+    }
+    return n < 0 ? hash : hash%n;
+}
+
 //cria estrutura grafo
-void* GRAFO_CREATE(int modulo){
+void* GRAFO_CREATE(int n){
     Grafo* result;
 
     result = (Grafo*) calloc(1, sizeof(Grafo));
-    result->vertices = KDT_CREATE(compareGD,2);
-    result->left = HASH_CREATE(n,compareH_CEP, hashFunction);
-    result->right = HASH_CREATE(n,compareH_CEP, hashFunction);
-    result->ID = HASH_CREATE(n,compareH_ID, hashFunction);
+    result->vertices = KDT_create(compareGD,2);
+    result->left = create_hashtable(n,compareH_CEP, hashFunction);
+    result->right = create_hashtable(n,compareH_CEP, hashFunction);
+    result->ID = create_hashtable(n,compareH_ID, hashFunction);
     return (void*) result;
 }
 
@@ -57,7 +131,7 @@ void *grafoD_criar(GrafoD gd, char *id, float x, float y){
 
     VerticeV *grafo = malloc(1*sizeof(VerticeV));
     grafo= malloc(1*sizeof(VerticeV));
-    grafo->id = malloc(atrlen(id)*sizeof(char));
+    grafo->id = malloc(strlen(id)*sizeof(char));
     strcpy(grafo->id,id);
 
     KDT_insert(gd, grafo);
@@ -95,7 +169,7 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
 //função retorna uma lista de adjacentes - destinos
 Lista grafoD_listaAdjacente(Vertice v1){
 
-    VerticeV *grafo = (Vertice *) v1;
+    VerticeV *grafo = (VerticeV *) v1;
 
     return grafo->aresta;
 
@@ -115,82 +189,4 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
 
     return 0;
 
-}
-
-//compara "xy" grafo
-int compareGD(Vertice v1, Vertice v2, int dim){
-
-    VerticeV *V1;
-    VerticeV *V2;
-    int cmp;
-
-    V1 = (VerticeV *) v1;
-    V2 = (VerticeV *) v2;
-    cmp = dim % 2;
-
-    if(dim==0){
-       return V1->x > V2->x ? 1 : (V1->x < V2->x ? -1 : 0);
-    }else{
-        return V1->y > V2->y ? 1 : (V1->y < V2->y ? -1 : 0);
-    }
-}
-
-//compara cep encontrado com cep procurado - 1 p/ true(igual) e 0 p/ false(diferente)
-int compareH_CEP(HASH itemA, Aresta itemB){
-
-    ArestaP *found, *search;
-    int i;
-
-    found = (ArestaP *) itemA;
-    search = (ArestaP *) itemB;
-
-    i = strcmp(found->cepL,search->cepL));
-    if(i==0){
-        return 1;
-    }
-    i = strcmp(found->cepL,search->cepR));
-    if(i==0){
-        return 1;
-    }
-    i = strcmp(found->cepR,search->cepR));
-    if(i==0){
-        return 1;
-    }
-    i = strcmp(found->cepR,search->cepL));
-    if(i==0){
-        return 1;
-    }
-
-    return 0;
-} 
-
-//compara id encontrado com id procurado
-int compareH_ID(HASH itemA, Vertice itemB){
-
-    VerticeV *found, *search;
-
-    found = (VerticeV *) itemA;
-    search = (VerticeV *) itemB;
-
-    return strcmp(found->id,search->id);
-
-} 
-
-//hash encoding function
-int hashFunction(void *String, int n){
-
-    char *string;
-    int tam, hash;
-
-    string = (char *) String;
-
-    tam = strlen(string);
-    hash = 0;
-
-    while(*string != 0){
-        hash += tam*(*string);
-        string++;
-        tam--;
-    }
-    return n < 0 ? hash : hash%n;
 }

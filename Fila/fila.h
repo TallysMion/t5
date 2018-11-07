@@ -22,4 +22,6 @@ Value remove_Fila(Fila fila);
 
 void freeFila(Fila fila);
 
+int lenghFila(Fila fila);
+
 #endif

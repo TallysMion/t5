@@ -6,6 +6,7 @@
 #include "../Fila/fila.h"
 #include "../KDTREE/kdtree.h"
 #include "../HashTable/hashtable.h"
+#include "../Grafos/GrafoD.h"
 
 
 /*entrutura das informações base do programa*/
@@ -28,24 +29,24 @@ typedef struct config{
 typedef struct database{
     int maxDrawerSize;
     Lista   *Drawer;
+    Lista   Reg;
 
     KDT         HidrantesTree;
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
-    KDT         PessoaTree;
-    KDT         EstabelecimentoTree;
 
     HashTable   EstabelecimentoType;
+    HashTable   *EstabHash; /*id*/
+    HashTable   *enderecoPessoa; /*cep*/
     HashTable   *HidrantesHash; /*id*/
     HashTable   *SemaforosHash; /*id*/ 
     HashTable   *RadioBaseHash; /*id*/
-
     HashTable   *PessoaCepHash; /*cpf*/
-    HashTable   *EstabHash; /*id*/
     HashTable   *cepQuadraHash; /*cep*/
     HashTable   *enderecoEstab; /*cep*/
-    HashTable   *enderecoPessoa; /*cep*/
+
+    GrafoD      grafo;
 
 }Database;
 
@@ -56,6 +57,7 @@ typedef struct Info{
     char *q;
     char *ec;
     char *pm;
+    char *via;
 
     int size;
 
@@ -63,11 +65,13 @@ typedef struct Info{
     Fila notsQRY; /*Anotações para SVG*/
     Fila notsEC;  /*Anotações para SVG*/
     Fila notsPm;  /*Anotações para SVG*/
+    Fila notsVia; /*Anotações para SVG*/
 
     Fila respGEO; /*Anotações para TXT*/
     Fila respQRY; /*Anotações para TXT*/
     Fila respEC;  /*Anotações para TXT*/
     Fila respPM;  /*Anotações para TXT*/
+    Fila respVia; /*Anotações para TXT*/
 
     Database *bd; /*banco de dados*/
 
@@ -97,5 +101,17 @@ Fila getCommandsForPM(Info* info);
 
 /*libera a memoria de config*/
 void freeConfig(Info *info);
+
+/*Inicia as hash do GEO*/
+void inicGEO(Info* info, int size);
+
+/*Inicia as Hash do PM*/
+void inicPM(Info* info, int size);
+
+/*Inicia as Hash do EC*/
+void inicEC(Info* info, int size);
+
+/*Inicia a estrutura da Via*/
+void inicVIA(Info* info, int size);
 
 #endif

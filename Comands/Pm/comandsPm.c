@@ -15,7 +15,6 @@ int createPessoa(char* text, Info* info){
     nascimento = (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s %s %s %s %s", cpf, nome, sobrenome, sexo, nascimento);
     Pessoa ps = Pessoa_create(cpf, nome, sobrenome, sexo, nascimento);
-    KDT_insert(info->bd->PessoaTree, ps);
     insert_hashtable(info->bd->PessoaCepHash, ps);   
     return 1;
 }

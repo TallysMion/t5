@@ -34,12 +34,14 @@ void* Pessoa_create(char* cpf, char* nome, char* sobrenome, char* sexo, char* na
     pessoa->nome        = (char*) calloc(strlen(nome)+2, sizeof(char));
     pessoa->sobrenome   = (char*) calloc(strlen(sobrenome)+2, sizeof(char));
     pessoa->sexo        = (char*) calloc(strlen(sexo)+2, sizeof(char));
+    pessoa->nasc        = (char*) calloc(strlen(nasc)+2, sizeof(char));
     pessoa->endereco    = NULL;
 
     strcpy(pessoa->cpf, cpf);
     strcpy(pessoa->nome, nome);
     strcpy(pessoa->sobrenome, sobrenome);
     strcpy(pessoa->sexo, sexo);
+    strcpy(pessoa->nasc, nasc);
 
     return (void*) pessoa;
 
@@ -182,7 +184,7 @@ char* Pessoa_relatorio(void* pessoa){
     if(pes->endereco == NULL){
         sprintf(result, "%s", pes->nome);
     }else{
-        sprintf(result, "%s, %s %s, nº %s - %s", pes->nome, pes->endereco->cep, pes->endereco->face, pes->endereco->num, pes->endereco->comp);
+        sprintf(result, "%s (%s), %s %s, nº %s - %s", pes->nome, pes->nasc, pes->endereco->cep, pes->endereco->face, pes->endereco->num, pes->endereco->comp);
     }
     return result;
 }
