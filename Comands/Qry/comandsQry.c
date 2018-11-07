@@ -15,6 +15,7 @@
 #include "../../Estabelecimento/estabelecimento.h"
 #include "../../KDTREE/kdtree.h"
 #include "../../HashTable/hashtable.h"
+#include "../../Registrador/registrador.h"
 
 
 /*Reporta quadras e equipamentos dentro do retanguo*/
@@ -2021,3 +2022,110 @@ void desapropriar(char* text, Info* info){
 
 }
 
+void pessoaToReg(char* text, Info* info){
+    char *aux, *id, *cpf;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    cpf = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s", id, cpf);
+    Pessoa pAux = Pessoa_create(cpf, "", "", "", "");
+    Pessoa pes = get_hashtable(info->bd->PessoaCepHash, pAux);
+    free(pAux);
+    if(pes == NULL){
+        insert_Fila(info->respQRY, "Pessoa Não Encontrada\n");
+        return;
+    }
+    regis reg = create_Reg(id, Pessoa_getCordGeo(pes, info));
+    insert_hashtable(info->bd->Reg, reg);
+    char* result;
+    result = (char*) calloc(55, sizeof(char));
+    sprintf(result, "%s  <--  %s\n", id, cpf);
+    insert_Fila(info->respQRY, result);
+}
+
+void enderecoToReg(char* text, Info* info){
+    char *aux, *id, *cep, *face, *num;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    cep = (char*) calloc(55, sizeof(char));
+    face = (char*) calloc(55, sizeof(char));
+    num = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s %s %s", id, cep, face, num);
+    Pessoa pAux = Pessoa_create("", "", "", "", "");
+    Pessoa_SetEndereco(pAux, cep, face, num, "");
+    double *cord;
+    cord = Pessoa_getCordGeo(pAux, info);
+    regis reg = create_Reg(id, cord);
+    Pessoa_Free(pAux);
+    insert_hashtable(info->bd->Reg, reg);
+    char* result;
+    result = (char*) calloc(55, sizeof(char));
+    sprintf(result, "%s  <--  %s %s nº %s - (Cord: [%lf , %lf])\n", id, cep, face, num, cord[0], cord[1]);
+    insert_Fila(info->respQRY, result);
+}
+
+void equipUrbanToReg(char* text, Info* info){
+    char *aux, *id, *item;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    item = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s", id, item);
+    void* it, *temp;
+    double *cord;
+    it == NULL; temp == NULL; cord == NULL;
+
+    if(it == NULL){
+        temp = createHidrante(it, "", "", 0, 0);
+        it = get_hashtable(info->bd->HidrantesHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircHidr(it));
+    }
+    if(it == NULL){
+        temp = createSemaforo(it, "", "", 0, 0);
+        it = get_hashtable(info->bd->SemaforosHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircSemaf(it));
+    }
+    if(it == NULL){
+        temp = createRadioB(it, "", "", 0, 0);
+        it = get_hashtable(info->bd->RadioBaseHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircRadioB(it));
+    }
+    if(it == NULL){
+        insert_Fila(info->respQRY, "Item Não Encontrado!\n");
+        return;
+    }
+    if(cord == NULL){
+        insert_Fila(info->respQRY, "Cordenada Não Encontrado!\n");
+        return;
+    }
+    regis reg = create_Reg(id, cord);
+    insert_hashtable(info->bd->Reg, reg);
+}
+
+void cordToReg(char* text, Info* info){
+    char *aux, *id;
+    double x, y;
+    double* cord;
+    cord = (double*) calloc(2, sizeof(double));
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %lf %lf", id, &x, &y);
+    cord[0] = x;
+    cord[1] = y;
+    regis reg = create_Reg(id, cord);
+    insert_hashtable(info->bd->Reg, reg);
+}

@@ -80,4 +80,17 @@
     /*Desapropria uma região*/
     void desapropriar(char* text, Info* info);
 
+    /*Inclui a cordenada geografica de uma pessoa(cpf) no registrador(r)*/
+    void pessoaToReg(char* text, Info* info);
+
+    /*Inclui a cordenada geografica de um endereco no registrador(r)*/
+    void enderecoToReg(char* text, Info* info);
+
+    /*Inclui a cordenada geografica do equipamento urbano no registrador(r)*/
+    void equipUrbanToReg(char* text, Info* info);
+
+    /*Inclui a cordenada geografica no registrador(r)*/
+    void cordToReg(char* text, Info* info);
+
+
 #endif

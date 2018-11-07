@@ -29,13 +29,13 @@ typedef struct config{
 typedef struct database{
     int maxDrawerSize;
     Lista   *Drawer;
-    Lista   Reg;
 
     KDT         HidrantesTree;
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
 
+    HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/
     HashTable   *enderecoPessoa; /*cep*/

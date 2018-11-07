@@ -13,6 +13,7 @@
 #include "../Quadra/quadra.h"
 #include "../Radio-Base/radio-base.h"
 #include "../Semaforo/semaforo.h"
+#include "../Registrador/registrador.h"
 
 #define MODULOHASH 15
 
@@ -36,13 +37,13 @@ typedef struct config{
 typedef struct database{
     int maxDrawerSize;
     Lista   *Drawer;
-    Lista   Reg;
 
     KDT         HidrantesTree;
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
 
+    HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/
     HashTable   *enderecoPessoa; /*cep*/
@@ -203,7 +204,6 @@ Info* configIn(int argc, const char *argv[]){
     
     //LISTAS
     result->bd->Drawer  = Lista_createLista();
-    result->bd->Reg     = Lista_createLista();
 
     //KDTREE
     //void*  KDT_create(int (*compare)(void*, void*, int), int dimension);
@@ -214,6 +214,7 @@ Info* configIn(int argc, const char *argv[]){
 
 
     //HASHTABLE
+    result->bd->Reg     = create_hashtable(MODULOHASH, HashCompareRegistrador, hashCodeRegistrador);
     //HashTable create_hashtable(int modulo, int (*compare)(void*, char*), int hash(void*, int));
     // result->bd->HidrantesHash       = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
     // result->bd->SemaforosHash       = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
