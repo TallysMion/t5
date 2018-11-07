@@ -18,6 +18,7 @@ typedef struct VerticeV{
 typedef struct ArestaP{
     VerticeV *v2;
     int disable;
+    char *nome; 
     char *cepR;
     char *cepL;
     float tam;
@@ -94,12 +95,33 @@ int compareH_ID(HashTable itemA, Vertice itemB){
 } 
 
 //hash encoding function
-int hashFunction(void *String, int n){
-
+int hashFunctionArest(void *Item, int n){
+    ArestaP * v;
+    v = (ArestaP*)Item;
     char *string;
     int tam, hash;
 
-    string = (char *) String;
+    string = (char *) v->nome;
+
+    tam = strlen(string);
+    hash = 0;
+
+    while(*string != 0){
+        hash += tam*(*string);
+        string++;
+        tam--;
+    }
+    return n < 0 ? hash : hash%n;
+}
+
+//hash encoding function
+int hashFunction(void *Item, int n){
+    VerticeV * v;
+    v = (VerticeV*)Item;
+    char *string;
+    int tam, hash;
+
+    string = (char *) v->id;
 
     tam = strlen(string);
     hash = 0;
@@ -118,8 +140,8 @@ void* GRAFO_CREATE(int n){
 
     result = (Grafo*) calloc(1, sizeof(Grafo));
     result->vertices = KDT_create(compareGD,2);
-    result->left = create_hashtable(n,compareH_CEP, hashFunction);
-    result->right = create_hashtable(n,compareH_CEP, hashFunction);
+    result->left = create_hashtable(n,compareH_CEP, hashFunctionArest);
+    result->right = create_hashtable(n,compareH_CEP, hashFunctionArest);
     result->ID = create_hashtable(n,compareH_ID, hashFunction);
     return (void*) result;
 }
@@ -128,13 +150,14 @@ void* GRAFO_CREATE(int n){
 void *grafoD_criar(GrafoD gd, char *id, float x, float y){
 
     Grafo *gr;
+    gr = (Grafo*)gd;
 
     VerticeV *grafo = malloc(1*sizeof(VerticeV));
     grafo= malloc(1*sizeof(VerticeV));
     grafo->id = malloc(strlen(id)*sizeof(char));
     strcpy(grafo->id,id);
 
-    KDT_insert(gd, grafo);
+    KDT_insert(gr->vertices, grafo);
     gr = (Grafo *) gd;
     insert_hashtable(gr->ID, grafo);
 
@@ -142,18 +165,22 @@ void *grafoD_criar(GrafoD gd, char *id, float x, float y){
 }
 
 //função insere uma aresta
-void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed){
+void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed, char* nome){
 
-    VerticeV *V1;
+    VerticeV *V1, *aux;
     Grafo *GD;
 
     GD = (Grafo *) gd;
-
-    V1 = (VerticeV *) get_hashtable(GD->ID, vID1);
+    aux = calloc(1, sizeof(VerticeV));
+    aux->id = vID1;
+    V1 = (VerticeV *) get_hashtable(GD->ID, aux);
     V1->aresta = malloc(sizeof(ArestaP));
-    V1->aresta->v2 = (VerticeV *) get_hashtable(GD->ID, vID2);
+    aux->id = vID2;
+    V1->aresta->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
 
     V1->aresta->disable = 0;
+    V1->aresta->nome = malloc(strlen(nome)*sizeof(char));
+    strcpy(V1->aresta->nome, nome);
     V1->aresta->cepR = malloc(strlen(rightCEP)*sizeof(char));
     strcpy(V1->aresta->cepR, rightCEP);
     V1->aresta->cepL = malloc(strlen(leftCEP)*sizeof(char));

@@ -1,6 +1,6 @@
 m? b02.4
 
-Flavio_Tiago, b02.4 L, nº 10 - -Ana_Micaela, b02.4 O, nº 60 - -
+Flavio_Tiago (09/08/1963), b02.4 L, nº 10 - -Ana_Micaela (03/10/1983), b02.4 O, nº 60 - -
 m? b03.3
 
 
@@ -12,7 +12,7 @@ m? b02.1
 
 m? b04.5
 
-Pedro_Bernardo, b04.5 L, nº 50 - -
+Pedro_Bernardo (25/05/2013), b04.5 L, nº 50 - -
 m? cep-inexistente
 
 
@@ -24,28 +24,28 @@ mr? 745.000000 585.000000 240.000000 160.000000
 
 mr? 0.000000 0.000000 600.000000 400.000000
 
-Ernestina_Dirk, b02.3 S, nº 70 - ap-794Aad_Mart, b01.1 L, nº 40 - ap-928mr? 132.500000 132.500000 600.000000 400.000000
+Ernestina_Dirk (09/10/2004), b02.3 S, nº 70 - ap-794Aad_Mart (10/01/1980), b01.1 L, nº 40 - ap-928mr? 132.500000 132.500000 600.000000 400.000000
 
-Joana_Dorus, b04.4 O, nº 10 - -Taisa_Paulo, b04.4 S, nº 40 - -Zelia_Isabella, b04.3 O, nº 40 - -Larz_Valdir, b04.3 S, nº 30 - ap-1005Ernestina_Dirk, b02.3 S, nº 70 - ap-794Flavio_Tiago, b02.4 L, nº 10 - -Ana_Micaela, b02.4 O, nº 60 - -mr? 565.000000 465.000000 600.000000 400.000000
+Joana_Dorus (25/05/1984), b04.4 O, nº 10 - -Taisa_Paulo (05/04/2007), b04.4 S, nº 40 - -Zelia_Isabella (14/06/1984), b04.3 O, nº 40 - -Larz_Valdir (06/07/2000), b04.3 S, nº 30 - ap-1005Ernestina_Dirk (09/10/2004), b02.3 S, nº 70 - ap-794Flavio_Tiago (09/08/1963), b02.4 L, nº 10 - -Ana_Micaela (03/10/1983), b02.4 O, nº 60 - -mr? 565.000000 465.000000 600.000000 400.000000
 
-Dirk_Doortje, b05.5 N, nº 30 - ap-1198Gisela_Joppe, b05.5 S, nº 60 - -mr? 0.000000 0.000000 288.333333 221.666667
+Dirk_Doortje (21/02/1970), b05.5 N, nº 30 - ap-1198Gisela_Joppe (07/11/2000), b05.5 S, nº 60 - -mr? 0.000000 0.000000 288.333333 221.666667
 
-Aad_Mart, b01.1 L, nº 40 - ap-928mr? 288.333333 221.666667 288.333333 221.666667
+Aad_Mart (10/01/1980), b01.1 L, nº 40 - ap-928mr? 288.333333 221.666667 288.333333 221.666667
 
 mr? 720.833333 554.166667 288.333333 221.666667
 
 dm? 000.000.471-55
 
-Joao_Doortje, b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
+Joao_Doortje (13/11/1989), b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
 dm? 000.000.521-59
 
-Martijn_Laura, b03.5 S, nº 20 - - (Cordenadas [645.000000,275.000000])
+Martijn_Laura (26/03/1964), b03.5 S, nº 20 - - (Cordenadas [645.000000,275.000000])
 dm? 000.001.351-00
 
-Maartje_Ankie, b04.1 L, nº 30 - - (Cordenadas [85.000000,400.000000])
+Maartje_Ankie (08/06/2004), b04.1 L, nº 30 - - (Cordenadas [85.000000,400.000000])
 dm? 000.000.291-73
 
-Larz_Valdir, b04.3 S, nº 30 - ap-1005 (Cordenadas [385.000000,370.000000])
+Larz_Valdir (06/07/2000), b04.3 S, nº 30 - ap-1005 (Cordenadas [385.000000,370.000000])
 de? 00000121/0001-00
 
 Vidracaria_M2-0 - Vidracaria, b05.4 S, nº 100 (Cordenadas [590.000000,465.000000])
@@ -60,31 +60,31 @@ de? 00000129/0001-00
 Confeccao_de_uniformes_M1-0 - Confeccao_de_uniformes, b05.5 S, nº 50 (Cordenadas [675.000000,465.000000])
 dm? 000.000.281-00
 
-Daniel_Luiz_Felipe, b04.1 S, nº 90 - - (Cordenadas [175.000000,370.000000])
+Daniel_Luiz_Felipe (05/12/1980), b04.1 S, nº 90 - - (Cordenadas [175.000000,370.000000])
 dm? 000.000.531-20
 
-Zelia_Isabella, b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
+Zelia_Isabella (14/06/1984), b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
 dm? 000.000.471-55
 
-Joao_Doortje, b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
+Joao_Doortje (13/11/1989), b01.5 L, nº 20 - ap-1158 (Cordenadas [625.000000,105.000000])
 dm? 000.000.031-07
 
-Rafael_Geert, b04.1 S, nº 60 - - (Cordenadas [145.000000,370.000000])
+Rafael_Geert (06/09/2012), b04.1 S, nº 60 - - (Cordenadas [145.000000,370.000000])
 dm? 000.000.531-20
 
-Zelia_Isabella, b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
+Zelia_Isabella (14/06/1984), b04.3 O, nº 40 - - (Cordenadas [475.000000,410.000000])
 rip 000.000.281-00
 
-Daniel_Luiz_Felipe, b04.1 S, nº 90 - -
+Daniel_Luiz_Felipe (05/12/1980), b04.1 S, nº 90 - -
 rip 000.000.531-20
 
-Zelia_Isabella, b04.3 O, nº 40 - -
+Zelia_Isabella (14/06/1984), b04.3 O, nº 40 - -
 rip 000.000.471-55
 
-Joao_Doortje, b01.5 L, nº 20 - ap-1158
+Joao_Doortje (13/11/1989), b01.5 L, nº 20 - ap-1158
 rip 000.000.031-07
 
-Rafael_Geert, b04.1 S, nº 60 - -
+Rafael_Geert (06/09/2012), b04.1 S, nº 60 - -
 rip 000.000.531-20
 
 Esta pessoa não existe
@@ -147,7 +147,7 @@ Restaurante:
 Restaurante_M4-0
 dpr 0.000000 0.000000 259.500000 199.500000
 
-Aad_Mart, b01.1 L, nº 40 - ap-928
+Aad_Mart (10/01/1980), b01.1 L, nº 40 - ap-928
 b01.1
 Hidr. -  id: hob01.1  -  x: 205.000000  -  y: 125.000000
 Hidr. -  id: hnb01.1  -  x: 145.000000  -  y: 165.000000
