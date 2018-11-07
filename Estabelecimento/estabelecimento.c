@@ -240,9 +240,9 @@ double* Estab_getCordGeo(void* estab, Info* info){
 
 char* Estab_relatorio(void* estab){
     Estab* est;
+    est = (Estab*) estab;
     char* result;
     result = (char*) calloc(510, sizeof(char));
-    est = (Estab*) estab;
     if(est->ende == NULL){
         sprintf(result, "%s - %s", est->nome, est->tipo->info);
     }else{
@@ -262,14 +262,20 @@ void* Estab_IdentEndereco(char* cep){
     end->estab = NULL;
 }
 
-char* Estab_getTipoCod(Estab* estab){
-    return estab->tipo->cod;
+char* Estab_getTipoCod(void* estab){
+    Estab* est;
+    est = (Estab*) estab;
+    return est->tipo->cod;
 }
 
-char* Estab_Tipo(Estab* estab){
-    return estab->tipo->info;
+char* Estab_Tipo(void* estab){
+    Estab* est;
+    est = (Estab*) estab;
+    return est->tipo->info;
 }
 
-char* Estab_Name(Estab* estab){
-    return estab->nome;
+char* Estab_Name(void* estab){
+    Estab* est;
+    est = (Estab*) estab;
+    return est->nome;
 }

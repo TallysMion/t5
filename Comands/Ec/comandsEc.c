@@ -33,7 +33,6 @@ int newEstab(char* text,Info *info){
     tipo = get_hashtable(info->bd->EstabelecimentoType, tipotemp);
     free(tipotemp);
     Estab estab = Estab_create(cnpj, tipo, cep, face, num, nome);
-    KDT_insert(info->bd->EstabelecimentoTree, estab);
     insert_hashtable(info->bd->EstabHash, estab);
     insert_hashtable(info->bd->enderecoEstab, Estab_getEndereco(estab));
     return 1;

@@ -13,15 +13,21 @@ int main(int argc, const char *argv[]){
     Fila comandos;    
     info = configIn(argc, argv);    
 
+
+
+
     comandos = getCommandsForGEO(info);    
+    inicGEO(info, lenghFila(comandos));
     if(comandos)
     startGEO(comandos, info);
 
     comandos = getCommandsForEC(info); 
+    inicEC(info, lenghFila(comandos));
     if(comandos)  
     startEc(comandos, info);
 
     comandos = getCommandsForPM(info); 
+    inicPM(info, lenghFila(comandos));
     if(comandos)  
     startPm(comandos, info);
 

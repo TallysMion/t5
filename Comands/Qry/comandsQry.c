@@ -41,7 +41,7 @@ void reportRec(char* text,Info *info){
             if(i){
 
                 Item it = Lista_get(quadras, t);
-                rectangle rc = getRecQuad(it);                    
+                void* rc = getRecQuad(it);                    
 
                 xi = getXRec(rc);
                 xf = xi + getWRec(rc);
@@ -70,7 +70,7 @@ void reportRec(char* text,Info *info){
             if(i){
                 
                 Item it = Lista_get(hidrantes, t);
-                circulo circ = getCircHidr(it);
+                void* circ = getCircHidr(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -98,7 +98,7 @@ void reportRec(char* text,Info *info){
             if(i){
                 
                 Item it = Lista_get(radios, t);
-                circulo circ = getCircRadioB(it);
+                void* circ = getCircRadioB(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -126,7 +126,7 @@ void reportRec(char* text,Info *info){
             if(i){
                 
                 Item it = Lista_get(semaforos, t);
-                circulo circ = getCircSemaf(it);
+                void* circ = getCircSemaf(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -146,7 +146,7 @@ void reportRec(char* text,Info *info){
         }
 
     //imprimir resultados
-    Notation nt = createNotacao("Black", w, h, x, y, "");
+    void* nt = createNotacao("Black", w, h, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 }
@@ -177,7 +177,7 @@ void reportCirc(char* text,Info* info){
             if(i){
 
                 Item it = Lista_get(quadras, t);
-                rectangle rc = getRecQuad(it);                    
+                void* rc = getRecQuad(it);                    
 
                 xi = getXRec(rc);
                 xf = xi + getWRec(rc);
@@ -213,7 +213,7 @@ void reportCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(hidrantes, t);
-                circulo circ = getCircHidr(it);
+                void* circ = getCircHidr(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -244,7 +244,7 @@ void reportCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(radios, t);
-                circulo circ = getCircRadioB(it);
+                void* circ = getCircRadioB(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -274,7 +274,7 @@ void reportCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(semaforos, t);
-                circulo circ = getCircSemaf(it);
+                void* circ = getCircSemaf(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -296,7 +296,7 @@ void reportCirc(char* text,Info* info){
         }
 
     //imprimir resultados
-    Notation nt = createNotacao("Black", r, 0, x, y, "");
+    void* nt = createNotacao("Black", r, 0, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 }
@@ -330,7 +330,7 @@ void deleteQuadrasRec(char* text,Info* info){
             if(i){
 
                 Item it = Lista_get(quadras, t);
-                rectangle rc = getRecQuad(it);                    
+                void* rc = getRecQuad(it);                    
 
                 xi = getXRec(rc);
                 xf = xi + getWRec(rc);
@@ -357,7 +357,7 @@ void deleteQuadrasRec(char* text,Info* info){
 
 
     //imprimir resultados
-    Notation nt = createNotacao("red", w, h, x, y, "");
+    void* nt = createNotacao("red", w, h, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 }       
@@ -404,7 +404,7 @@ void deleteUrbamEqRec(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(hidrantes, t);
-                circulo circ = getCircHidr(it);
+                void* circ = getCircHidr(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -437,7 +437,7 @@ void deleteUrbamEqRec(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(radios, t);
-                circulo circ = getCircRadioB(it);
+                void* circ = getCircRadioB(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -470,7 +470,7 @@ void deleteUrbamEqRec(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(semaforos, t);
-                circulo circ = getCircSemaf(it);
+                void* circ = getCircSemaf(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -496,7 +496,7 @@ void deleteUrbamEqRec(char* text,Info* info){
         }
 
     //imprimir resultados
-    Notation nt = createNotacao("Black", w, h, x, y, "");
+    void* nt = createNotacao("Black", w, h, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 }
@@ -531,7 +531,7 @@ void deleteQuadrasCirc(char* text,Info* info){
             if(i){
 
                 Item it = Lista_get(quadras, t);
-                rectangle rc = getRecQuad(it);                    
+                void* rc = getRecQuad(it);                    
 
                 xi = getXRec(rc);
                 xf = xi + getWRec(rc);
@@ -563,7 +563,7 @@ void deleteQuadrasCirc(char* text,Info* info){
 
 
     //imprimir resultados
-    Notation nt = createNotacao("red", r, 0, x, y, "");
+    void* nt = createNotacao("red", r, 0, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 
@@ -611,7 +611,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(hidrantes, t);
-                circulo circ = getCircHidr(it);
+                void* circ = getCircHidr(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -647,7 +647,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(radios, t);
-                circulo circ = getCircRadioB(it);
+                void* circ = getCircRadioB(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -683,7 +683,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(semaforos, t);
-                circulo circ = getCircSemaf(it);
+                void* circ = getCircSemaf(it);
 
                 xi = getXCirc(circ);
                 yi = getYCirc(circ);
@@ -711,7 +711,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
         }
 
     //imprimir resultados
-    Notation nt = createNotacao("Black", r, 0, x, y, "");
+    void* nt = createNotacao("Black", r, 0, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
 }
@@ -925,7 +925,7 @@ void equipOnCepOrId(char* text,Info* info){
 
         //achar cep
 
-        rectangle rt;
+        void* rt;
         rt = NULL;
         Lista quadras = KDT_getAll(info->bd->QuadrasTree);
         t=Lista_getFirst(quadras);
@@ -961,7 +961,7 @@ void equipOnCepOrId(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(hidrantes, t);
-                circulo circ = getCircHidr(it);
+                void* circ = getCircHidr(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -989,7 +989,7 @@ void equipOnCepOrId(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(radios, t);
-                circulo circ = getCircRadioB(it);
+                void* circ = getCircRadioB(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -1017,7 +1017,7 @@ void equipOnCepOrId(char* text,Info* info){
             if(i){
                 
                 Item it = Lista_get(semaforos, t);
-                circulo circ = getCircSemaf(it);
+                void* circ = getCircSemaf(it);
 
                 xi = getXCirc(circ) - getRCirc(circ);
                 xf = getXCirc(circ) + getRCirc(circ);
@@ -1081,8 +1081,8 @@ void closestRBase(char* text,Info* info){
     insert_Fila(info->respQRY, temp);
 
     double xt, yt;
-    Notation nt;
-    circulo cr;
+    void* nt;
+    void* cr;
     //criar as duas anotações
     cr = getCircRadioB(it1);
     xt = getXCirc(cr);
@@ -1145,7 +1145,7 @@ void closeQRY(Info* info){
     //Imprimir notas GEO
     auxF = create_Fila();
     while(!empty_Fila(info->notsGeo)){
-        auxN = (Notation) remove_Fila(info->notsGeo);
+        auxN = (void*) remove_Fila(info->notsGeo);
         insert_Fila(auxF,(void*) auxN);
         fprintf(arqSVG_QRY, "%s\n", createNotacaoSvg(auxN));
     }
@@ -1155,7 +1155,7 @@ void closeQRY(Info* info){
     //imprimir notas QRY
     auxF = create_Fila();
     while(!empty_Fila(info->notsQRY)){
-        auxN = (Notation) remove_Fila(info->notsQRY);
+        auxN = (void*) remove_Fila(info->notsQRY);
         insert_Fila(auxF,(void*) auxN);
         fprintf(arqSVG_QRY, "%s\n", createNotacaoSvg(auxN));
     }
@@ -1311,7 +1311,7 @@ void whoIsInThisArea(char* text, Info* info){
         if(i){
 
             Item it = Lista_get(quadras, t);
-            rectangle rc = getRecQuad(it);                    
+            void* rc = getRecQuad(it);                    
 
             xi = getXRec(rc);
             xf = xi + getWRec(rc);
@@ -1341,8 +1341,8 @@ void whoAreYou(char* text, Info* info){
     cpf = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cpf);
-    Pessoa *p = Pessoa_create(cpf, "", "", "", "");
-    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    void* *p = Pessoa_create(cpf, "", "", "", "");
+    void* pessoa = get_hashtable(info->bd->PessoaCepHash, p);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Pessoa não encontrada\n");
         return;
@@ -1358,7 +1358,7 @@ void whoAreYou(char* text, Info* info){
         result = (char*) calloc(255, sizeof(char));
         sprintf(result, "%s (Cordenadas [%lf,%lf])\n", Pessoa_relatorio(pessoa), cord[0], cord[1]);
         insert_Fila(info->respQRY, result);
-        Notation nt = createNotacao("RED", 5, 0, cord[0], cord[1], cpf);
+        void* nt = createNotacao("RED", 5, 0, cord[0], cord[1], cpf);
         insert_Fila(info->notsQRY, nt);
     }
 }
@@ -1373,8 +1373,8 @@ void whoAreYouEstab(char* text, Info* info){
     cnpj = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cnpj);
-    Estab *e = Estab_create(cnpj, NULL, "", "", "", "");
-    Estab estab = get_hashtable(info->bd->EstabHash, e);
+    void* *e = Estab_create(cnpj, NULL, "", "", "", "");
+    void* estab = get_hashtable(info->bd->EstabHash, e);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Estabelecimento não encontrado\n");
         return;
@@ -1390,7 +1390,7 @@ void whoAreYouEstab(char* text, Info* info){
         result = (char*) calloc(255, sizeof(char));
         sprintf(result, "%s (Cordenadas [%lf,%lf])\n", Estab_relatorio(estab), cord[0], cord[1]);
         insert_Fila(info->respQRY, result);
-        Notation nt = createNotacao("PURPLE", 5, 0, cord[0], cord[1], cnpj);
+        void* nt = createNotacao("PURPLE", 5, 0, cord[0], cord[1], cnpj);
         insert_Fila(info->notsQRY, nt);
     }
 }
@@ -1405,8 +1405,8 @@ void bread(char* text, Info* info){
     cpf = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cpf);
-    Pessoa *p = Pessoa_create(cpf, "", "", "", "");
-    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    void* *p = Pessoa_create(cpf, "", "", "", "");
+    void* pessoa = get_hashtable(info->bd->PessoaCepHash, p);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Esta pessoa não existe\n");
         return;
@@ -1422,12 +1422,11 @@ void bread(char* text, Info* info){
         result = (char*) calloc(255, sizeof(char));
         sprintf(result, "%s\n", Pessoa_relatorio(pessoa));
         insert_Fila(info->respQRY, result);
-        Notation nt = createNotacao("RED", 0, 1, cord[0], cord[1], cpf);
+        void* nt = createNotacao("RED", 0, 1, cord[0], cord[1], cpf);
         insert_Fila(info->notsQRY, nt);
     }
     //remove
     remove_hashtable(info->bd->PessoaCepHash, pessoa);
-    KDT_remove(info->bd->PessoaTree, pessoa);
     void* end = Pessoa_getEndereco(pessoa);
     if(end != NULL)
     remove_hashtable(info->bd->enderecoPessoa, end);
@@ -1496,7 +1495,7 @@ void whatHaveInThisArea(char* text, Info* info){
         if(i){
 
             Item it = Lista_get(quadras, t);
-            rectangle rc = getRecQuad(it);                    
+            void* rc = getRecQuad(it);                    
 
             xi = getXRec(rc);
             xf = xi + getWRec(rc);
@@ -1607,7 +1606,7 @@ void whatHaveInThisArea_typeOrder(char* text, Info* info){
         if(i){
 
             Item it = Lista_get(quadras, t);
-            rectangle rc = getRecQuad(it);                    
+            void* rc = getRecQuad(it);                    
 
             xi = getXRec(rc);
             xf = xi + getWRec(rc);
@@ -1629,7 +1628,7 @@ void whatHaveInThisArea_typeOrder(char* text, Info* info){
 void closestHidrant(char* text, Info* info){
     char* temp, *aux, *cep, *face;
     double num;
-    Notation nt;
+    void* nt;
     temp = (char*) calloc (155, sizeof(char));
     strcpy(temp, text);
     insert_Fila(info->respQRY, temp);
@@ -1640,8 +1639,8 @@ void closestHidrant(char* text, Info* info){
     sscanf(aux, "%s %s %lf",cep, face, &num);
 
     double x,y;
-    quadra q = createQuadra(cep, "", "", 0, 0, 0, 0);
-    quadra qd = get_hashtable(info->bd->cepQuadraHash, q);
+    void* q = createQuadra(cep, "", "", 0, 0, 0, 0);
+    void* qd = get_hashtable(info->bd->cepQuadraHash, q);
     freeQuad(q);
     x = getXRec(getRecQuad(qd));
     y = getYRec(getRecQuad(qd));
@@ -1662,8 +1661,8 @@ void closestHidrant(char* text, Info* info){
     nt = createNotacao("RED", 0, 0, x, y, "X");
     insert_Fila(info->notsQRY, nt);
 
-    hidrante hidr = createHidrante("", "", "", x, y);
-    hidrante hd = closestNeibord(info->bd->HidrantesTree, hidr);
+    void* hidr = createHidrante("", "", "", x, y);
+    void* hd = closestNeibord(info->bd->HidrantesTree, hidr);
     free(hidr);
     nt = createNotacao("RED", x*(-1), y*(-1), getXCirc(getCircHidr(hd))*(-1), getYCirc(getCircHidr(hd))*(-1), "");
     insert_Fila(info->notsQRY, nt);
@@ -1679,9 +1678,9 @@ void closestHidrant(char* text, Info* info){
 
 void closestHidrantFromRB(char* text, Info* info){
     char *temp, *aux, *idRB, *result;
-    radioB rb, rbTemp;
-    hidrante hd;
-    Notation nt;
+    void* rb, *rbTemp;
+    void* hd;
+    void* nt;
     double dist, a, b;
     temp = (char*) calloc (155, sizeof(char));
     strcpy(temp, text);
@@ -1721,8 +1720,8 @@ void closeEstab(char* text, Info* info){
     cnpj = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cnpj);
-    Estab *Est = Estab_create(cnpj, NULL,  "", "", "", "");
-    Estab estab = get_hashtable(info->bd->EstabHash, Est);
+    void* Est = Estab_create(cnpj, NULL,  "", "", "", "");
+    void* estab = get_hashtable(info->bd->EstabHash, Est);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Este Estabelecimento não existe\n");
         return;
@@ -1734,7 +1733,6 @@ void closeEstab(char* text, Info* info){
     
     //remove
     remove_hashtable(info->bd->EstabHash, estab);
-    KDT_remove(info->bd->EstabelecimentoTree, estab);
     void* end = Estab_getEndereco(estab);
     if(end != NULL)
     remove_hashtable(info->bd->enderecoEstab, end);
@@ -1754,8 +1752,8 @@ void mudancaPessoa(char* text, Info* info){
     aux = text; aux += 4;
     sscanf(aux, "%s %s %s %s %s", cpf, cep, face, num, comp);
 
-    Pessoa *temp = Pessoa_create(cpf, "", "", "", "");
-    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, temp);
+    void* temp = Pessoa_create(cpf, "", "", "", "");
+    void* pessoa = get_hashtable(info->bd->PessoaCepHash, temp);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Pessoa nao Encontrada\n");
         return;
@@ -1778,7 +1776,7 @@ void mudancaPessoa(char* text, Info* info){
     cord_j = Pessoa_getCordGeo(pessoa, info);
 
     if(cord_i != NULL && cord_j != NULL){
-        Notation nt = createNotacao("GREEN", cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
+        void* nt = createNotacao(info->conf->colorMud, cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
         insert_Fila(info->notsQRY, nt);
     }
 }
@@ -1796,8 +1794,8 @@ void mudancaEstab(char* text, Info* info){
     aux = text; aux += 6;
     sscanf(aux, "%s %s %s %s", cnpj, cep, face, num);
 
-    Estab *temp = Estab_create(cnpj, NULL,  "", "", "", "");
-    Estab estab = get_hashtable(info->bd->EstabHash, temp);
+    void* temp = Estab_create(cnpj, NULL,  "", "", "", "");
+    void* estab = get_hashtable(info->bd->EstabHash, temp);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Estabelecimento nao Encontrado\n");
         return;
@@ -1820,7 +1818,7 @@ void mudancaEstab(char* text, Info* info){
     cord_j = Estab_getCordGeo(estab, info);
 
     if(cord_i != NULL && cord_j != NULL){
-        Notation nt = createNotacao("PURPLE", cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
+        void* nt = createNotacao(info->conf->colorMudec, cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
         insert_Fila(info->notsQRY, nt);
     }
     
@@ -1838,7 +1836,7 @@ void desapropriar(char* text, Info* info){
     aux = text; aux += 4;
     sscanf(aux, "%lf %lf %lf %lf", &x, &y, &w, &h);
 
-    Notation nt = createNotacao("BLUE", w, h, x, y, "");
+    void* nt = createNotacao("BLUE", w, h, x, y, "");
     insert_Fila(info->notsQRY, nt);
 
     //apagar quadra e tudo que esta nela, estabelecimentos e desapropriar pessoas(não matar)
@@ -1850,7 +1848,7 @@ void desapropriar(char* text, Info* info){
         if(cont){
 
             Item it = Lista_get(quadras, i);
-            rectangle rc = getRecQuad(it);                    
+            void* rc = getRecQuad(it);                    
 
             xi = getXRec(rc);
             xf = xi + getWRec(rc);
@@ -1867,13 +1865,12 @@ void desapropriar(char* text, Info* info){
                 while(1){
                     void* temp = Lista_get(enderecos, t);
                     if(temp){
-                        Estab estab = Estab_getEstabEndereco(temp);
+                        void* estab = Estab_getEstabEndereco(temp);
                         char * temp1; temp1 = (char*) calloc(155, sizeof(char));
                         sprintf(temp1, "%s\n", Estab_relatorio(estab));
                         insert_Fila(info->respQRY, temp1);
 
                         void* temp = Lista_getNext(enderecos, t);
-                        KDT_remove(info->bd->EstabelecimentoTree, estab);
                         remove_hashtable(info->bd->EstabHash, estab);
                         Lista_remove(enderecos, t);
                         t = temp;
@@ -1892,13 +1889,12 @@ void desapropriar(char* text, Info* info){
                 while(1){
                     void* temp = Lista_get(enderecos, t);
                     if(temp){
-                        Pessoa pess = Pessoa_getPessoaEndereco(temp);
+                        void* pess = Pessoa_getPessoaEndereco(temp);
                         char * temp1; temp1 = (char*) calloc(155, sizeof(char));
                         sprintf(temp1, "%s\n", Pessoa_relatorio(pess));
                         insert_Fila(info->respQRY, temp1);
 
                         void* temp = Lista_getNext(enderecos, t);
-                        KDT_remove(info->bd->PessoaTree, pess);
                         remove_hashtable(info->bd->PessoaCepHash, pess);
                         Lista_remove(enderecos, t);
                         t = temp;
@@ -1936,7 +1932,7 @@ void desapropriar(char* text, Info* info){
         if(i){
             
             Item it = Lista_get(hidrantes, t);
-            circulo circ = getCircHidr(it);
+            void* circ = getCircHidr(it);
 
             xi = getXCirc(circ) - getRCirc(circ);
             xf = getXCirc(circ) + getRCirc(circ);
@@ -1967,7 +1963,7 @@ void desapropriar(char* text, Info* info){
         if(i){
             
             Item it = Lista_get(radios, t);
-            circulo circ = getCircRadioB(it);
+            void* circ = getCircRadioB(it);
 
             xi = getXCirc(circ) - getRCirc(circ);
             xf = getXCirc(circ) + getRCirc(circ);
@@ -1998,7 +1994,7 @@ void desapropriar(char* text, Info* info){
         if(i){
             
             Item it = Lista_get(semaforos, t);
-            circulo circ = getCircSemaf(it);
+            void* circ = getCircSemaf(it);
 
             xi = getXCirc(circ) - getRCirc(circ);
             xf = getXCirc(circ) + getRCirc(circ);
