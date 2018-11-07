@@ -103,6 +103,26 @@ int executeQry(char* text, Info *info){
         closestHidrant(text, info);
         return 1;
     }
+    if(!strcmp(cmd, "hmp?")){
+        closestHidrantFromRB(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "fec")){
+        closeEstab(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "mud")){
+        mudancaPessoa(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "mudec")){
+        mudancaEstab(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "dpr")){
+        desapropriar(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }

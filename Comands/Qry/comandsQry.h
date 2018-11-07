@@ -64,4 +64,20 @@
     faz um relatorio sobre o hidrante e a distancia entre ele e o X*/
     void closestHidrant(char* text, Info* info);
 
+    /*Faz uma linha entre a RadioB e o hidrante mais proximo dela, 
+    faz um relatorio sobre a RadioB e o hidrante, incluindo a distancia entre eles*/
+    void closestHidrantFromRB(char* text, Info* info);
+
+    /*Fecha um estabelecimento comercial, e deleta todas as informações*/
+    void closeEstab(char* text, Info* info);
+
+    /*Uma pessoa ta de mudança, faz um relatorio no txt, e imprime uma linha no svg*/
+    void mudancaPessoa(char* text, Info* info);
+
+    /*Uma pessoa ta de mudança, faz um relatorio no txt, e imprime uma linha no svg*/
+    void mudancaEstab(char* text, Info* info);
+
+    /*Desapropria uma região*/
+    void desapropriar(char* text, Info* info);
+
 #endif

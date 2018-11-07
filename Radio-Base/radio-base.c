@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../Circulo/circulo.h"
 #include "../Anotacao/anotacao.h"
-#include "../Utils/Point.h"
+
 
 #define SIZE 10
 #define CENTER 1
@@ -71,19 +71,6 @@ cicle getCircRadioB(void* raB){
     RadioB *rb;
     rb = (RadioB*) raB;
     return (void*) createCirculo(0, rb->cor1, rb->cor2, SIZE, rb->x, rb->y);
-}
-
-Point* pointRB(void* raB){
-    RadioB *rb;
-    rb = (RadioB*) raB;
-
-    Point *pt;
-    pt = (Point *) calloc(1, sizeof(Point));
-    pt->id = (char*) calloc(155, sizeof(char));
-    strcpy(pt->id, rb->id);
-    pt->x = rb->x;
-    pt->y = rb->y;
-    return pt;
 }
 
 void setColorFillRB(void* semaf, char* color){

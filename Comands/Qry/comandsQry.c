@@ -13,8 +13,6 @@
 #include "../../Hidrante/hidrante.h"
 #include "../../Pessoa/pessoa.h"
 #include "../../Estabelecimento/estabelecimento.h"
-#include "../../Utils/Point.h"
-#include "../../Utils/proxPoint.h"
 #include "../../KDTREE/kdtree.h"
 #include "../../HashTable/hashtable.h"
 
@@ -399,6 +397,7 @@ void deleteUrbamEqRec(char* text,Info* info){
 
         /*hidrantes*/
         Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+        Lista_lenght(hidrantes);
         t=Lista_getFirst(hidrantes);
         while(hd){
             i = Lista_get(hidrantes,t);
@@ -1044,73 +1043,63 @@ void equipOnCepOrId(char* text,Info* info){
 
 /*encontra as radio-base mais proximas, e informa id's e distancia*/
 void closestRBase(char* text,Info* info){
-
-    void* i;
-    int cont = 0;
     Lista radios = KDT_getAll(info->bd->RadioBaseTree);
-    int n = Lista_lenght(radios);
-    Posic t;
-    Point *points[n];
     insert_Fila(info->respQRY, "crb?\n");
 
+    void *t, *i;
+    void *it1, *it2, *itTemp;
+    double minDist = -1;
+    it1 = NULL, it2 = NULL;
     t=Lista_getFirst(radios);
     while(1){
         i = Lista_get(radios,t);
         if(i){
-            
-            Item it = Lista_get(radios, t);
-            points[cont] = (Point*) calloc(1, sizeof(Point));
-            *points[cont] = *(pointRB(it));
-            cont++;
+            itTemp = closestNeibord(info->bd->RadioBaseTree, i);
+            double a;
+            double b;
+            a = getXCirc(getCircRadioB(i)) - getXCirc(getCircRadioB(itTemp));
+            b = getYCirc(getCircRadioB(i)) - getYCirc(getCircRadioB(itTemp));
+            a = a*a;
+            b = b*b;
+            double dist = sqrt( a + b);
+            if(minDist < 0 || dist < minDist && i != itTemp){
+                minDist = dist;
+                it1 = i;
+                it2 = itTemp;
+            }
             t = Lista_getNext(radios, t);
         }else{
         break;
         }
     }
 
-    char *rbases;
-    rbases = (char*) calloc(155, sizeof(char));
     
-    double dist = closest(points, n, rbases);    
-
-    char *id1, *id2;
-    id1 = (char*) calloc(155, sizeof(char));
-    id2 = (char*) calloc(155, sizeof(char));
-    sscanf(rbases, "%s %s", id1, id2);
-
+    
     char* temp;
     temp = (char*) calloc(155, sizeof(char));
-    sprintf(temp, "id: %s e %s  -   Dist: %lf", id1, id2, dist);
+    sprintf(temp, "id: %s e %s  -   Dist: %lf", getIdRadioB(it1), getIdRadioB(it2), minDist);
     insert_Fila(info->respQRY, temp);
 
-    t=Lista_getFirst(radios);
-    while(1){
-        i = Lista_get(radios,t);
-        if(i){
-            char* temps;
-            temps = getIdRadioB(i);
-            if(!strcmp(temps, id1) || !strcmp(temps, id2)){
-                circulo cr = getCircRadioB(i);
-                double xt, yt;
-                xt = getXCirc(cr);
-                yt = getYCirc(cr);
-                Notation nt = createNotacao("BLACK", 15, 0, xt, yt, "");
-                Lista_insert(info->notsQRY, nt);
-            }
+    double xt, yt;
+    Notation nt;
+    circulo cr;
+    //criar as duas anotações
+    cr = getCircRadioB(it1);
+    xt = getXCirc(cr);
+    yt = getYCirc(cr);
+    nt = createNotacao("BLACK", 15, 0, xt, yt, "");
+    Lista_insert(info->notsQRY, nt);
 
-            
-            t = Lista_getNext(radios, t);
-        }else{
-        break;
-        }
-    
-    }
-
+    cr = getCircRadioB(it2);
+    xt = getXCirc(cr);
+    yt = getYCirc(cr);
+    nt = createNotacao("BLACK", 15, 0, xt, yt, "");
+    Lista_insert(info->notsQRY, nt);
 }
 
 void closeQRY(Info* info){
     int i;
-    char* path, *aux;
+    char* path, *aux, *aux2;
     FILE *arqSVG_QRY, *arqTXT;
 
     void *auxN, *auxF, *t, *temp; 
@@ -1126,11 +1115,11 @@ void closeQRY(Info* info){
     aux = info->q;
     while(*aux){
         if(*aux == '/'){
-            info->q = aux+1;
+            aux2 = aux+1;
         }
         aux++;
     }
-    sprintf(path, "%s-%s", path, info->q);
+    sprintf(path, "%s-%s", path, aux2);
     aux = path;
     aux += strlen(path);
     while(*aux != '.')aux--;
@@ -1295,6 +1284,8 @@ void whoIsHere(char* text, Info* info){
     char* result;
     result = moradoresQuadra(cep, info);
     insert_Fila(info->respQRY, result);
+    insert_Fila(info->respQRY, "\n");
+    
 }
 
 void whoIsInThisArea(char* text, Info* info){
@@ -1352,6 +1343,10 @@ void whoAreYou(char* text, Info* info){
     sscanf(aux, "%s", cpf);
     Pessoa *p = Pessoa_create(cpf, "", "", "", "");
     Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    if(pessoa == NULL){
+        insert_Fila(info->respQRY, "Pessoa não encontrada\n");
+        return;
+    }
     double* cord = Pessoa_getCordGeo(pessoa, info);
     if(cord == NULL){
        char* result;
@@ -1380,6 +1375,10 @@ void whoAreYouEstab(char* text, Info* info){
     sscanf(aux, "%s", cnpj);
     Estab *e = Estab_create(cnpj, NULL, "", "", "", "");
     Estab estab = get_hashtable(info->bd->EstabHash, e);
+    if(estab == NULL){
+        insert_Fila(info->respQRY, "Estabelecimento não encontrado\n");
+        return;
+    }
     double* cord = Estab_getCordGeo(estab, info);
     if(cord == NULL){
        char* result;
@@ -1677,3 +1676,352 @@ void closestHidrant(char* text, Info* info){
     // Linha nt = createNotacao("RED", x*(-1), y*(-1), x1*(-1), y1*(-1), "");
 
 }
+
+void closestHidrantFromRB(char* text, Info* info){
+    char *temp, *aux, *idRB, *result;
+    radioB rb, rbTemp;
+    hidrante hd;
+    Notation nt;
+    double dist, a, b;
+    temp = (char*) calloc (155, sizeof(char));
+    strcpy(temp, text);
+    insert_Fila(info->respQRY, temp);
+    insert_Fila(info->respQRY, "\n");
+    aux = text; aux += 5;
+    idRB  = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s",idRB);
+    
+    rbTemp = createRadioB(idRB, "", "", 0, 0);
+    rb = get_hashtable(info->bd->RadioBaseHash, rbTemp);
+    freeRadioB(rbTemp);
+    if(rb == NULL){
+        insert_Fila(info->respQRY, "RadioB não Encontrada");
+        return;
+    }
+
+    hd = closestNeibord(info->bd->HidrantesTree, rb);
+
+    nt = createNotacao("RED", getXCirc(getCircRadioB(rb))*(-1), getYCirc(getCircRadioB(rb))*(-1),getXCirc(getCircHidr(hd))*(-1), getYCirc(getCircHidr(hd))*(-1), "");
+    a = getXCirc(getCircRadioB(rb)) - getXCirc(getCircHidr(hd));
+    b = getYCirc(getCircRadioB(rb)) - getYCirc(getCircHidr(hd));
+    dist = sqrt(a*a + b*b);
+    result = (char*) calloc(255, sizeof(char));
+    sprintf(result, "%s, %s - dist: %lf", reportRadioB(rb), reportHidrante(rb), dist);
+
+    insert_Fila(info->notsQRY, nt);
+    insert_Fila(info->respQRY, result);
+}
+
+void closeEstab(char* text, Info* info){
+    char *aux, *cnpj;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    cnpj = (char*) calloc(55, sizeof(char));
+    aux = text; aux += 4;
+    sscanf(aux, "%s", cnpj);
+    Estab *Est = Estab_create(cnpj, NULL,  "", "", "", "");
+    Estab estab = get_hashtable(info->bd->EstabHash, Est);
+    if(estab == NULL){
+        insert_Fila(info->respQRY, "Este Estabelecimento não existe\n");
+        return;
+    }
+    char* result;
+    result = (char*) calloc(255, sizeof(char));
+    sprintf(result, "%s\n", Estab_relatorio(estab));
+    insert_Fila(info->respQRY, result);
+    
+    //remove
+    remove_hashtable(info->bd->EstabHash, estab);
+    KDT_remove(info->bd->EstabelecimentoTree, estab);
+    void* end = Estab_getEndereco(estab);
+    if(end != NULL)
+    remove_hashtable(info->bd->enderecoEstab, end);
+}
+
+void mudancaPessoa(char* text, Info* info){
+    char *aux, *cpf, *cep, *face, *num, *comp;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    cpf = (char*) calloc(55, sizeof(char));
+    cep = (char*) calloc(55, sizeof(char));
+    face= (char*) calloc(55, sizeof(char));
+    num = (char*) calloc(55, sizeof(char));
+    comp= (char*) calloc(55, sizeof(char));
+    aux = text; aux += 4;
+    sscanf(aux, "%s %s %s %s %s", cpf, cep, face, num, comp);
+
+    Pessoa *temp = Pessoa_create(cpf, "", "", "", "");
+    Pessoa pessoa = get_hashtable(info->bd->PessoaCepHash, temp);
+    if(pessoa == NULL){
+        insert_Fila(info->respQRY, "Pessoa nao Encontrada\n");
+        return;
+    }
+
+    char* result;
+    result = (char*) calloc(255, sizeof(char));
+    sprintf(result, "%s --> Novo Endereco: %s %s, nº %s - %s\n", Pessoa_relatorio(pessoa), cep, face, num, comp);
+    insert_Fila(info->respQRY, result);
+
+    double *cord_i;
+    cord_i = Pessoa_getCordGeo(pessoa, info);
+    
+    void* contr = Pessoa_getEndereco(pessoa);
+    void* end = Pessoa_SetEndereco(pessoa, cep, face, num, comp);
+    if(contr == NULL)
+        insert_hashtable(info->bd->enderecoPessoa, end);
+    
+    double *cord_j;
+    cord_j = Pessoa_getCordGeo(pessoa, info);
+
+    if(cord_i != NULL && cord_j != NULL){
+        Notation nt = createNotacao("GREEN", cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
+        insert_Fila(info->notsQRY, nt);
+    }
+}
+
+void mudancaEstab(char* text, Info* info){
+    char *aux, *cnpj, *cep, *face, *num;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    cnpj = (char*) calloc(55, sizeof(char));
+    cep = (char*) calloc(55, sizeof(char));
+    face= (char*) calloc(55, sizeof(char));
+    num = (char*) calloc(55, sizeof(char));
+    aux = text; aux += 6;
+    sscanf(aux, "%s %s %s %s", cnpj, cep, face, num);
+
+    Estab *temp = Estab_create(cnpj, NULL,  "", "", "", "");
+    Estab estab = get_hashtable(info->bd->EstabHash, temp);
+    if(estab == NULL){
+        insert_Fila(info->respQRY, "Estabelecimento nao Encontrado\n");
+        return;
+    }
+
+    char* result;
+    result = (char*) calloc(255, sizeof(char));
+    sprintf(result, "%s --> Novo Endereco: %s %s, nº %s\n", Estab_relatorio(estab), cep, face, num);
+    insert_Fila(info->respQRY, result);
+
+    double *cord_i;
+    cord_i = Estab_getCordGeo(estab, info);
+    
+    void* contr = Estab_getEndereco(estab);
+    void* end = Estab_changeEndereco(estab, cep, face, num);
+    if(contr == NULL)
+        insert_hashtable(info->bd->enderecoEstab, end);
+    
+    double *cord_j;
+    cord_j = Estab_getCordGeo(estab, info);
+
+    if(cord_i != NULL && cord_j != NULL){
+        Notation nt = createNotacao("PURPLE", cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
+        insert_Fila(info->notsQRY, nt);
+    }
+    
+}
+
+void desapropriar(char* text, Info* info){
+    char *aux;
+    double x, y, w, h;
+    double xi, yi, xf, yf;
+    void* i, *t, *ident;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    insert_Fila(info->respQRY, "\n");
+    aux = text; aux += 4;
+    sscanf(aux, "%lf %lf %lf %lf", &x, &y, &w, &h);
+
+    Notation nt = createNotacao("BLUE", w, h, x, y, "");
+    insert_Fila(info->notsQRY, nt);
+
+    //apagar quadra e tudo que esta nela, estabelecimentos e desapropriar pessoas(não matar)
+    //apaga quadras
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    i=Lista_getFirst(quadras);
+    while(1){
+        void* cont = Lista_get(quadras,i);
+        if(cont){
+
+            Item it = Lista_get(quadras, i);
+            rectangle rc = getRecQuad(it);                    
+
+            xi = getXRec(rc);
+            xf = xi + getWRec(rc);
+            yi = getYRec(rc);
+            yf = yi + getHRec(rc);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                Lista enderecos;
+                //deleta estabelecimentos
+                ident = Estab_IdentEndereco(getCepQuad(it));
+                enderecos = getList_hashtable(info->bd->enderecoEstab, ident);
+
+                t = Lista_getFirst(enderecos);
+                while(1){
+                    void* temp = Lista_get(enderecos, t);
+                    if(temp){
+                        Estab estab = Estab_getEstabEndereco(temp);
+                        char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                        sprintf(temp1, "%s\n", Estab_relatorio(estab));
+                        insert_Fila(info->respQRY, temp1);
+
+                        void* temp = Lista_getNext(enderecos, t);
+                        KDT_remove(info->bd->EstabelecimentoTree, estab);
+                        remove_hashtable(info->bd->EstabHash, estab);
+                        Lista_remove(enderecos, t);
+                        t = temp;
+                        continue;
+                    }else{
+                        break;
+                    }
+                    t = Lista_getNext(enderecos, t);
+                }
+
+
+                //desapropria pessoas
+                ident = Pessoa_IdentEndereco(getCepQuad(it));
+                enderecos = getList_hashtable(info->bd->enderecoPessoa, ident);
+                t = Lista_getFirst(enderecos);
+                while(1){
+                    void* temp = Lista_get(enderecos, t);
+                    if(temp){
+                        Pessoa pess = Pessoa_getPessoaEndereco(temp);
+                        char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                        sprintf(temp1, "%s\n", Pessoa_relatorio(pess));
+                        insert_Fila(info->respQRY, temp1);
+
+                        void* temp = Lista_getNext(enderecos, t);
+                        KDT_remove(info->bd->PessoaTree, pess);
+                        remove_hashtable(info->bd->PessoaCepHash, pess);
+                        Lista_remove(enderecos, t);
+                        t = temp;
+                        continue;
+                    }else{
+                        break;
+                    }
+                    t = Lista_getNext(enderecos, t);
+                }
+
+
+                char * temp1; temp1 = (char*) calloc(155, sizeof(char));
+                sprintf(temp1, "%s\n", getCepQuad(it));
+                insert_Fila(info->respQRY, temp1);
+
+                void* temp = Lista_getNext(quadras, i);
+                KDT_remove(info->bd->QuadrasTree, it);
+                remove_hashtable(info->bd->cepQuadraHash, it);
+                Lista_remove(quadras, i);
+                i = temp;
+                continue;  
+            }else{              
+                i = Lista_getNext(quadras, i);
+            }
+        }else{
+        break;
+        }
+    }
+
+    //apaga hidrantes
+    Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+    t=Lista_getFirst(hidrantes);
+    while(1){
+        i = Lista_get(hidrantes,t);
+        if(i){
+            
+            Item it = Lista_get(hidrantes, t);
+            circulo circ = getCircHidr(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Hidr. -  id: %s  -  x: %lf  -  y: %lf\n", getIdHidr(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(hidrantes, t);
+                Lista_remove(hidrantes, t);
+                KDT_remove(info->bd->HidrantesTree, it);
+                remove_hashtable(info->bd->HidrantesHash, it);
+                t = temp; 
+            }else{
+                t = Lista_getNext(hidrantes, t);
+            }
+        }else{
+        break;
+        }
+    }
+    //apaga radioB
+    Lista radios = KDT_getAll(info->bd->RadioBaseTree);
+    t=Lista_getFirst(radios);
+    while(1){
+        i = Lista_get(radios,t);
+        if(i){
+            
+            Item it = Lista_get(radios, t);
+            circulo circ = getCircRadioB(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Radios. -  id: %s  -  x: %lf  -  y: %lf\n", getIdRadioB(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(radios, t);
+                Lista_remove(radios, t);
+                KDT_remove(info->bd->RadioBaseTree, it);
+                remove_hashtable(info->bd->RadioBaseHash, it);
+                t = temp; 
+            }else{
+                t = Lista_getNext(radios, t);
+            }
+        }else{
+        break;
+        }
+    }
+    //apaga semaforos
+    Lista semaforos = KDT_getAll(info->bd->SemaforosTree);
+    t=Lista_getFirst(semaforos);
+    while(1){
+        i = Lista_get(semaforos,t);
+        if(i){
+            
+            Item it = Lista_get(semaforos, t);
+            circulo circ = getCircSemaf(it);
+
+            xi = getXCirc(circ) - getRCirc(circ);
+            xf = getXCirc(circ) + getRCirc(circ);
+            yi = getYCirc(circ) - getRCirc(circ);
+            yf = getYCirc(circ) + getRCirc(circ);
+
+            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+                char * temp2; temp2 = (char*) calloc(155, sizeof(char));
+                sprintf(temp2, "Semaf. -  id: %s  -  x: %lf  -  y: %lf\n", getIdSemaf(it), getXCirc(circ), getYCirc(circ));
+                insert_Fila(info->respQRY, temp2);
+                void* temp = Lista_getNext(semaforos, t);
+                Lista_remove(semaforos, t);
+                KDT_remove(info->bd->SemaforosTree, it);
+                remove_hashtable(info->bd->SemaforosHash, it);
+                t = temp;  
+            }else{
+                t = Lista_getNext(semaforos, t);
+            }                
+            
+        }else{
+        break;
+        }
+    }
+
+}
+

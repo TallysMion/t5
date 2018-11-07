@@ -1,6 +1,5 @@
 #ifndef ITEM_H
 #define ITEM_H
-#include "../Utils/Point.h"
 
 #define RETANGULO 0
 #define CIRCULO 1

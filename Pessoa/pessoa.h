@@ -32,6 +32,6 @@ int Pessoa_Ende_HashCode(void* endereco, int modulo);
 int Pessoa_Ende_HashCompare(void* Endereco1, void* Endereco2);
 void* Pessoa_IdentEndereco(char* cep);
 char* Pessoa_relatorio(void* pessoa);
-double* Pessoa_getCordGeo(void* pessoa, void*quadra);
+double* Pessoa_getCordGeo(void* pessoa, void* info);
 
 #endif

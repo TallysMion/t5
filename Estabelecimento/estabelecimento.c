@@ -246,7 +246,7 @@ char* Estab_relatorio(void* estab){
     if(est->ende == NULL){
         sprintf(result, "%s - %s", est->nome, est->tipo->info);
     }else{
-        sprintf(result, "%s - %s, %s %s, nº %s - %s", est->nome, est->tipo->info, est->ende->cep, est->ende->face, est->ende->num, est->ende->comp);
+        sprintf(result, "%s - %s, %s %s, nº %s", est->nome, est->tipo->info, est->ende->cep, est->ende->face, est->ende->num);
     }
     return result;
 }

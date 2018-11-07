@@ -69,10 +69,10 @@ void* Pessoa_SetEndereco(void* pes, char* cep, char* face, char* num, char* comp
         free(pessoa->endereco->face);
         free(pessoa->endereco->num);
         free(pessoa->endereco->comp);
-        strcpy(pessoa->endereco->cep, cep);
-        strcpy(pessoa->endereco->face, face);
-        strcpy(pessoa->endereco->num, num);
-        strcpy(pessoa->endereco->comp, comp);
+        pessoa->endereco->cep = cep;
+        pessoa->endereco->face= face;
+        pessoa->endereco->num = num;
+        pessoa->endereco->comp= comp;
         return (void*) pessoa->endereco;
     }
 }

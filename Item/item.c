@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Utils/Point.h"
 #include "../Retangulo/retangulo.h"
 #include "../Circulo/circulo.h"
 #include <math.h>

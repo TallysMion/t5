@@ -68,7 +68,7 @@ void* Lista_insert(void* lista, void* item){
     return (void*) ps;
 }
 
-void Lista_insertLista(Lista* list, Lista* list2){
+void Lista_insertLista(void* list, void* list2){
     Lista *lista, *lista2;
     lista = (Lista*) list;
     lista2= (Lista*) list2;
@@ -296,17 +296,7 @@ void* Lista_getPrevious(void* lista, void* p){
 
 //testar
 void Lista_insertAll(void* lista, void* lista2){
-    void *t, *temp;
-    t = Lista_getFirst(lista2);
-    while(1){
-        temp = Lista_get(lista2,t);
-        if(temp){
-            Lista_insert(lista, temp);
-            t = Lista_getNext(lista2, t);
-        }else{
-        break;
-        }
-    }
+    Lista_insertLista(lista, lista2);
 }
 
 
