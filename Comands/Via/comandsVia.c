@@ -12,6 +12,7 @@ void criarVertice(char* text,Info *info){
     id = (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s %lf %lf", id, &x, &y);
     grafoD_criar(info->bd->grafo, id, x, y);
+    free(id);
 }
 
 /*comando 'e' do EC*/
@@ -26,4 +27,9 @@ void criarAresta(char* text,Info *info){
     nome = (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s %s %s %s %lf %lf %s", idA, idB, rightCep, leftCep, &size, &speed, nome);
     grafoD_insereAresta(info->bd->grafo, idA, idB, leftCep, rightCep, size, speed, nome);
+    free(idA);
+    free(idB);
+    free(leftCep);
+    free(rightCep);
+    free(nome);
 }

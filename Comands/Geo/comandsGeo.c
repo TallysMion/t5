@@ -46,7 +46,8 @@ int drawCircle(char *text, Info *info){
     
     circ = createCirculo(id, cor1, cor2, r, x, y);
     item = createItem(circ, CIRCULO);
-
+    free(cor1);
+    free(cor2);
     Lista_insert(info->bd->Drawer, item);
     
     
@@ -75,7 +76,8 @@ int drawRectangle(char *text, Info *info){
     sscanf(aux, "%d %s %s %lf %lf %lf %lf", &id, cor1, cor2, &w, &h, &x, &y);    
     rect = createRetangulo(id, cor1, cor2, w, h, x, y);
     item = createItem(rect, RETANGULO);
-
+    free(cor1);
+    free(cor2);
     Lista_insert(info->bd->Drawer, item);
 
     return 1;
@@ -588,6 +590,7 @@ int drawQuad(char *text, Info *info){
     quad = createQuadra(cep, info->conf->cstrkQuad, info->conf->cfillQuad, w, h, x, y);
     KDT_insert(info->bd->QuadrasTree, quad);
     insert_hashtable(info->bd->cepQuadraHash, quad);
+    free(cep);
     return 1;
 }
 
@@ -605,9 +608,9 @@ int drawHidr(char *text, Info *info){
     sscanf(aux, "%s %lf %lf", id, &x, &y);
     
     hidr = createHidrante(id, info->conf->cstrkHidr, info->conf->cfillHidr, x, y);
-    free(id);
     KDT_insert(info->bd->HidrantesTree, hidr);
     insert_hashtable(info->bd->HidrantesHash, hidr);
+    free(id);
     return 1;
 }
 
@@ -625,9 +628,9 @@ int drawSemaf(char *text, Info *info){
     sscanf(aux, "%s %lf %lf", id, &x, &y);
     
     semaf = createSemaforo(id, info->conf->cstrkSemaf, info->conf->cfillSemaf, x, y);
-    free(id);
     KDT_insert(info->bd->SemaforosTree, semaf);
     insert_hashtable(info->bd->SemaforosHash, semaf);
+    free(id);
     return 1;
 }
 
@@ -647,6 +650,7 @@ int drawRBase(char *text, Info *info){
     rb = createRadioB(id, info->conf->cstrkRBase, info->conf->cfillRBase, x, y);
     KDT_insert(info->bd->RadioBaseTree, rb);
     insert_hashtable(info->bd->RadioBaseHash, rb);
+    free(id);
     return 1;
 }
 

@@ -13,6 +13,8 @@ int newEstabType(char* text,Info *info){
     sscanf(aux, "%s %s", cod, descrip);
     type tipo = Estab_createType(cod, descrip);
     insert_hashtable(info->bd->EstabelecimentoType, tipo);
+    free(cod);
+    free(descrip);
     return 1;
 }
 
@@ -35,5 +37,11 @@ int newEstab(char* text,Info *info){
     Estab estab = Estab_create(cnpj, tipo, cep, face, num, nome);
     insert_hashtable(info->bd->EstabHash, estab);
     insert_hashtable(info->bd->enderecoEstab, Estab_getEndereco(estab));
+    free(cnpj);
+    free(tipoCod);
+    free(cep);
+    free(face);
+    free(num);
+    free(nome);
     return 1;
 }

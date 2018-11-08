@@ -35,6 +35,37 @@ typedef struct Grafo{
 
 //-------------------------------------------------------------------------------------------------------------
 
+void freeArestaP(void* a){
+    ArestaP *ar;
+    ar = (ArestaP*) a;
+    if(ar == NULL) return;
+    free(ar->cepL);
+    free(ar->cepR);
+    free(ar->nome);
+    ar->v2 = NULL;
+    void* a2 = ar->next;
+    free(ar);
+    freeArestaP(a2);
+}
+
+void freeVerticeV(void* v){
+    VerticeV *vt;
+    vt = (VerticeV*) v;
+    free(vt->id);
+    freeArestaP(vt->aresta);
+}
+
+
+void freeGrafoD(void* grafo){
+    Grafo *g;
+    g = (Grafo*)grafo;
+    freeKDTree(g->vertices);
+    free_hashtable(g->left);
+    free_hashtable(g->right);
+    free_hashtable(g->ID);
+    free(g);
+}
+
 //compara "xy" grafo
 int compareGD(Vertice v1, Vertice v2, int dim){
 
@@ -139,7 +170,7 @@ void* GRAFO_CREATE(int n){
     Grafo* result;
 
     result = (Grafo*) calloc(1, sizeof(Grafo));
-    result->vertices = KDT_create(compareGD,2);
+    result->vertices = KDT_create(compareGD,2, freeVerticeV);
     result->left = create_hashtable(n,compareH_CEP, hashFunctionArest);
     result->right = create_hashtable(n,compareH_CEP, hashFunctionArest);
     result->ID = create_hashtable(n,compareH_ID, hashFunction);
@@ -187,6 +218,7 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
     strcpy(V1->aresta->cepL, leftCEP);
     V1->aresta->tam = size;
     V1->aresta->speed = speed;
+    V1->aresta->next = NULL;
 
     insert_hashtable(GD->left, V1->aresta);
     insert_hashtable(GD->right, V1->aresta);
@@ -217,3 +249,6 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
     return 0;
 
 }
+
+
+

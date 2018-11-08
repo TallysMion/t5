@@ -199,6 +199,7 @@ double* Pessoa_getCordGeo(void* pessoa, Info* info){
     }
     quadra temp = createQuadra(pes->endereco->cep, "", "", 0, 0, 0, 0);
     quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    freeQuad(temp);
     sscanf(pes->endereco->num, "%lf", &num);
     result = (double*) calloc(2, sizeof(double));
     result[0] = getXRec(getRecQuad(quad));

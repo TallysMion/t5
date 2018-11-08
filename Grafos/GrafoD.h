@@ -36,4 +36,7 @@ int compareH_ID(HashTable itemA, Vertice itemB);
 //hash encoding function
 int hashFunction(void *String, int n);
 
+//da Free no grafo
+void freeGrafoD(void* grafo);
+
 #endif
