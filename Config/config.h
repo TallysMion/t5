@@ -29,13 +29,13 @@ typedef struct config{
 typedef struct database{
     int maxDrawerSize;
     Lista   *Drawer;
-    Lista   Reg;
 
     KDT         HidrantesTree;
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
 
+    HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/
     HashTable   *enderecoPessoa; /*cep*/
@@ -98,6 +98,9 @@ Fila getCommandsForEC(Info* info);
 
 /*inclui as linhas do arquivo de entrada na fila e retorna a fila*/
 Fila getCommandsForPM(Info* info);
+
+/*inclui as linhas do arquivo de entrada na fila e retorna a fila*/
+Fila getCommandsForVIA(Info* info);
 
 /*libera a memoria de config*/
 void freeConfig(Info *info);

@@ -1,5 +1,5 @@
-siguel: Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o
-	gcc Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o -lm -o siguel -g -pedantic -fstack-protector-all -std=c99
+siguel: Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o Comands/Via/executeVia.o Comands/Via/comandsVia.o Registrador/registrador.o
+	gcc Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o Comands/Via/executeVia.o Comands/Via/comandsVia.o Registrador/registrador.o -lm -o siguel -g -pedantic -fstack-protector-all -std=c99
 
 Anotacao/anotacao.o:Anotacao/anotacao.c Anotacao/anotacao.h
 	gcc -c Anotacao/anotacao.c -lm -o Anotacao/anotacao.o -g -pedantic -fstack-protector-all -std=c99
@@ -70,16 +70,24 @@ Comands/Ec/executeEc.o: Comands/Ec/executeEc.c Comands/Ec/executeEc.h
 Comands/Ec/comandsEc.o: Comands/Ec/comandsEc.c Comands/Ec/comandsEc.h
 	gcc -c Comands/Ec/comandsEc.c -lm -o Comands/Ec/comandsEc.o -g -pedantic -fstack-protector-all -std=c99
 
-
 Comands/Pm/executePm.o: Comands/Pm/executePm.c Comands/Pm/executePm.h
 	gcc -c Comands/Pm/executePm.c -lm -o Comands/Pm/executePm.o -g -pedantic -fstack-protector-all -std=c99
 
 Comands/Pm/comandsPm.o: Comands/Pm/comandsPm.c Comands/Pm/comandsPm.h
 	gcc -c Comands/Pm/comandsPm.c -lm -o Comands/Pm/comandsPm.o -g -pedantic -fstack-protector-all -std=c99
 
+Comands/Via/executeVia.o: Comands/Via/executeVia.c Comands/Via/executeVia.h
+	gcc -c Comands/Via/executeVia.c -lm -o Comands/Via/executeVia.o -g -pedantic -fstack-protector-all -std=c99
+
+Comands/Via/comandsVia.o: Comands/Via/comandsVia.c Comands/Via/comandsVia.h
+	gcc -c Comands/Via/comandsVia.c -lm -o Comands/Via/comandsVia.o -g -pedantic -fstack-protector-all -std=c99
+
 Grafos/GrafoD.o: Grafos/GrafoD.c Grafos/GrafoD.h
 	gcc -c Grafos/GrafoD.c -lm -o Grafos/GrafoD.o -g -pedantic -fstack-protector-all -std=c99
 
+Registrador/registrador.o: Registrador/registrador.c Registrador/registrador.h
+	gcc -c Registrador/registrador.c -lm -o Registrador/registrador.o -g -pedantic -fstack-protector-all -std=c99
+
 clean:
-	rm Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o siguel
+	rm Anotacao/anotacao.o Circulo/circulo.o Config/config.o Estabelecimento/estabelecimento.o Fila/fila.o HashTable/hashtable.o Hidrante/hidrante.o Item/item.o KDTREE/kdtree.o Lista/lista.o Main/main.o Pessoa/pessoa.o Quadra/quadra.o Radio-Base/radio-base.o Retangulo/retangulo.o Semaforo/semaforo.o Comands/Geo/executeGeo.o Comands/Qry/executeQry.o Comands/Ec/executeEc.o Comands/Pm/executePm.o Comands/Geo/comandsGeo.o Comands/Ec/comandsEc.o Comands/Pm/comandsPm.o Comands/Qry/comandsQry.o Grafos/GrafoD.o Comands/Via/executeVia.o Comands/Via/comandsVia.o Registrador/registrador.o siguel
 	

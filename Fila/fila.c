@@ -37,7 +37,7 @@ void insert_Fila(Fila fila, Value item){
     struct item *value;
 
     filaAux = (struct fila*) fila;    
-    value = (struct item*) calloc(1, sizeof(struct item*));
+    value = (struct item*) calloc(1, sizeof(struct item));
     value->value = item;
     value->next = NULL;
 

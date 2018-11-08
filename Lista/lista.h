@@ -44,5 +44,6 @@ void Lista_insertAll(Lista lista, Lista lista2);
 void Lista_insertLista(Lista* lista, Lista* lista2);
 
 //precisa de uma função free -> causando leek de memoria
+void freeLista(Lista* lista);
 
 #endif

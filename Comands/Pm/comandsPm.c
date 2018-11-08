@@ -16,6 +16,11 @@ int createPessoa(char* text, Info* info){
     sscanf(aux, "%s %s %s %s %s", cpf, nome, sobrenome, sexo, nascimento);
     Pessoa ps = Pessoa_create(cpf, nome, sobrenome, sexo, nascimento);
     insert_hashtable(info->bd->PessoaCepHash, ps);   
+    free(cpf);
+    free(nome);
+    free(sobrenome);
+    free(sexo);
+    free(nascimento);
     return 1;
 }
 
@@ -35,5 +40,10 @@ int setEndereco(char* text, Info* info){
     Pessoa_Free(pessoatemp);
     Endereco end = Pessoa_SetEndereco(pessoa, cep, face, num, comp);
     insert_hashtable(info->bd->enderecoPessoa, end);
+    free(pessoaCod);
+    free(cep);
+    free(face);
+    free(num);
+    free(comp);
     return 1;
 }

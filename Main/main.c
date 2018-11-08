@@ -6,6 +6,7 @@
 #include "../Comands/Qry/executeQry.h"
 #include "../Comands/Ec/executeEc.h"
 #include "../Comands/Pm/executePm.h"
+#include "../Comands/Via/executeVia.h"
 
 int main(int argc, const char *argv[]){
     //configurações
@@ -13,23 +14,29 @@ int main(int argc, const char *argv[]){
     Fila comandos;    
     info = configIn(argc, argv);    
 
-
-
-
     comandos = getCommandsForGEO(info);    
-    inicGEO(info, lenghFila(comandos));
-    if(comandos)
-    startGEO(comandos, info);
-
+    if(comandos){
+        inicGEO(info, lenghFila(comandos));
+        startGEO(comandos, info);
+    }
+    
     comandos = getCommandsForEC(info); 
-    inicEC(info, lenghFila(comandos));
-    if(comandos)  
-    startEc(comandos, info);
-
+    if(comandos){
+        inicEC(info, lenghFila(comandos));
+        startEc(comandos, info);
+    }
+    
     comandos = getCommandsForPM(info); 
-    inicPM(info, lenghFila(comandos));
-    if(comandos)  
-    startPm(comandos, info);
+    if(comandos){
+        inicPM(info, lenghFila(comandos));
+        startPm(comandos, info);
+    }
+
+    comandos = getCommandsForVIA(info);
+    if(comandos){
+        inicVIA(info, lenghFila(comandos));
+        startVia(comandos, info);
+    }
 
     comandos = getCommandsForQRY(info); 
     if(comandos)  

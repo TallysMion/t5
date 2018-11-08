@@ -9,7 +9,7 @@ char *getCommandEc(char* text){
     int i;
     char *aux; 
     aux = (char*)calloc(strlen(text)+2, sizeof(char));
-    strcpy(aux,text);
+    sscanf(text, "%s ", aux);
     aux = strtok(aux, " ");
     for(i = 0; *(aux+i); i++){
         if(*(aux+i) == '\n'){

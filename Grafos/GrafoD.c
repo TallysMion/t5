@@ -18,6 +18,7 @@ typedef struct VerticeV{
 typedef struct ArestaP{
     VerticeV *v2;
     int disable;
+    char *nome; 
     char *cepR;
     char *cepL;
     float tam;
@@ -33,6 +34,37 @@ typedef struct Grafo{
 }Grafo;
 
 //-------------------------------------------------------------------------------------------------------------
+
+void freeArestaP(void* a){
+    ArestaP *ar;
+    ar = (ArestaP*) a;
+    if(ar == NULL) return;
+    free(ar->cepL);
+    free(ar->cepR);
+    free(ar->nome);
+    ar->v2 = NULL;
+    void* a2 = ar->next;
+    free(ar);
+    freeArestaP(a2);
+}
+
+void freeVerticeV(void* v){
+    VerticeV *vt;
+    vt = (VerticeV*) v;
+    free(vt->id);
+    freeArestaP(vt->aresta);
+}
+
+
+void freeGrafoD(void* grafo){
+    Grafo *g;
+    g = (Grafo*)grafo;
+    freeKDTree(g->vertices);
+    free_hashtable(g->left);
+    free_hashtable(g->right);
+    free_hashtable(g->ID);
+    free(g);
+}
 
 //compara "xy" grafo
 int compareGD(Vertice v1, Vertice v2, int dim){
@@ -94,12 +126,33 @@ int compareH_ID(HashTable itemA, Vertice itemB){
 } 
 
 //hash encoding function
-int hashFunction(void *String, int n){
-
+int hashFunctionArest(void *Item, int n){
+    ArestaP * v;
+    v = (ArestaP*)Item;
     char *string;
     int tam, hash;
 
-    string = (char *) String;
+    string = (char *) v->nome;
+
+    tam = strlen(string);
+    hash = 0;
+
+    while(*string != 0){
+        hash += tam*(*string);
+        string++;
+        tam--;
+    }
+    return n < 0 ? hash : hash%n;
+}
+
+//hash encoding function
+int hashFunction(void *Item, int n){
+    VerticeV * v;
+    v = (VerticeV*)Item;
+    char *string;
+    int tam, hash;
+
+    string = (char *) v->id;
 
     tam = strlen(string);
     hash = 0;
@@ -117,9 +170,9 @@ void* GRAFO_CREATE(int n){
     Grafo* result;
 
     result = (Grafo*) calloc(1, sizeof(Grafo));
-    result->vertices = KDT_create(compareGD,2);
-    result->left = create_hashtable(n,compareH_CEP, hashFunction);
-    result->right = create_hashtable(n,compareH_CEP, hashFunction);
+    result->vertices = KDT_create(compareGD,2, freeVerticeV);
+    result->left = create_hashtable(n,compareH_CEP, hashFunctionArest);
+    result->right = create_hashtable(n,compareH_CEP, hashFunctionArest);
     result->ID = create_hashtable(n,compareH_ID, hashFunction);
     return (void*) result;
 }
@@ -128,13 +181,14 @@ void* GRAFO_CREATE(int n){
 void *grafoD_criar(GrafoD gd, char *id, float x, float y){
 
     Grafo *gr;
+    gr = (Grafo*)gd;
 
     VerticeV *grafo = malloc(1*sizeof(VerticeV));
     grafo= malloc(1*sizeof(VerticeV));
     grafo->id = malloc(strlen(id)*sizeof(char));
     strcpy(grafo->id,id);
 
-    KDT_insert(gd, grafo);
+    KDT_insert(gr->vertices, grafo);
     gr = (Grafo *) gd;
     insert_hashtable(gr->ID, grafo);
 
@@ -142,24 +196,29 @@ void *grafoD_criar(GrafoD gd, char *id, float x, float y){
 }
 
 //função insere uma aresta
-void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed){
+void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed, char* nome){
 
-    VerticeV *V1;
+    VerticeV *V1, *aux;
     Grafo *GD;
 
     GD = (Grafo *) gd;
-
-    V1 = (VerticeV *) get_hashtable(GD->ID, vID1);
+    aux = calloc(1, sizeof(VerticeV));
+    aux->id = vID1;
+    V1 = (VerticeV *) get_hashtable(GD->ID, aux);
     V1->aresta = malloc(sizeof(ArestaP));
-    V1->aresta->v2 = (VerticeV *) get_hashtable(GD->ID, vID2);
+    aux->id = vID2;
+    V1->aresta->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
 
     V1->aresta->disable = 0;
+    V1->aresta->nome = malloc(strlen(nome)*sizeof(char));
+    strcpy(V1->aresta->nome, nome);
     V1->aresta->cepR = malloc(strlen(rightCEP)*sizeof(char));
     strcpy(V1->aresta->cepR, rightCEP);
     V1->aresta->cepL = malloc(strlen(leftCEP)*sizeof(char));
     strcpy(V1->aresta->cepL, leftCEP);
     V1->aresta->tam = size;
     V1->aresta->speed = speed;
+    V1->aresta->next = NULL;
 
     insert_hashtable(GD->left, V1->aresta);
     insert_hashtable(GD->right, V1->aresta);
@@ -190,3 +249,6 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
     return 0;
 
 }
+
+
+

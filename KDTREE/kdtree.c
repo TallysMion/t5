@@ -9,15 +9,17 @@ typedef struct No{
 }Node;
 
 typedef struct{
+    void (*freeFunc)(void*);
     int (*compare)(void*, void*, int);
     int dimension;
     int size;
     Node *no;
 }Tree;
 
-void* KDT_create(int (*compare)(void*, void*, int), int dimension){
+void* KDT_create(int (*compare)(void*, void*, int), int dimension, void (*freeFunc)(void*)){
     Tree *result;
     result = (Tree*) calloc(1, sizeof(Tree));
+    result->freeFunc = freeFunc;
     result->compare = compare;
     result->dimension = dimension;
     result->no = NULL;
@@ -70,23 +72,23 @@ void KDT_insert(void* tree, void*value){
     tr->size+=1;
 }
 
-void freeNode(void* node){
+void freeNode(void* node, Tree* tr){
     Node *n;
     n = (Node*) node;
     if(n->left != NULL){
-        freeNode(n->left);
+        freeNode(n->left, tr);
     }
     if(n->Right != NULL){
-        freeNode(n->Right);
+        freeNode(n->Right, tr);
     }
-    n->value = NULL;
+    tr->freeFunc(n->value);
     free(node);
 }
 
 void freeKDTree(void* tree){
     Tree *tr;
     tr = (Tree*) tree;
-    freeNode(tr->no);
+    freeNode(tr->no, tr);
     tr->compare = NULL;
     tr->size=0;
     tr->dimension=0;

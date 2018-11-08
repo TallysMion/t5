@@ -242,6 +242,9 @@ void* Lista_getNext(void* lista, void* p){
     if(pos->lista != lista){
         return NULL;
     }
+    if(pos->it == NULL){
+        return NULL;
+    }
 
     Posic *result;
     result = (Posic*) calloc(1,sizeof(Posic));
@@ -299,5 +302,17 @@ void Lista_insertAll(void* lista, void* lista2){
     Lista_insertLista(lista, lista2);
 }
 
+
+void freeLista(void* lista){
+    Item *a, *p;
+    Lista* ls;
+    ls = (Lista*) lista;
+    a = ls->inicio;
+    while(a != NULL){
+        p = a->next;
+        free(a->value);
+        a = p;
+    }
+}
 
 

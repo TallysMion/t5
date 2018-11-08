@@ -6,7 +6,7 @@ typedef void* KTD_Value;
 
 
 /* Cria uma KD-Tree*/
-void*  KDT_create(int (*compare)(void*, void*, int), int dimension);
+void* KDT_create(int (*compare)(void*, void*, int), int dimension, void (*freeFunc)(void*));
 
 /* Insere um Valor na KD-Tree*/
 void   KDT_insert(KDT tree, KTD_Value value);

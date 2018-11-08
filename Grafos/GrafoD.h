@@ -4,10 +4,6 @@
 typedef void* GrafoD;   
 typedef void* Aresta;   
 typedef void* Vertice;  
-typedef void* Lista;
-typedef void* KDT;
-typedef void* KTD_Value;
-typedef void* HASH;
 
 /*
 TAD Grafos direcionados
@@ -20,7 +16,7 @@ void* GRAFO_CREATE(int modulo);
 void *grafoD_criar(GrafoD gd, char *id, float x, float y);
 
 //função insere uma aresta
-void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed);
+void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed, char* nome);
 
 //função retorna uma lista de adjacentes - destinos
 Lista grafoD_listaAdjacente(Vertice v1);
@@ -32,12 +28,15 @@ int grafoD_Adjacente(Vertice a1, Vertice a2);
 int compareGD(Vertice v1, Vertice v2, int dim);
 
 //compara cep encontrado com cep procurado - 1 p/ true(igual) e 0 p/ false(diferente)
-int compareH_CEP(HASH itemA, Aresta itemB);
+int compareH_CEP(HashTable itemA, Aresta itemB);
 
 //compara id encontrado com id procurado
-int compareH_ID(HASH itemA, Vertice itemB);
+int compareH_ID(HashTable itemA, Vertice itemB);
 
 //hash encoding function
 int hashFunction(void *String, int n);
+
+//da Free no grafo
+void freeGrafoD(void* grafo);
 
 #endif

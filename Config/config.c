@@ -13,6 +13,7 @@
 #include "../Quadra/quadra.h"
 #include "../Radio-Base/radio-base.h"
 #include "../Semaforo/semaforo.h"
+#include "../Registrador/registrador.h"
 
 #define MODULOHASH 15
 
@@ -36,13 +37,13 @@ typedef struct config{
 typedef struct database{
     int maxDrawerSize;
     Lista   *Drawer;
-    Lista   Reg;
 
     KDT         HidrantesTree;
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
 
+    HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/
     HashTable   *enderecoPessoa; /*cep*/
@@ -203,28 +204,28 @@ Info* configIn(int argc, const char *argv[]){
     
     //LISTAS
     result->bd->Drawer  = Lista_createLista();
-    result->bd->Reg     = Lista_createLista();
 
     //KDTREE
     //void*  KDT_create(int (*compare)(void*, void*, int), int dimension);
-    result->bd->HidrantesTree       = KDT_create(compareHidrante , 2);
-    result->bd->SemaforosTree       = KDT_create(compareSemaforo , 2);
-    result->bd->QuadrasTree         = KDT_create(compareQuadra   , 2);
-    result->bd->RadioBaseTree       = KDT_create(compareRadioB   , 2);
+    result->bd->HidrantesTree       = KDT_create(compareHidrante , 2, freeHidr);
+    result->bd->SemaforosTree       = KDT_create(compareSemaforo , 2, freeSemaf);
+    result->bd->QuadrasTree         = KDT_create(compareQuadra   , 2, freeQuad);
+    result->bd->RadioBaseTree       = KDT_create(compareRadioB   , 2, freeRadioB);
 
 
     //HASHTABLE
+    result->bd->Reg     = create_hashtable(MODULOHASH, HashCompareRegistrador, hashCodeRegistrador);
     //HashTable create_hashtable(int modulo, int (*compare)(void*, char*), int hash(void*, int));
-    // result->bd->HidrantesHash       = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
-    // result->bd->SemaforosHash       = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
-    // result->bd->RadioBaseHash       = create_hashtable(MODULOHASH, HashCompareRadioB,       hashCodeRadioB);
-    // result->bd->cepQuadraHash       = create_hashtable(MODULOHASH, HashCompareQuadra,       hashCodeQuadra);
+    result->bd->HidrantesHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
+    result->bd->SemaforosHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
+    result->bd->RadioBaseHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareRadioB,       hashCodeRadioB);
+    result->bd->cepQuadraHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareQuadra,       hashCodeQuadra);
     
-    // result->bd->EstabelecimentoType = create_hashtable(MODULOHASH, Estab_Type_HashCompare,  Estab_Type_HashCode);
-    // result->bd->PessoaCepHash       = create_hashtable(MODULOHASH, Pessoa_HashCompare,      Pessoa_HashCode);
-    // result->bd->EstabHash           = create_hashtable(MODULOHASH, Estab_HashCompare,       Estab_HashCode);
-    // result->bd->enderecoEstab       = create_hashtable(MODULOHASH, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
-    // result->bd->enderecoPessoa      = create_hashtable(MODULOHASH, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
+    result->bd->EstabelecimentoType     = NULL;//= create_hashtable(MODULOHASH, Estab_Type_HashCompare,  Estab_Type_HashCode);
+    result->bd->PessoaCepHash           = NULL;//= create_hashtable(MODULOHASH, Pessoa_HashCompare,      Pessoa_HashCode);
+    result->bd->EstabHash               = NULL;//= create_hashtable(MODULOHASH, Estab_HashCompare,       Estab_HashCode);
+    result->bd->enderecoEstab           = NULL;//= create_hashtable(MODULOHASH, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
+    result->bd->enderecoPessoa          = NULL;//= create_hashtable(MODULOHASH, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
 
     //FILAS
     result->notsGeo     = create_Fila();
@@ -454,16 +455,17 @@ void freeConfig(Info *info){
     free_hashtable(info->bd->PessoaCepHash);
     free_hashtable(info->bd->RadioBaseHash);
     free_hashtable(info->bd->SemaforosHash);
+    free_hashtable(info->bd->enderecoEstab);
+    free_hashtable(info->bd->enderecoPessoa);
+    free_hashtable(info->bd->EstabelecimentoType);
     free_hashtable(info->bd->EstabHash);
-    //freeTree(info->bd->EstabelecimentoTree);
-    //freeTree(info->bd->HidrantesTree);
-    //freeTree(info->bd->PessoaTree);
-    //freeTree(info->bd->QuadrasTree);
-    //freeTree(info->bd->RadioBaseTree);
-    //freeTree(info->bd->SemaforosTree);
-    //freeGrafoD(info->bd->grafo);
-    //freeLista(info->bd->Reg);
-    //freeLista(info->bd->Drawer);
+    free_hashtable(info->bd->Reg);
+    freeKDTree(info->bd->HidrantesTree);
+    freeKDTree(info->bd->QuadrasTree);
+    freeKDTree(info->bd->RadioBaseTree);
+    freeKDTree(info->bd->SemaforosTree);
+    freeGrafoD(info->bd->grafo);
+    freeLista(info->bd->Drawer);
     free(info->bd);
 
     free(info->conf->cfillHidr);

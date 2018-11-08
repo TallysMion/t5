@@ -15,6 +15,7 @@
 #include "../../Estabelecimento/estabelecimento.h"
 #include "../../KDTREE/kdtree.h"
 #include "../../HashTable/hashtable.h"
+#include "../../Registrador/registrador.h"
 
 
 /*Reporta quadras e equipamentos dentro do retanguo*/
@@ -371,7 +372,7 @@ void deleteUrbamEqRec(char* text,Info* info){
         insert_Fila(info->respQRY, "\n");
 
 
-        char *aux, *cont;
+        char *aux, *cont, *auxcont;
         int hd = 0, sm = 0, rb = 0;
         double x, y , w, h;
         double xi, yi, xf, yf;
@@ -382,7 +383,7 @@ void deleteUrbamEqRec(char* text,Info* info){
 
         aux = text; aux += 4;
         sscanf(aux, "%s %lf %lf %lf %lf", cont, &x, &y, &w, &h);
-
+        auxcont = cont;
         while(*cont){
             switch(*cont){
                 case 'h':hd = 1;
@@ -394,6 +395,8 @@ void deleteUrbamEqRec(char* text,Info* info){
             }
             cont++;
         }
+        free(auxcont);
+
 
         /*hidrantes*/
         Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
@@ -578,7 +581,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
         insert_Fila(info->respQRY, "\n");
 
 
-        char *aux, *cont;
+        char *aux, *cont, *auxcont;
         int hd = 0, sm = 0, rb = 0;
         double x, y , r;
         double xi, yi, xf, yf, ri;
@@ -588,7 +591,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
 
         aux = text; aux += 4;
         sscanf(aux, "%s %lf %lf %lf", cont, &x, &y, &r);
-
+        auxcont = cont;
         while(*cont){
             switch(*cont){
                 case 'h':hd = 1;
@@ -600,7 +603,7 @@ void deleteUrbamEqCirc(char* text,Info* info){
             }
             cont++;
         }
-
+        free(auxcont);
 
         /*hidrantes*/
 
@@ -742,6 +745,9 @@ void colorChange(char* text,Info* info){
                 if(!strcmp(getCepQuad(it), ident)){
                     setColorStrokeQuad(it, strok);
                     setColorFillQuad(it, fill);
+                    free(ident);
+                    free(strok);
+                    free(fill);
                     return;
                 }                                        
                 t = Lista_getNext(quadras, t);
@@ -766,6 +772,9 @@ void colorChange(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     setColorStrokeHidr(it, strok);
                     setColorFillHidr(it, fill);
+                    free(ident);
+                    free(strok);
+                    free(fill);
                     return;
                 }                    
                 
@@ -791,6 +800,9 @@ void colorChange(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     setColorStrokeRB(it, strok);
                     setColorFillRB(it, fill);
+                    free(ident);
+                    free(strok);
+                    free(fill);
                     return;
                 }            
                 
@@ -816,6 +828,9 @@ void colorChange(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     setColorStrokeSemaf(it, strok);
                     setColorFillSemaf(it, fill);
+                    free(ident);
+                    free(strok);
+                    free(fill);
                     return;
                 }                  
                 
@@ -824,7 +839,9 @@ void colorChange(char* text,Info* info){
             break;
             }
         }
-
+        free(ident);
+        free(strok);
+        free(fill);
 }
 
 /*informa as cordenadas e o ID do item passado, se for uma quadra, 
@@ -863,6 +880,7 @@ void equipOnCepOrId(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     sprintf(temp, "Hidr. -  id: %s  -  x: %lf  -  y: %lf\n", getIdHidr(it), getXCirc(getCircHidr(it)), getYCirc(getCircHidr(it)));
                     insert_Fila(info->respQRY, temp);
+                    free(ident);
                     return;
                 }                    
                 
@@ -888,6 +906,7 @@ void equipOnCepOrId(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     sprintf(temp, "Radio-Base. -  id: %s  -  x: %lf  -  y: %lf\n", getIdRadioB(it), getXCirc(getCircRadioB(it)), getYCirc(getCircRadioB(it)));
                     insert_Fila(info->respQRY, temp);
+                    free(ident);
                     return;
                 }                
                 
@@ -913,6 +932,7 @@ void equipOnCepOrId(char* text,Info* info){
                 if(!strcmp(temp, ident)){
                     sprintf(temp, "Semaforo. -  id: %s  -  x: %lf  -  y: %lf\n", getIdSemaf(it), getXCirc(getCircSemaf(it)), getYCirc(getCircSemaf(it)));
                     insert_Fila(info->respQRY, temp);
+                    free(ident);
                     return;
                 }                 
                 
@@ -936,6 +956,7 @@ void equipOnCepOrId(char* text,Info* info){
                 Item it = Lista_get(quadras, t);
                 if(!strcmp(getCepQuad(it), ident)){
                     rt = getRecQuad(it);
+                    free(ident);
                     break;
                 }                                        
                 t = Lista_getNext(quadras, t);
@@ -1285,7 +1306,7 @@ void whoIsHere(char* text, Info* info){
     result = moradoresQuadra(cep, info);
     insert_Fila(info->respQRY, result);
     insert_Fila(info->respQRY, "\n");
-    
+    free(cep);
 }
 
 void whoIsInThisArea(char* text, Info* info){
@@ -1341,10 +1362,12 @@ void whoAreYou(char* text, Info* info){
     cpf = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cpf);
-    void* *p = Pessoa_create(cpf, "", "", "", "");
+    void* p = Pessoa_create(cpf, "", "", "", "");
     void* pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    Pessoa_Free(p);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Pessoa não encontrada\n");
+        free(cpf);
         return;
     }
     double* cord = Pessoa_getCordGeo(pessoa, info);
@@ -1361,6 +1384,7 @@ void whoAreYou(char* text, Info* info){
         void* nt = createNotacao("RED", 5, 0, cord[0], cord[1], cpf);
         insert_Fila(info->notsQRY, nt);
     }
+    free(cpf);
 }
 
 void whoAreYouEstab(char* text, Info* info){
@@ -1373,10 +1397,12 @@ void whoAreYouEstab(char* text, Info* info){
     cnpj = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cnpj);
-    void* *e = Estab_create(cnpj, NULL, "", "", "", "");
+    void* e = Estab_create(cnpj, NULL, "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, e);
+    Estab_Free(e);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Estabelecimento não encontrado\n");
+        free(cnpj);
         return;
     }
     double* cord = Estab_getCordGeo(estab, info);
@@ -1393,6 +1419,7 @@ void whoAreYouEstab(char* text, Info* info){
         void* nt = createNotacao("PURPLE", 5, 0, cord[0], cord[1], cnpj);
         insert_Fila(info->notsQRY, nt);
     }
+    free(cnpj);
 }
 
 /*Mãe, no céu tem Pão? e Morreu...*/
@@ -1407,8 +1434,10 @@ void bread(char* text, Info* info){
     sscanf(aux, "%s", cpf);
     void* *p = Pessoa_create(cpf, "", "", "", "");
     void* pessoa = get_hashtable(info->bd->PessoaCepHash, p);
+    Pessoa_Free(p);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Esta pessoa não existe\n");
+        free(cpf);
         return;
     }
     double* cord = Pessoa_getCordGeo(pessoa, info);
@@ -1430,6 +1459,7 @@ void bread(char* text, Info* info){
     void* end = Pessoa_getEndereco(pessoa);
     if(end != NULL)
     remove_hashtable(info->bd->enderecoPessoa, end);
+    free(cpf);
 }
 
 
@@ -1469,6 +1499,7 @@ void whatHaveHere(char* text, Info* info){
     char* result;
     result = estabsQuadra(cep, info, NULL);
     insert_Fila(info->respQRY, result);
+    free(cep);
 }
 
 void whatHaveInThisArea(char* text, Info* info){
@@ -1513,6 +1544,7 @@ void whatHaveInThisArea(char* text, Info* info){
         break;
         }
     }
+    free(tipo);
 }
 
 char* estabsQuadra_typeOrderPrint(Lista estabs){
@@ -1563,6 +1595,7 @@ Lista estabsQuadra_typeOrder(char* cep, Info* info, char* tipo){
         break;
         }
     }
+    freeLista(enderecos);
     return estabs;
 }
 
@@ -1574,11 +1607,12 @@ void whatHaveHere_typeOrder(char* text, Info* info){
     insert_Fila(info->respQRY, "\n");
     aux = text;
     aux+=6;
-    cep = (char*) calloc(1, sizeof(char));
+    cep = (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s", cep);
     char* result;
     result = estabsQuadra_typeOrderPrint(estabsQuadra_typeOrder(cep, info, NULL));
     insert_Fila(info->respQRY, result);
+    free(cep);
 }
 
 void whatHaveInThisArea_typeOrder(char* text, Info* info){
@@ -1671,7 +1705,8 @@ void closestHidrant(char* text, Info* info){
     result = (char*) calloc(255, sizeof(char));
     sprintf(result, "%s, dist: %lf", reportHidrante(hd), dist);
     insert_Fila(info->respQRY, result);
-
+    free(cep);
+    free(face);
     // Linha nt = createNotacao("RED", x*(-1), y*(-1), x1*(-1), y1*(-1), "");
 
 }
@@ -1709,6 +1744,7 @@ void closestHidrantFromRB(char* text, Info* info){
 
     insert_Fila(info->notsQRY, nt);
     insert_Fila(info->respQRY, result);
+    free(idRB);
 }
 
 void closeEstab(char* text, Info* info){
@@ -1722,6 +1758,7 @@ void closeEstab(char* text, Info* info){
     sscanf(aux, "%s", cnpj);
     void* Est = Estab_create(cnpj, NULL,  "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, Est);
+    Estab_Free(Est); free(cnpj);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Este Estabelecimento não existe\n");
         return;
@@ -1754,6 +1791,7 @@ void mudancaPessoa(char* text, Info* info){
 
     void* temp = Pessoa_create(cpf, "", "", "", "");
     void* pessoa = get_hashtable(info->bd->PessoaCepHash, temp);
+    Pessoa_Free(temp);
     if(pessoa == NULL){
         insert_Fila(info->respQRY, "Pessoa nao Encontrada\n");
         return;
@@ -1779,6 +1817,7 @@ void mudancaPessoa(char* text, Info* info){
         void* nt = createNotacao(info->conf->colorMud, cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
         insert_Fila(info->notsQRY, nt);
     }
+    free(cep); free(face), free(num); free(comp);
 }
 
 void mudancaEstab(char* text, Info* info){
@@ -1796,6 +1835,7 @@ void mudancaEstab(char* text, Info* info){
 
     void* temp = Estab_create(cnpj, NULL,  "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, temp);
+    Estab_Free(temp); free(cnpj);
     if(estab == NULL){
         insert_Fila(info->respQRY, "Estabelecimento nao Encontrado\n");
         return;
@@ -1821,7 +1861,7 @@ void mudancaEstab(char* text, Info* info){
         void* nt = createNotacao(info->conf->colorMudec, cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
         insert_Fila(info->notsQRY, nt);
     }
-    
+    free(cep); free(face), free(num);
 }
 
 void desapropriar(char* text, Info* info){
@@ -1854,7 +1894,7 @@ void desapropriar(char* text, Info* info){
             xf = xi + getWRec(rc);
             yi = getYRec(rc);
             yf = yi + getHRec(rc);
-
+            freeRec(rc);
             if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
                 Lista enderecos;
                 //deleta estabelecimentos
@@ -1923,6 +1963,7 @@ void desapropriar(char* text, Info* info){
         break;
         }
     }
+    freeLista(quadras);
 
     //apaga hidrantes
     Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
@@ -1938,6 +1979,7 @@ void desapropriar(char* text, Info* info){
             xf = getXCirc(circ) + getRCirc(circ);
             yi = getYCirc(circ) - getRCirc(circ);
             yf = getYCirc(circ) + getRCirc(circ);
+            freeCirculo(circ);
 
             if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
                 char * temp2; temp2 = (char*) calloc(155, sizeof(char));
@@ -1955,6 +1997,8 @@ void desapropriar(char* text, Info* info){
         break;
         }
     }
+    freeLista(hidrantes);
+
     //apaga radioB
     Lista radios = KDT_getAll(info->bd->RadioBaseTree);
     t=Lista_getFirst(radios);
@@ -1969,7 +2013,7 @@ void desapropriar(char* text, Info* info){
             xf = getXCirc(circ) + getRCirc(circ);
             yi = getYCirc(circ) - getRCirc(circ);
             yf = getYCirc(circ) + getRCirc(circ);
-
+            freeCirculo(circ);
             if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
                 char * temp2; temp2 = (char*) calloc(155, sizeof(char));
                 sprintf(temp2, "Radios. -  id: %s  -  x: %lf  -  y: %lf\n", getIdRadioB(it), getXCirc(circ), getYCirc(circ));
@@ -1986,6 +2030,8 @@ void desapropriar(char* text, Info* info){
         break;
         }
     }
+    freeLista(radios);
+
     //apaga semaforos
     Lista semaforos = KDT_getAll(info->bd->SemaforosTree);
     t=Lista_getFirst(semaforos);
@@ -2000,7 +2046,7 @@ void desapropriar(char* text, Info* info){
             xf = getXCirc(circ) + getRCirc(circ);
             yi = getYCirc(circ) - getRCirc(circ);
             yf = getYCirc(circ) + getRCirc(circ);
-
+            freeCirculo(circ);
             if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
                 char * temp2; temp2 = (char*) calloc(155, sizeof(char));
                 sprintf(temp2, "Semaf. -  id: %s  -  x: %lf  -  y: %lf\n", getIdSemaf(it), getXCirc(circ), getYCirc(circ));
@@ -2018,6 +2064,145 @@ void desapropriar(char* text, Info* info){
         break;
         }
     }
-
+    freeLista(semaforos);
 }
 
+void pessoaToReg(char* text, Info* info){
+    char *aux, *id, *cpf;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    cpf = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s", id, cpf);
+    Pessoa pAux = Pessoa_create(cpf, "", "", "", "");
+    Pessoa pes = get_hashtable(info->bd->PessoaCepHash, pAux);
+    Pessoa_Free(pAux);
+    if(pes == NULL){
+        insert_Fila(info->respQRY, "Pessoa Não Encontrada\n");
+        free(id); free(cpf);
+        return;
+    }
+    regis reg = create_Reg(id, Pessoa_getCordGeo(pes, info));
+    insert_hashtable(info->bd->Reg, reg);
+    char* result;
+    result = (char*) calloc(55, sizeof(char));
+    sprintf(result, "%s  <--  %s\n", id, cpf);
+    insert_Fila(info->respQRY, result);
+    free(id); free(cpf);
+}
+
+void enderecoToReg(char* text, Info* info){
+    char *aux, *id, *cep, *face;
+    double num;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(25, sizeof(char));
+    cep = (char*) calloc(25, sizeof(char));
+    face = (char*) calloc(5, sizeof(char));
+    sscanf(aux, "%s %s %s %lf", id, cep, face, &num);
+    double *cord = (double*) calloc(2, sizeof(double));
+    
+    quadra temp = createQuadra(cep, "", "", 0, 0, 0, 0);
+    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    freeQuad(temp);
+    
+    cord[0] = getXRec(getRecQuad(quad));
+    cord[1] = getYRec(getRecQuad(quad));
+
+    if(strcmp(face, "N") == 0){
+        //x += num
+        cord[0] += num;
+        //y += h
+        cord[1] += getHRec(getRecQuad(quad));
+    }
+    if(strcmp(face, "S") == 0){
+        //x += num
+        cord[0] += num;
+    }
+    if(strcmp(face, "L") == 0){
+        //y += num
+        cord[1] += num;
+    }
+    if(strcmp(face, "O") == 0){
+        //y += num
+        cord[1] += num;
+        //x += w
+        cord[0] += getWRec(getRecQuad(quad));
+    }
+
+    regis reg = create_Reg(id, cord);
+    insert_hashtable(info->bd->Reg, reg);
+    char* result;
+    result = (char*) calloc(155, sizeof(char));
+    sprintf(result, "%s  <--  %s %s nº %lf - (Cord: [%lf , %lf])\n", id, cep, face, num, cord[0], cord[1]);
+    insert_Fila(info->respQRY, result);
+    free(id); free(cep); free(face);
+}
+
+void equipUrbanToReg(char* text, Info* info){
+    char *aux, *id, *item;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    item = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s", id, item);
+    void* it, *temp;
+    double *cord;
+    it == NULL; temp == NULL; cord == NULL;
+
+    if(it == NULL){
+        temp = createHidrante(item, "", "", 0, 0);
+        it = get_hashtable(info->bd->HidrantesHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircHidr(it));
+    }
+    if(it == NULL){
+        temp = createSemaforo(item, "", "", 0, 0);
+        it = get_hashtable(info->bd->SemaforosHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircSemaf(it));
+    }
+    if(it == NULL){
+        temp = createRadioB(item, "", "", 0, 0);
+        it = get_hashtable(info->bd->RadioBaseHash, temp);
+        if(it != NULL)
+        cord = conrdenadaCentroCirc(getCircRadioB(it));
+    }
+    if(it == NULL){
+        insert_Fila(info->respQRY, "Item Não Encontrado!\n");
+        free(id); free(item);
+        return;
+    }
+    if(cord == NULL){
+        insert_Fila(info->respQRY, "Cordenada Não Encontrado!\n");
+        free(id); free(item);
+        return;
+    }
+    regis reg = create_Reg(id, cord);
+    insert_hashtable(info->bd->Reg, reg);
+    free(id); free(item);
+}
+
+void cordToReg(char* text, Info* info){
+    char *aux, *id;
+    double x, y;
+    double* cord;
+    cord = (double*) calloc(2, sizeof(double));
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 4;
+    id = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %lf %lf", id, &x, &y);
+    cord[0] = x;
+    cord[1] = y;
+    regis reg = create_Reg(id, cord);
+    insert_hashtable(info->bd->Reg, reg);
+    free(id);
+}

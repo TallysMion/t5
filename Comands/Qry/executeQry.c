@@ -123,6 +123,47 @@ int executeQry(char* text, Info *info){
         desapropriar(text, info);
         return 1;
     }
+    //Funções do t5
+    if(!strcmp(cmd, "@m?")){
+        pessoaToReg(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "@e?")){
+        enderecoToReg(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "@g?")){
+        equipUrbanToReg(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "@xy")){
+        cordToReg(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "@tp?")){
+        //(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "p?")){
+        //(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "sp?")){
+        //(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "au")){
+        //(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "dc")){
+        //(text, info);
+        return 1;
+    }
+    if(!strcmp(cmd, "rau")){
+        //(text, info);
+        return 1;
+    }
     free(cmd);
     return 0;
 }
