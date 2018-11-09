@@ -216,16 +216,16 @@ Info* configIn(int argc, const char *argv[]){
     //HASHTABLE
     result->bd->Reg     = create_hashtable(MODULOHASH, HashCompareRegistrador, hashCodeRegistrador);
     //HashTable create_hashtable(int modulo, int (*compare)(void*, char*), int hash(void*, int));
-    result->bd->HidrantesHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
-    result->bd->SemaforosHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
-    result->bd->RadioBaseHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareRadioB,       hashCodeRadioB);
-    result->bd->cepQuadraHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareQuadra,       hashCodeQuadra);
+    result->bd->HidrantesHash           = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
+    result->bd->SemaforosHash           = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
+    result->bd->RadioBaseHash           = create_hashtable(MODULOHASH, HashCompareRadioB,       hashCodeRadioB);
+    result->bd->cepQuadraHash           = create_hashtable(MODULOHASH, HashCompareQuadra,       hashCodeQuadra);
     
-    result->bd->EstabelecimentoType     = NULL;//= create_hashtable(MODULOHASH, Estab_Type_HashCompare,  Estab_Type_HashCode);
-    result->bd->PessoaCepHash           = NULL;//= create_hashtable(MODULOHASH, Pessoa_HashCompare,      Pessoa_HashCode);
-    result->bd->EstabHash               = NULL;//= create_hashtable(MODULOHASH, Estab_HashCompare,       Estab_HashCode);
-    result->bd->enderecoEstab           = NULL;//= create_hashtable(MODULOHASH, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
-    result->bd->enderecoPessoa          = NULL;//= create_hashtable(MODULOHASH, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
+    result->bd->EstabelecimentoType     = create_hashtable(MODULOHASH, Estab_Type_HashCompare,  Estab_Type_HashCode);
+    result->bd->PessoaCepHash           = create_hashtable(MODULOHASH, Pessoa_HashCompare,      Pessoa_HashCode);
+    result->bd->EstabHash               = create_hashtable(MODULOHASH, Estab_HashCompare,       Estab_HashCode);
+    result->bd->enderecoEstab           = create_hashtable(MODULOHASH, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
+    result->bd->enderecoPessoa          = create_hashtable(MODULOHASH, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
 
     //FILAS
     result->notsGeo     = create_Fila();
@@ -279,6 +279,11 @@ Info* configIn(int argc, const char *argv[]){
 }
 
 void inicGEO(Info* info, int size){
+    free_hashtable(info->bd->HidrantesHash);//       = create_hashtable(size, HashCompareHidrante,     hashCodeHidrante);
+    free_hashtable(info->bd->SemaforosHash);//       = create_hashtable(size, HashCompareSemaf,        hashCodeSemaforo);
+    free_hashtable(info->bd->RadioBaseHash);//       = create_hashtable(size, HashCompareRadioB,       hashCodeRadioB);
+    free_hashtable(info->bd->cepQuadraHash);//       = create_hashtable(size, HashCompareQuadra,       hashCodeQuadra);
+
     info->bd->HidrantesHash       = create_hashtable(size, HashCompareHidrante,     hashCodeHidrante);
     info->bd->SemaforosHash       = create_hashtable(size, HashCompareSemaf,        hashCodeSemaforo);
     info->bd->RadioBaseHash       = create_hashtable(size, HashCompareRadioB,       hashCodeRadioB);
@@ -286,17 +291,25 @@ void inicGEO(Info* info, int size){
 }
 
 void inicEC(Info* info, int size){
+    free_hashtable(info->bd->EstabelecimentoType);// = create_hashtable(size, Estab_Type_HashCompare,  Estab_Type_HashCode);
+    free_hashtable(info->bd->EstabHash);//           = create_hashtable(size, Estab_HashCompare,       Estab_HashCode);
+    free_hashtable(info->bd->enderecoEstab);//       = create_hashtable(size, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
+    
     info->bd->EstabelecimentoType = create_hashtable(size, Estab_Type_HashCompare,  Estab_Type_HashCode);
     info->bd->EstabHash           = create_hashtable(size, Estab_HashCompare,       Estab_HashCode);
     info->bd->enderecoEstab       = create_hashtable(size, Estab_Ende_HashCompare,  Estab_Ende_HashCode);
 }
 
 void inicPM(Info* info, int size){
+    free_hashtable(info->bd->PessoaCepHash);//       = create_hashtable(size, Pessoa_HashCompare,      Pessoa_HashCode);
+    free_hashtable(info->bd->enderecoPessoa);//      = create_hashtable(size, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
+
     info->bd->PessoaCepHash       = create_hashtable(size, Pessoa_HashCompare,      Pessoa_HashCode);
     info->bd->enderecoPessoa      = create_hashtable(size, Pessoa_Ende_HashCompare, Pessoa_Ende_HashCode);
 }
 
 void inicVIA(Info* info, int size){
+    freeGrafoD(info->bd->grafo);
     info->bd->grafo               = GRAFO_CREATE(size);
 }
 

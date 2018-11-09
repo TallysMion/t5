@@ -1397,7 +1397,7 @@ void whoAreYouEstab(char* text, Info* info){
     cnpj = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cnpj);
-    void* e = Estab_create(cnpj, NULL, "", "", "", "");
+    void* e = Estab_create(info, cnpj, NULL, "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, e);
     Estab_Free(e);
     if(estab == NULL){
@@ -1405,7 +1405,7 @@ void whoAreYouEstab(char* text, Info* info){
         free(cnpj);
         return;
     }
-    double* cord = Estab_getCordGeo(estab, info);
+    double* cord = Estab_getCordGeo(estab);
     if(cord == NULL){
        char* result;
         result = (char*) calloc(255, sizeof(char));
@@ -1756,7 +1756,7 @@ void closeEstab(char* text, Info* info){
     cnpj = (char*) calloc(55, sizeof(char));
     aux = text; aux += 4;
     sscanf(aux, "%s", cnpj);
-    void* Est = Estab_create(cnpj, NULL,  "", "", "", "");
+    void* Est = Estab_create(info, cnpj, NULL,  "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, Est);
     Estab_Free(Est); free(cnpj);
     if(estab == NULL){
@@ -1833,7 +1833,7 @@ void mudancaEstab(char* text, Info* info){
     aux = text; aux += 6;
     sscanf(aux, "%s %s %s %s", cnpj, cep, face, num);
 
-    void* temp = Estab_create(cnpj, NULL,  "", "", "", "");
+    void* temp = Estab_create(info, cnpj, NULL,  "", "", "", "");
     void* estab = get_hashtable(info->bd->EstabHash, temp);
     Estab_Free(temp); free(cnpj);
     if(estab == NULL){
@@ -1847,15 +1847,15 @@ void mudancaEstab(char* text, Info* info){
     insert_Fila(info->respQRY, result);
 
     double *cord_i;
-    cord_i = Estab_getCordGeo(estab, info);
+    cord_i = Estab_getCordGeo(estab);
     
     void* contr = Estab_getEndereco(estab);
-    void* end = Estab_changeEndereco(estab, cep, face, num);
+    void* end = Estab_changeEndereco(info, estab, cep, face, num);
     if(contr == NULL)
         insert_hashtable(info->bd->enderecoEstab, end);
     
     double *cord_j;
-    cord_j = Estab_getCordGeo(estab, info);
+    cord_j = Estab_getCordGeo(estab);
 
     if(cord_i != NULL && cord_j != NULL){
         void* nt = createNotacao(info->conf->colorMudec, cord_i[0]*(-1), cord_i[1]*(-1), cord_j[0]*(-1), cord_j[1]*(-1), "");
@@ -2084,11 +2084,13 @@ void pessoaToReg(char* text, Info* info){
         free(id); free(cpf);
         return;
     }
-    regis reg = create_Reg(id, Pessoa_getCordGeo(pes, info));
+    double* cord;
+    cord = Pessoa_getCordGeo(pes, info);
+    regis reg = create_Reg(id, cord);
     insert_hashtable(info->bd->Reg, reg);
     char* result;
-    result = (char*) calloc(55, sizeof(char));
-    sprintf(result, "%s  <--  %s\n", id, cpf);
+    result = (char*) calloc(110, sizeof(char));
+    sprintf(result, "%s  <--  %s - (Cord: [%lf , %lf])\n", id, cpf, cord[0], cord[1]);
     insert_Fila(info->respQRY, result);
     free(id); free(cpf);
 }
@@ -2186,6 +2188,9 @@ void equipUrbanToReg(char* text, Info* info){
     }
     regis reg = create_Reg(id, cord);
     insert_hashtable(info->bd->Reg, reg);
+    char *result = (char*) calloc(155, sizeof(char));
+    sprintf(result, "%s  <-- %s (Cord: [%lf , %lf])\n", id, item , cord[0], cord[1]);
+    insert_Fila(info->respQRY, result);
     free(id); free(item);
 }
 
@@ -2204,5 +2209,70 @@ void cordToReg(char* text, Info* info){
     cord[1] = y;
     regis reg = create_Reg(id, cord);
     insert_hashtable(info->bd->Reg, reg);
+    char *result = (char*) calloc(155, sizeof(char));
+    sprintf(result, "%s  <-- (Cord: [%lf , %lf])\n", id, cord[0], cord[1]);
+    insert_Fila(info->respQRY, result);
     free(id);
 }
+
+void theClosestEstab(char* text, Info* info){
+    char *aux, *idA, *tipo, *idB;
+    double x, y;
+    double* cord;
+    cord = (double*) calloc(2, sizeof(double));
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);
+    aux = text; aux += 5;
+    idA  = (char*) calloc(55, sizeof(char));
+    tipo = (char*) calloc(55, sizeof(char));
+    idB  = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s %s", idA, tipo, idB);
+    Lista estabs = getAll_hashtable(info->bd->EstabHash);
+    KDT estabskdt = KDT_create(Estab_compare, 2, Estab_Free);
+
+    void *temp, *auxEstab;
+    temp = Lista_getFirst(estabs);
+    while(1){
+        auxEstab = Lista_get(estabs, temp);
+        if(auxEstab){
+            char* tip;
+            tip = Estab_getTipoCod(auxEstab);
+            if(tip != NULL && !strcmp(tip, tipo)){
+                KDT_insert(estabskdt, auxEstab);
+            }
+            temp = Lista_getNext(estabs, temp);
+        }else{
+            break;
+        }
+    }
+
+    if(KDT_Size(estabskdt) == 0){
+        char *result = (char*) calloc(155, sizeof(char));
+        sprintf(result, "Nenhum Estabelecimento desse tipo encontrado\n");
+        insert_Fila(info->respQRY, result);
+        return;
+    }
+
+    void *reg, *regAux;
+    regAux  = create_Reg(idB, NULL);
+    reg = get_hashtable(info->bd->Reg, regAux);
+    free_Reg(regAux);
+
+    double* cordB = (double*) getValue_Reg(reg);
+    void* reference = createEstabCord(cordB[0], cordB[1]);
+    void* closestEstab = closestNeibord(estabskdt, reference);
+    Estab_Free(reference);
+    cord = Estab_getCordGeo(closestEstab);
+    regis regt = create_Reg(idA, cord);
+    insert_hashtable(info->bd->Reg, regt);
+    char *result = (char*) calloc(155, sizeof(char));
+    if(cord == NULL){
+        sprintf(result, "Error\n");    
+    }else{
+        sprintf(result, "%s  <-- (Cord: [%lf , %lf])\n", idA, cord[0], cord[1]);
+    }
+    insert_Fila(info->respQRY, result);
+    free(idA);
+}
+

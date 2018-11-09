@@ -17,6 +17,13 @@ void* create_Reg(char* id, void* value){
     return (void*) rg;
 }
 
+void free_Reg(void* reg){
+    Reg* rg;
+    rg = (Reg*) reg;
+    free(rg->id);
+    free(rg);
+}
+
 //Retorna o id do registrador
 char* getId_Reg(void* reg){
     Reg* rg;

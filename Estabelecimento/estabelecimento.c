@@ -26,10 +26,64 @@ typedef struct{
     type* tipo;
     Endereco* ende;
     char* nome;
+    double* cord;
 } Estab;
 
+
+double* calcCord(void* estab, Info* info){
+    Estab* est;
+    double num;
+    est = (Estab*) estab;
+    double* result;
+    if(est->ende == NULL){
+        return NULL;
+    }
+    quadra temp = createQuadra(est->ende->cep, "", "", 0, 0, 0, 0);
+    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    sscanf(est->ende->num, "%lf", &num);
+    result = (double*) calloc(2, sizeof(double));
+    result[0] = getXRec(getRecQuad(quad));
+    result[1] = getYRec(getRecQuad(quad));
+
+    if(strcmp(est->ende->face, "N") == 0){
+        //x += num
+        result[0] += num;
+        //y += h
+        result[1] += getHRec(getRecQuad(quad));
+    }
+    if(strcmp(est->ende->face, "S") == 0){
+        //x += num
+        result[0] += num;
+    }
+    if(strcmp(est->ende->face, "L") == 0){
+        //y += num
+        result[1] += num;
+    }
+    if(strcmp(est->ende->face, "O") == 0){
+        //y += num
+        result[1] += num;
+        //x += w
+        result[0] += getWRec(getRecQuad(quad));
+    }
+    return result;
+}
+
+//Cria um estab so com as cordenadas
+Estab* createEstabCord(double x,double y){
+    Estab* result;
+    result = (Estab*) calloc(1, sizeof(Estab));
+
+    result->cnpj    = (char*) calloc(10 , sizeof(char*));
+    strcpy(result->cnpj, "");
+    result->cord = (double*) calloc(2, sizeof(double));
+    result->cord[0] = x;
+    result->cord[1] = y;
+
+    return (void*) result;
+}
+
 //criar Estabelecimento
-Estab* Estab_create(char* cnpj, void* tip, char* cep, char* face, char* num, char* nome){
+Estab* Estab_create(Info* info, char* cnpj, void* tip, char* cep, char* face, char* num, char* nome){
     Estab* result;
     result = (Estab*) calloc(1, sizeof(Estab));
 
@@ -56,6 +110,7 @@ Estab* Estab_create(char* cnpj, void* tip, char* cep, char* face, char* num, cha
     result->tipo = tipo;
     result->ende = end;
     result->ende->estab = result;
+    result->cord = calcCord(result, info);
 
     return (void*) result;
 
@@ -72,13 +127,15 @@ void* Estab_getEndereco(void* estab){
 type* Estab_createType(char* cod, char* info){
     type* tipo;
     tipo = (type*) calloc(1, sizeof(type));
-    tipo->cod = cod;
-    tipo->info = info;
+    tipo->cod = (char*) calloc(strlen(cod)+2, sizeof(char));
+    tipo->info =(char*) calloc(strlen(info)+2, sizeof(char));
+    strcpy(tipo->cod,cod);
+    strcpy(tipo->info,info);
     return (void*) tipo;
 }
 
 //Mudança - Retorna Linha em SVG da mudança
-void* Estab_changeEndereco(void* estab,  char* cep, char* face, char* num){
+void* Estab_changeEndereco(Info* info, void* estab,  char* cep, char* face, char* num){
     Estab* est;
     est = (Estab*) estab;
     free(est->ende->cep);
@@ -93,6 +150,9 @@ void* Estab_changeEndereco(void* estab,  char* cep, char* face, char* num){
     strcpy(est->ende->face, face);
     strcpy(est->ende->num, num);
 
+    free(est->cord);
+    est->cord = calcCord(estab, info);
+
     return (void*) est->ende;
 }
 
@@ -102,10 +162,12 @@ void Estab_Free(void* estab){
     est = (Estab*) estab;
     free(est->nome);
     free(est->cnpj);
+    if(est->ende != NULL){
     free(est->ende->cep);
     free(est->ende->face);
     free(est->ende->num);
     free(est->ende);
+    }
     free(est);
 }
 
@@ -115,7 +177,15 @@ int Estab_compare(void* estab1, void* estab2, int dimension){
     Estab* estB;    
     estA = (Estab*) estab1;
     estB = (Estab*) estab2;
-    return strcmp(estA->cnpj, estB->cnpj);
+    dimension = dimension%2;
+    double *cordA;
+    double *cordB;
+    if(strcmp(estA->cnpj, estB->cnpj) == 0) return 0;
+    if (dimension == 0){
+        return estA->cord[0] - estB->cord[0];
+    }else{
+        return estA->cord[1] - estB->cord[1];
+    }
 }
 
 //hashCode - retorna o codigo do estabelecimento
@@ -202,40 +272,10 @@ int Estab_Ende_HashCompare(void* Endereco1, void* Endereco2){
 
 double* Estab_getCordGeo(void* estab, Info* info){
     Estab* est;
-    double num;
     est = (Estab*) estab;
-    double* result;
-    if(est->ende == NULL){
-        return NULL;
-    }
-    quadra temp = createQuadra(est->ende->cep, "", "", 0, 0, 0, 0);
-    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
-    sscanf(est->ende->num, "%lf", &num);
-    result = (double*) calloc(2, sizeof(double));
-    result[0] = getXRec(getRecQuad(quad));
-    result[1] = getYRec(getRecQuad(quad));
-
-    if(strcmp(est->ende->face, "N") == 0){
-        //x += num
-        result[0] += num;
-        //y += h
-        result[1] += getHRec(getRecQuad(quad));
-    }
-    if(strcmp(est->ende->face, "S") == 0){
-        //x += num
-        result[0] += num;
-    }
-    if(strcmp(est->ende->face, "L") == 0){
-        //y += num
-        result[1] += num;
-    }
-    if(strcmp(est->ende->face, "O") == 0){
-        //y += num
-        result[1] += num;
-        //x += w
-        result[0] += getWRec(getRecQuad(quad));
-    }
-    return result;
+    if(est == NULL)
+    return NULL;
+    return  est->cord;
 }
 
 char* Estab_relatorio(void* estab){
@@ -265,6 +305,12 @@ void* Estab_IdentEndereco(char* cep){
 char* Estab_getTipoCod(void* estab){
     Estab* est;
     est = (Estab*) estab;
+    if(est->tipo == NULL){
+        return NULL;
+    }
+    if(est->cord == NULL){
+        return NULL;
+    }
     return est->tipo->cod;
 }
 

@@ -34,7 +34,7 @@ int newEstab(char* text,Info *info){
     tipotemp = Estab_createType(tipoCod, "");
     tipo = get_hashtable(info->bd->EstabelecimentoType, tipotemp);
     free(tipotemp);
-    Estab estab = Estab_create(cnpj, tipo, cep, face, num, nome);
+    Estab estab = Estab_create(info, cnpj, tipo, cep, face, num, nome);
     insert_hashtable(info->bd->EstabHash, estab);
     insert_hashtable(info->bd->enderecoEstab, Estab_getEndereco(estab));
     free(cnpj);

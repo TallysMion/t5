@@ -51,7 +51,7 @@ int executeGeo(char* text, Info *info){
     if(!strcmp(cmd, "a")){
         return drawSufixo(text, info);
     }
-    if(!strcmp(cmd, "#")){
+    if(!strcmp(cmd, "#") || !strcmp(cmd, "#\r") || !strcmp(cmd, "#\r\n")){
         return close(info);
     }
     if(!strcmp(cmd, "q")){

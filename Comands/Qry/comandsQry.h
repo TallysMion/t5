@@ -92,5 +92,8 @@
     /*Inclui a cordenada geografica no registrador(r)*/
     void cordToReg(char* text, Info* info);
 
+    /*Inlclui no regA, o estab de 'tipo' mais proximo do regB*/
+    void theClosestEstab(char*text, Info*info);
+
 
 #endif

@@ -59,9 +59,15 @@ void freeVerticeV(void* v){
 void freeGrafoD(void* grafo){
     Grafo *g;
     g = (Grafo*)grafo;
+    if(g == NULL)
+    return;
+    if(g->vertices != NULL)
     freeKDTree(g->vertices);
+    if(g->left != NULL)
     free_hashtable(g->left);
+    if(g->right != NULL)
     free_hashtable(g->right);
+    if(g->ID != NULL)
     free_hashtable(g->ID);
     free(g);
 }

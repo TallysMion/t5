@@ -18,6 +18,9 @@ int main(int argc, const char *argv[]){
     if(comandos){
         inicGEO(info, lenghFila(comandos));
         startGEO(comandos, info);
+    }else{
+        printf("Arquivo .geo (obrigatorio) nao encontrado\n");
+        return -1;
     }
     
     comandos = getCommandsForEC(info); 
