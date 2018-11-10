@@ -11,6 +11,9 @@ void* KDT_create(int (*compare)(void*, void*, int), int dimension, void (*freeFu
 /* Insere um Valor na KD-Tree*/
 void   KDT_insert(KDT tree, KTD_Value value);
 
+/*Retorna o tamanho da tree*/
+int KDT_Size(void* tree);
+
 /* Limpa a memoria da KD-Tree*/
 void   freeKDTree(KDT tree);
 

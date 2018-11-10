@@ -88,6 +88,7 @@ void freeNode(void* node, Tree* tr){
 void freeKDTree(void* tree){
     Tree *tr;
     tr = (Tree*) tree;
+    if(tr->no != NULL)
     freeNode(tr->no, tr);
     tr->compare = NULL;
     tr->size=0;
@@ -239,6 +240,12 @@ void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* d
         }
     }
 
+}
+
+int KDT_Size(void* tree){
+    Tree *tr;
+    tr = (Tree*) tree;
+    return tr->size;
 }
 
 void* closestNeibord(void* tree, void* reference){

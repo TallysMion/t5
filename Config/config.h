@@ -34,7 +34,9 @@ typedef struct database{
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
+    KDT         carroTree;
 
+    HashTable   carroHash;
     HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/

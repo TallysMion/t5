@@ -141,7 +141,7 @@ int executeQry(char* text, Info *info){
         return 1;
     }
     if(!strcmp(cmd, "@tp?")){
-        //(text, info);
+        theClosestEstab(text, info);
         return 1;
     }
     if(!strcmp(cmd, "p?")){

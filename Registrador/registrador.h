@@ -6,6 +6,9 @@ typedef void* regis;
 //Cria uma estrutura de registrador
 void* create_Reg(char* id, void* value);
 
+//Função de Free
+void free_Reg(void* reg);
+
 //Retorna o id do registrador
 char* getId_Reg(void* Reg);
 

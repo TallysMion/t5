@@ -14,6 +14,7 @@
 #include "../Radio-Base/radio-base.h"
 #include "../Semaforo/semaforo.h"
 #include "../Registrador/registrador.h"
+#include "../Carro/carro.h"
 
 #define MODULOHASH 15
 
@@ -42,7 +43,9 @@ typedef struct database{
     KDT         SemaforosTree;
     KDT         QuadrasTree;
     KDT         RadioBaseTree;
+    KDT         carroTree;
 
+    HashTable   carroHash;
     HashTable   Reg;
     HashTable   EstabelecimentoType;
     HashTable   *EstabHash; /*id*/
@@ -211,11 +214,13 @@ Info* configIn(int argc, const char *argv[]){
     result->bd->SemaforosTree       = KDT_create(compareSemaforo , 2, freeSemaf);
     result->bd->QuadrasTree         = KDT_create(compareQuadra   , 2, freeQuad);
     result->bd->RadioBaseTree       = KDT_create(compareRadioB   , 2, freeRadioB);
+    result->bd->carroTree           = KDT_create(compareCarro    , 2, freeCarro);
 
 
     //HASHTABLE
     result->bd->Reg     = create_hashtable(MODULOHASH, HashCompareRegistrador, hashCodeRegistrador);
     //HashTable create_hashtable(int modulo, int (*compare)(void*, char*), int hash(void*, int));
+    result->bd->carroHash               = create_hashtable(MODULOHASH, HashCompareCarro, hashCodeCarro);
     result->bd->HidrantesHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareHidrante,     hashCodeHidrante);
     result->bd->SemaforosHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareSemaf,        hashCodeSemaforo);
     result->bd->RadioBaseHash           = NULL;//    = create_hashtable(MODULOHASH, HashCompareRadioB,       hashCodeRadioB);
