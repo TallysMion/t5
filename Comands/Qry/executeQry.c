@@ -153,7 +153,7 @@ int executeQry(char* text, Info *info){
         return 1;
     }
     if(!strcmp(cmd, "au")){
-        //(text, info);
+        create_Carro(text, info);
         return 1;
     }
     if(!strcmp(cmd, "dc")){

@@ -16,6 +16,7 @@
 #include "../../KDTREE/kdtree.h"
 #include "../../HashTable/hashtable.h"
 #include "../../Registrador/registrador.h"
+#include "../../Carro/carro.h"
 
 
 /*Reporta quadras e equipamentos dentro do retanguo*/
@@ -1243,6 +1244,21 @@ void closeQRY(Info* info){
         }
     }
 
+    //imprimir carros
+    Lista carros = KDT_getAll(info->bd->carroTree);
+    t=Lista_getFirst(carros);
+    while(1){
+        temp = Lista_get(carros,t);
+        if(temp){          
+              
+            Item it = Lista_get(carros, t);
+            fprintf(arqSVG_QRY, "%s\n", createCarroSVG(it));
+            t = Lista_getNext(carros, t);
+        }else{
+        break;
+        }
+    }
+
     fprintf(arqSVG_QRY,"</svg>");
 
     fclose(arqSVG_QRY);
@@ -2276,3 +2292,19 @@ void theClosestEstab(char* text, Info* info){
     free(idA);
 }
 
+
+/*Cria um Carro*/
+void create_Carro(char* text, Info* info){
+    char *aux, *placa;
+    double x, y, w, h;
+    aux = text; aux += 3;
+    placa = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %lf %lf %lf %lf", placa, &x, &y, &w, &h);
+
+    carro car = createCarro(placa, x, y, w, h);
+    free(placa);
+
+    KDT_insert(info->bd->carroTree, car);
+    insert_hashtable(info->bd->carroHash, car);
+
+}

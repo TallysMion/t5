@@ -36,8 +36,9 @@ char* createCarroSVG(void* car){
     retangulo rt = createRetangulo(0, "BLUE", "YELLOW", c->w, c->h, c->x, c->y);
     Notation nt = createNotacao("Black", 0, 0, (c->x+5), (c->y + c->h/2 + 5), c->placa);
     char *rec, *not, *result;
-    rec = (char*) calloc(155, sizeof(char));
-    not = (char*) calloc(155, sizeof(char));
+    rec = createRetanguloSvg(rt);
+    not = createNotacaoSvg(nt);
+
     int len = strlen(rec) + strlen(not) + 10;
     result = (char*) calloc(len, sizeof(char));
     strcpy(result, rec);
