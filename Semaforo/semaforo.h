@@ -30,6 +30,6 @@ int compareSemaforo(void* hdA, void* hdB, int dim);
 int hashCodeSemaforo(void* hdA, int Modulo);
 
 //Comparação para hashTable
-int HashCompareSemaf(void* semaf, char* id);
+int HashCompareSemaf(void* semaf, void* id);
 
 #endif

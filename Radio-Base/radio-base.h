@@ -1,6 +1,6 @@
 #ifndef RADIOB_H
 #define RADIOB_H
-#include "../Utils/Point.h"
+
 
 typedef void* radioB;
 
@@ -15,9 +15,6 @@ char* getIdRadioB(radioB rb);
 
 /*Retorna H*/
 void* getCircRadioB(radioB rb);
-
-/*vetor de Point*/
-Point* pointRB(radioB rb);
 
 void setColorFillRB(void* semaf, char* color);
 void setColorStrokeRB(void* semaf, char* color);
@@ -34,6 +31,6 @@ int compareRadioB(void* hdA, void* hdB, int dim);
 int hashCodeRadioB(void* hdA, int Modulo);
 
 //Comparador para RadioB
-int HashCompareRadioB(void* rb, char* id);
+int HashCompareRadioB(void* rb, void* id);
 
 #endif

@@ -108,10 +108,11 @@ int compareHidrante(void* hdA, void* hdB, int dim){
     hidA = (Hidrante*) hdA;
     hidB = (Hidrante*) hdB;
     dim = dim%2;
+    if(!strcmp(hidA->id, hidB->id)) return 0;
     if (dim == 0){
-        return hidA->x > hidB->x ? 1 : (hidA->x < hidB->x ? -1 : 0) ; 
+        return hidA->x - hidB->x;
     }else{
-        return hidA->y > hidB->y ? 1 : (hidA->y < hidB->y ? -1 : 0) ;
+        return hidA->y - hidB->y;
     }
 }
 
@@ -130,8 +131,10 @@ int hashCodeHidrante(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareHidrante(void* hid, char* id){
-    Hidrante *hidr;
+int HashCompareHidrante(void* hid, void* id){
+    Hidrante *hidr, *idH;
     hidr = (Hidrante*) hid;
-    return strcmp(hidr->id, id);
+    idH = (Hidrante*) id;
+    return strcmp(hidr->id, idH->id);
 }
+

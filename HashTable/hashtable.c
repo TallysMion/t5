@@ -5,13 +5,13 @@
 
 typedef struct{
     int modulo;
-    int (*compare)(void*, char*);
+    int (*compare)(void*, void*);
     int (*hash)(void*, int);
     void **hashtable;
 } HashTable;
 
 //Cria uma hashtable com modulo = n, usando a função de hash func e o comparador compare
-void* create_hashtable(int modulo, int (*compare)(void*, char*), int (*hash)(void*, int)){
+void* create_hashtable(int modulo, int (*compare)(void*, void*), int (*hash)(void*, int)){
     HashTable *table;
     table = (HashTable*) calloc(1, sizeof(HashTable));
     table->modulo = modulo;
@@ -33,8 +33,27 @@ void insert_hashtable(void* hash, void* item){
     Lista_insert(*(table->hashtable + hashcode), item);
 }
 
-//retorna um item da hashtable
-void* get_hashtable(void* hash, char* ident){
+//Remove um item da hash
+void remove_hashtable(void* hash, void* item){
+    HashTable* table;
+    table = (HashTable*) hash;
+    int hashcode = table->hash(item, table->modulo);    
+    Lista list = *(table->hashtable + hashcode);
+    Posic t;
+    t=Lista_getFirst(list);
+    while(t != NULL){
+        void* aux;
+        aux = Lista_get(list,t);
+        if(table->compare(aux, item) == 0){
+            Lista_remove(list, t);
+            return;
+        }        
+        t = Lista_getNext(list, t);
+    }
+}
+
+//retorna um item da hashtable, se houver mais de um identificado, retorna o primeiro
+void* get_hashtable(void* hash, void* ident){
     HashTable* table;
     table = (HashTable*) hash;
     int hashcode = table->hash(ident, table->modulo);    
@@ -50,6 +69,27 @@ void* get_hashtable(void* hash, char* ident){
         t = Lista_getNext(list, t);
     }
     return NULL;
+
+}
+
+//retorna uma lista de Itens da hashtable, se houver mais de um identificado, retorna vai incluindo na lista
+Lista getList_hashtable(void* hash, void* ident){
+    HashTable* table;
+    table = (HashTable*) hash;
+    int hashcode = table->hash(ident, table->modulo);    
+    Lista list = *(table->hashtable + hashcode);
+    Lista result = Lista_createLista();
+    Posic t;
+    t=Lista_getFirst(list);
+    while(t != NULL){
+        void* aux;
+        aux = Lista_get(list,t);
+        if(table->compare(aux, ident) == 0){
+            Lista_insert(result, aux);
+        }        
+        t = Lista_getNext(list, t);
+    }
+    return result;
 
 }
 

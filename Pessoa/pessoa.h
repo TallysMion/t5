@@ -8,7 +8,7 @@ typedef void* Endereco;
 Pessoa Pessoa_create(char* cpf, char* nome, char* sobrenome, char* sexo, char* nasc);
 
 //criar Morador
-Endereco Pessoa_createSetEndereco(Pessoa pes, char* cep, char* face, char* num, char* comp);
+Endereco Pessoa_SetEndereco(Pessoa pes, char* cep, char* face, char* num, char* comp);
 
 //Retorna o endereco
 Endereco Pessoa_getEndereco(Pessoa pes);
@@ -23,6 +23,15 @@ int Pessoa_compare(Pessoa pes1, Pessoa pes2, int dimension);
 int Pessoa_HashCode(Pessoa pes, int modulo);
 
 //Comparador para hashtable
-int Pessoa_HashCompare(void* pes, char* cpf);
+int Pessoa_HashCompare(void* pes, void* cpf);
+
+//retorna a struct da pessoa que mora aqui, se não for um endereco de pessoa, retorna NULL
+void* Pessoa_getPessoaEndereco(void* endereco);
+
+int Pessoa_Ende_HashCode(void* endereco, int modulo);
+int Pessoa_Ende_HashCompare(void* Endereco1, void* Endereco2);
+void* Pessoa_IdentEndereco(char* cep);
+char* Pessoa_relatorio(void* pessoa);
+double* Pessoa_getCordGeo(void* pessoa, void* info);
 
 #endif

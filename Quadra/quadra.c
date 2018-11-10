@@ -109,10 +109,11 @@ int compareQuadra(void* hdA, void* hdB, int dim){
     qdA = (Quadra*) hdA;
     qdB = (Quadra*) hdB;
     dim = dim%2;
+    if(!strcmp(qdA->cep, qdB->cep)) return 0;
     if (dim == 0){
-        return qdA->x > qdB->x ? 1 : (qdA->x < qdB->x ? -1 : 0) ; 
+        return qdA->x - qdB->x;
     }else{
-        return qdA->y > qdB->y ? 1 : (qdA->y < qdB->y ? -1 : 0) ;
+        return qdA->y - qdB->y;
     }
 }
 
@@ -131,8 +132,9 @@ int hashCodeQuadra(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareQuadra(void* quad, char* cep){
-    Quadra *qd;
+int HashCompareQuadra(void* quad, void* cep){
+    Quadra *qd, *id;
     qd = (Quadra*) quad;
-    return strcmp(qd->cep,cep);
+    id = (Quadra*) cep;
+    return strcmp(qd->cep,id->cep);
 }

@@ -68,6 +68,25 @@ void* Lista_insert(void* lista, void* item){
     return (void*) ps;
 }
 
+void Lista_insertLista(void* list, void* list2){
+    Lista *lista, *lista2;
+    lista = (Lista*) list;
+    lista2= (Lista*) list2;
+    if(lista->size == 0){
+        lista->size = lista2->size;
+        lista->inicio = lista2->inicio;
+        lista->fim = lista2->fim;
+        return;
+    }
+    if(lista2->size == 0){
+        return;
+    }
+    lista->size += lista2->size;
+    lista->fim->next = lista2->inicio;
+    lista2->inicio->prev = lista->fim;
+    lista->fim = lista2->fim;
+}
+
 //remove um item da lista
 void Lista_remove(void* lista, void* p){
     Posic *pos;
@@ -223,6 +242,9 @@ void* Lista_getNext(void* lista, void* p){
     if(pos->lista != lista){
         return NULL;
     }
+    if(pos->it == NULL){
+        return NULL;
+    }
 
     Posic *result;
     result = (Posic*) calloc(1,sizeof(Posic));
@@ -277,18 +299,20 @@ void* Lista_getPrevious(void* lista, void* p){
 
 //testar
 void Lista_insertAll(void* lista, void* lista2){
-    void *t, *temp;
-    t = Lista_getFirst(lista2);
-    while(1){
-        temp = Lista_get(lista2,t);
-        if(temp){
-            Lista_insert(lista, temp);
-            t = Lista_getNext(lista2, t);
-        }else{
-        break;
-        }
-    }
+    Lista_insertLista(lista, lista2);
 }
 
+
+void freeLista(void* lista){
+    Item *a, *p;
+    Lista* ls;
+    ls = (Lista*) lista;
+    a = ls->inicio;
+    while(a != NULL){
+        p = a->next;
+        free(a->value);
+        a = p;
+    }
+}
 
 

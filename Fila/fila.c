@@ -9,7 +9,7 @@ typedef void* Value;
 
 struct item{void *value; struct item* next;};
 
-struct fila{struct item *begin; struct item *end;};
+struct fila{struct item *begin; struct item *end; int size;};
 
 /*cria uma fila vazia*/
 Fila create_Fila(){
@@ -17,6 +17,7 @@ Fila create_Fila(){
     result = (struct fila*) calloc(1, sizeof(struct fila));
     result->begin = NULL;
     result->end = NULL;
+    result->size = 0;
     return result;
 }
 
@@ -36,7 +37,7 @@ void insert_Fila(Fila fila, Value item){
     struct item *value;
 
     filaAux = (struct fila*) fila;    
-    value = (struct item*) calloc(1, sizeof(struct item*));
+    value = (struct item*) calloc(1, sizeof(struct item));
     value->value = item;
     value->next = NULL;
 
@@ -48,6 +49,7 @@ void insert_Fila(Fila fila, Value item){
     
     filaAux->end->next = value;
     filaAux->end = value;
+    filaAux->size += 1;
 }
 
 /*busca o proximo item da fila, removendo o mesmo da fila,
@@ -65,6 +67,7 @@ Value remove_Fila(Fila fila){
     temp = filaAux->begin->next;
     filaAux->begin = temp;
     temp2 = aux->value;
+    filaAux->size -= 1;
     return temp2;
 }
 
@@ -74,4 +77,11 @@ void freeFila(Fila fila){
         remove_Fila(fila);
     }
     free(fila);
+}
+
+/*Retorna o tamanho da fila*/
+int lenghFila(Fila fila){
+    struct fila *filaAux;
+    filaAux = (struct fila*) fila;
+    return filaAux->size;
 }

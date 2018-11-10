@@ -40,6 +40,10 @@ Posic Lista_getPrevious(Lista lista, Posic p);
 //Inseri os itens de uma lista no final da outra
 void Lista_insertAll(Lista lista, Lista lista2);
 
+//Concatena duas listas
+void Lista_insertLista(Lista* lista, Lista* lista2);
+
 //precisa de uma função free -> causando leek de memoria
+void freeLista(Lista* lista);
 
 #endif

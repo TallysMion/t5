@@ -2,30 +2,44 @@
 #include <stdlib.h>
 #include "../Config/config.h"
 #include "../Fila/fila.h"
-#include "../Comands/executeGeo.h"
-#include "../Comands/executeQry.h"
-#include "../Comands/executeEc.h"
-#include "../Comands/executePm.h"
-
+#include "../Comands/Geo/executeGeo.h"
+#include "../Comands/Qry/executeQry.h"
+#include "../Comands/Ec/executeEc.h"
+#include "../Comands/Pm/executePm.h"
+#include "../Comands/Via/executeVia.h"
 
 int main(int argc, const char *argv[]){
     //configurações
     Info *info;
     Fila comandos;    
-    info = configIn(argc, argv);
-    
+    info = configIn(argc, argv);    
 
     comandos = getCommandsForGEO(info);    
-    if(comandos)
-    startGEO(comandos, info);
-
+    if(comandos){
+        inicGEO(info, lenghFila(comandos));
+        startGEO(comandos, info);
+    }else{
+        printf("Arquivo .geo (obrigatorio) nao encontrado\n");
+        return -1;
+    }
+    
     comandos = getCommandsForEC(info); 
-    if(comandos)  
-    startEc(comandos, info);
-
+    if(comandos){
+        inicEC(info, lenghFila(comandos));
+        startEc(comandos, info);
+    }
+    
     comandos = getCommandsForPM(info); 
-    if(comandos)  
-    startPm(comandos, info);
+    if(comandos){
+        inicPM(info, lenghFila(comandos));
+        startPm(comandos, info);
+    }
+
+    comandos = getCommandsForVIA(info);
+    if(comandos){
+        inicVIA(info, lenghFila(comandos));
+        startVia(comandos, info);
+    }
 
     comandos = getCommandsForQRY(info); 
     if(comandos)  

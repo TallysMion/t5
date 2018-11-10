@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "../Lista/lista.h"
+#include <math.h>
 
 typedef struct No{
     void* value;
@@ -8,15 +9,17 @@ typedef struct No{
 }Node;
 
 typedef struct{
+    void (*freeFunc)(void*);
     int (*compare)(void*, void*, int);
     int dimension;
     int size;
     Node *no;
 }Tree;
 
-void* KDT_create(int (*compare)(void*, void*, int), int dimension){
+void* KDT_create(int (*compare)(void*, void*, int), int dimension, void (*freeFunc)(void*)){
     Tree *result;
     result = (Tree*) calloc(1, sizeof(Tree));
+    result->freeFunc = freeFunc;
     result->compare = compare;
     result->dimension = dimension;
     result->no = NULL;
@@ -69,54 +72,55 @@ void KDT_insert(void* tree, void*value){
     tr->size+=1;
 }
 
-void freeNode(void* node){
+void freeNode(void* node, Tree* tr){
     Node *n;
     n = (Node*) node;
     if(n->left != NULL){
-        freeNode(n->left);
+        freeNode(n->left, tr);
     }
     if(n->Right != NULL){
-        freeNode(n->Right);
+        freeNode(n->Right, tr);
     }
-    n->value = NULL;
+    tr->freeFunc(n->value);
     free(node);
 }
 
 void freeKDTree(void* tree){
     Tree *tr;
     tr = (Tree*) tree;
-    freeNode(tr->no);
+    if(tr->no != NULL)
+    freeNode(tr->no, tr);
     tr->compare = NULL;
     tr->size=0;
     tr->dimension=0;
     free(tree);
 }
 
-Lista getAllNode(void* node){
+Lista getAllNode(void* node, void* Lista){
     Node* no;
     no = (Node*) node;
-    Lista * ls;
-    ls = Lista_createLista();
     if(no == NULL){
-        return ls;
+        return Lista;
     }
     if(no->left != NULL){
-        Lista_insertAll(ls, getAllNode(no->left));
+       getAllNode(no->left, Lista);
     }
     if(no->value != NULL){
-        Lista_insert(ls, no->value);
+        Lista_insert(Lista, no->value);
     }
     if(no->Right != NULL){
-        Lista_insertAll(ls, getAllNode(no->Right));
+        getAllNode(no->Right, Lista);
     }
-    return ls;   
+    return Lista;   
 
 }
 
 Lista KDT_getAll(void* tree){
     Tree *tr;
     tr = (Tree*) tree;
-    return getAllNode(tr->no);
+    Lista * ls;
+    ls = Lista_createLista();
+    return getAllNode(tr->no, ls);
 }
 
 void* getValueNode(Tree* tree, Node* no, int dim, void* reference){
@@ -127,13 +131,13 @@ void* getValueNode(Tree* tree, Node* no, int dim, void* reference){
         dim = 0;
     }
 
-    if(tree->compare(no->value, reference, dim) == 0){
+    if(tree->compare(no->value, reference, dim) == 0 && tree->compare(no->value, reference, dim+1) == 0){
         return no->value;
     }
     if(tree->compare(no->value, reference, dim) < 0){
         return getValueNode(tree, no->left, dim, reference);
     }
-    if(tree->compare(no->value, reference, dim) > 0){
+    if(tree->compare(no->value, reference, dim) >= 0){
         return getValueNode(tree, no->Right, dim, reference);
     }
 
@@ -150,26 +154,37 @@ Lista removeValueNode(Tree* tree, Node* no, int dim, void* reference){
     if(no == NULL){
         return NULL;
     }
+    if(no->value == NULL){
+        return NULL;
+    }
     if(dim == tree->dimension){
         dim = 0;
     }
-
-    if(tree->compare(no->value, reference, dim) == 0){
-        Lista ls = Lista_createLista();
-        Lista_insertAll(ls, getAllNode(no->left));
-        Lista_insertAll(ls, getAllNode(no->Right));
+    int i = tree->compare(no->value, reference, dim);
+    Lista ls;
+    if(i == 0 && tree->compare(no->value, reference, dim+1) == 0 ){
+        ls = Lista_createLista();
+        getAllNode(no->left, ls);
+        getAllNode(no->Right, ls);
         no->value = NULL;
         no->left = NULL;
         no->Right = NULL;
         return ls;
     }
 
-    if(tree->compare(no->value, reference, dim) < 0){
-        return getValueNode(tree, no->left, dim, reference);
+    if(i < 0){
+        ls = removeValueNode(tree, no->left, dim+1, reference);
+        if(ls == NULL){
+            ls = removeValueNode(tree, no->Right, dim+1, reference);
+        }
     }
-    if(tree->compare(no->value, reference, dim) > 0){
-        return getValueNode(tree, no->Right, dim, reference);
+    if(i >= 0){
+        ls = removeValueNode(tree, no->Right, dim+1, reference);
+        if(ls == NULL){
+            ls = removeValueNode(tree, no->left, dim+1, reference);
+        }
     }
+    return ls;
 
 }
 
@@ -194,4 +209,59 @@ void KDT_remove(void* tree, void*reference){
         }
     }   
 
+}
+
+double distKDT(Tree* tr, void* valueA, void* valueB){
+    int i;
+    double dist = 0;
+    for(i = 0; i < tr->dimension; i++){
+        dist = dist + pow(tr->compare(valueA, valueB, i),2);
+    }
+    return sqrt(dist);
+}
+
+void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* dis, int dim){
+    if(n == NULL)
+    return;
+    double distAtual = distKDT(tr, reference, n->value);
+    if (distAtual < *dis && distAtual > 0){
+        *dis = distAtual;
+        *item = n->value;
+    }
+    if(tr->compare(n->value, reference, dim+1) < 0){
+        closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
+            closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        }
+    }else{
+        closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
+            closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        }
+    }
+
+}
+
+int KDT_Size(void* tree){
+    Tree *tr;
+    tr = (Tree*) tree;
+    return tr->size;
+}
+
+void* closestNeibord(void* tree, void* reference){
+    Tree *tr;
+    tr = (Tree*) tree;
+    Node *n;
+    n = (Node*) tr->no;
+    if(n == NULL){
+        return NULL;
+    } 
+    void** item;
+    item = (void**) calloc(1, sizeof(void*));
+    *item = n->value;
+    double *dis;
+    dis = (double*) calloc(1, sizeof(double));
+    *dis = distKDT(tr, reference, n->value);
+    closestNeibordNode(n, tr, reference , item, dis, 0);
+    return *item;
 }

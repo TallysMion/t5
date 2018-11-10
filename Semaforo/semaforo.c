@@ -109,10 +109,11 @@ int compareSemaforo(void* hdA, void* hdB, int dim){
     qdA = (Semaforo*) hdA;
     qdB = (Semaforo*) hdB;
     dim = dim%2;
+    if(!strcmp(qdA->id, qdB->id)) return 0;
     if (dim == 0){
-        return qdA->x > qdB->x ? 1 : (qdA->x < qdB->x ? -1 : 0) ; 
+        return qdA->x - qdB->x;
     }else{
-        return qdA->y > qdB->y ? 1 : (qdA->y < qdB->y ? -1 : 0) ;
+        return qdA->y - qdB->y;
     }
 }
 
@@ -131,8 +132,9 @@ int hashCodeSemaforo(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareSemaf(void* semaf, char* id){
-    Semaforo *sem;
+int HashCompareSemaf(void* semaf, void* id){
+    Semaforo *sem, *idS;
     sem = (Semaforo*) semaf;
-    return strcmp(sem->id, id);
+    idS = (Semaforo*) id;
+    return strcmp(sem->id, idS->id);
 }

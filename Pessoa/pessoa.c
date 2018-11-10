@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../Quadra/quadra.h"
+#include "../Retangulo/retangulo.h"
+#include "../Config/config.h"
+#include "../HashTable/hashtable.h"
 
 typedef struct{
     int tipo;
@@ -30,17 +34,18 @@ void* Pessoa_create(char* cpf, char* nome, char* sobrenome, char* sexo, char* na
     pessoa->nome        = (char*) calloc(strlen(nome)+2, sizeof(char));
     pessoa->sobrenome   = (char*) calloc(strlen(sobrenome)+2, sizeof(char));
     pessoa->sexo        = (char*) calloc(strlen(sexo)+2, sizeof(char));
+    pessoa->nasc        = (char*) calloc(strlen(nasc)+2, sizeof(char));
     pessoa->endereco    = NULL;
 
     strcpy(pessoa->cpf, cpf);
     strcpy(pessoa->nome, nome);
     strcpy(pessoa->sobrenome, sobrenome);
     strcpy(pessoa->sexo, sexo);
+    strcpy(pessoa->nasc, nasc);
 
     return (void*) pessoa;
 
 }
-
 
 //criar Morador
 void* Pessoa_SetEndereco(void* pes, char* cep, char* face, char* num, char* comp){
@@ -66,12 +71,30 @@ void* Pessoa_SetEndereco(void* pes, char* cep, char* face, char* num, char* comp
         free(pessoa->endereco->face);
         free(pessoa->endereco->num);
         free(pessoa->endereco->comp);
-        strcpy(pessoa->endereco->cep, cep);
-        strcpy(pessoa->endereco->face, face);
-        strcpy(pessoa->endereco->num, num);
-        strcpy(pessoa->endereco->comp, comp);
+        pessoa->endereco->cep = cep;
+        pessoa->endereco->face= face;
+        pessoa->endereco->num = num;
+        pessoa->endereco->comp= comp;
         return (void*) pessoa->endereco;
     }
+}
+
+void* Pessoa_IdentEndereco(char* cep){
+    Endereco* end;
+    end = (Endereco*) calloc(1, sizeof(Endereco));
+    end->tipo = 1;
+    end->cep = cep;
+    end->face= NULL;
+    end->num = NULL;
+    end->comp= NULL;
+    end->pessoa = NULL;
+}
+
+void* Pessoa_getPessoaEndereco(void* endereco){
+    Endereco * end;
+    end = (Endereco*) endereco;
+    if(end->tipo == 0) return NULL;
+    return end->pessoa;
 }
 
 //Retorna o endereco
@@ -90,11 +113,13 @@ void Pessoa_Free(void* pes){
     free(pessoa->sobrenome);
     free(pessoa->sexo);
     free(pessoa->nasc);
-    free(pessoa->endereco->cep);
-    free(pessoa->endereco->face);
-    free(pessoa->endereco->num);
-    free(pessoa->endereco->comp);
-    free(pessoa->endereco);
+    if(pessoa->endereco != NULL){
+        free(pessoa->endereco->cep);
+        free(pessoa->endereco->face);
+        free(pessoa->endereco->num);
+        free(pessoa->endereco->comp);
+        free(pessoa->endereco);
+    }
     free(pessoa);
 }
 
@@ -121,8 +146,84 @@ int Pessoa_HashCode(void* pes, int modulo){
     return modulo < 0 ? hash : hash%modulo;
 }
 
-int Pessoa_HashCompare(void* pes, char* cpf){
-    Pessoa *pessoa;
+int Pessoa_HashCompare(void* pes, void* cpf){
+    Pessoa *pessoa, *id;
     pessoa = (Pessoa*) pes;
-    return strcmp(pessoa->cpf, cpf);
+    id = (Pessoa*) cpf;
+    return strcmp(pessoa->cpf, id->cpf);
+}
+
+
+//hashCode - retorna o codigo do estabelecimento
+int Pessoa_Ende_HashCode(void* endereco, int modulo){
+    Endereco *end;
+    end = (Endereco*) endereco;
+    int x = strlen(end->cep);
+    int hash = 0;
+    char *aux = end->cep;
+    while(*aux != 0){
+        hash += x*(*aux);
+        aux++;
+        x--;
+    }
+    return modulo < 0 ? hash : hash%modulo;
+}
+
+int Pessoa_Ende_HashCompare(void* Endereco1, void* Endereco2){
+    Endereco *est1, *est2;
+    est1 = (Endereco*) Endereco1;
+    est2 = (Endereco*) Endereco2;
+    return strcmp(est1->cep, est2->cep);
+}
+
+char* Pessoa_relatorio(void* pessoa){
+    Pessoa* pes;
+    char* result;
+    result = (char*) calloc(510, sizeof(char));
+    pes = (Pessoa*) pessoa;
+    if(pes->endereco == NULL){
+        sprintf(result, "%s", pes->nome);
+    }else{
+        sprintf(result, "%s (%s), %s %s, nº %s - %s", pes->nome, pes->nasc, pes->endereco->cep, pes->endereco->face, pes->endereco->num, pes->endereco->comp);
+    }
+    return result;
+}
+
+double* Pessoa_getCordGeo(void* pessoa, Info* info){
+    Pessoa* pes;
+    double num;
+    pes = (Pessoa*) pessoa;
+    double* result;
+    if(pes->endereco == NULL){
+        return NULL;
+    }
+    quadra temp = createQuadra(pes->endereco->cep, "", "", 0, 0, 0, 0);
+    quadra quad = get_hashtable(info->bd->cepQuadraHash, temp);
+    freeQuad(temp);
+    sscanf(pes->endereco->num, "%lf", &num);
+    result = (double*) calloc(2, sizeof(double));
+    result[0] = getXRec(getRecQuad(quad));
+    result[1] = getYRec(getRecQuad(quad));
+
+    if(strcmp(pes->endereco->face, "N") == 0){
+        //x += num
+        result[0] += num;
+        //y += h
+        result[1] += getHRec(getRecQuad(quad));
+    }
+    if(strcmp(pes->endereco->face, "S") == 0){
+        //x += num
+        result[0] += num;
+    }
+    if(strcmp(pes->endereco->face, "L") == 0){
+        //y += num
+        result[1] += num;
+    }
+    if(strcmp(pes->endereco->face, "O") == 0){
+        //y += num
+        result[1] += num;
+        //x += w
+        result[0] += getWRec(getRecQuad(quad));
+    }
+    return result;
 }

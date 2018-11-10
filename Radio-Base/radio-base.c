@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../Circulo/circulo.h"
 #include "../Anotacao/anotacao.h"
-#include "../Utils/Point.h"
+
 
 #define SIZE 10
 #define CENTER 1
@@ -73,19 +73,6 @@ cicle getCircRadioB(void* raB){
     return (void*) createCirculo(0, rb->cor1, rb->cor2, SIZE, rb->x, rb->y);
 }
 
-Point* pointRB(void* raB){
-    RadioB *rb;
-    rb = (RadioB*) raB;
-
-    Point *pt;
-    pt = (Point *) calloc(1, sizeof(Point));
-    pt->id = (char*) calloc(155, sizeof(char));
-    strcpy(pt->id, rb->id);
-    pt->x = rb->x;
-    pt->y = rb->y;
-    return pt;
-}
-
 void setColorFillRB(void* semaf, char* color){
     RadioB *sm;
     sm = (RadioB*) semaf;
@@ -123,10 +110,11 @@ int compareRadioB(void* hdA, void* hdB, int dim){
     qdA = (RadioB*) hdA;
     qdB = (RadioB*) hdB;
     dim = dim%2;
+    if(!strcmp(qdA->id, qdB->id)) return 0;
     if (dim == 0){
-        return qdA->x > qdB->x ? 1 : (qdA->x < qdB->x ? -1 : 0) ; 
+        return qdA->x - qdB->x;
     }else{
-        return qdA->y > qdB->y ? 1 : (qdA->y < qdB->y ? -1 : 0) ;
+        return qdA->y - qdB->y;
     }
 }
 
@@ -145,8 +133,9 @@ int hashCodeRadioB(void* hdA, int Modulo){
     return Modulo < 0 ? hash : hash%Modulo;
 }
 
-int HashCompareRadioB(void* rb, char* id){
-    RadioB *radioB;
+int HashCompareRadioB(void* rb, void* id){
+    RadioB *radioB, *idR;
     radioB = (RadioB*) rb;
-    return strcmp(radioB->id, id);
+    idR = (RadioB*) id;
+    return strcmp(radioB->id, idR->id);
 }
