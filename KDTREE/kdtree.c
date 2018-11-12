@@ -265,3 +265,39 @@ void* closestNeibord(void* tree, void* reference){
     closestNeibordNode(n, tr, reference , item, dis, 0);
     return *item;
 }
+
+void itensInsideAreaNode(Tree* tr,Node* no,void* refInicial,void* refFinal,Lista ls, int dim){
+
+    int compA, compB;
+    //Comparadores, testar e verificar
+    compA = tr->compare(refInicial, no->value, dim);
+    compB = tr->compare(no->value, refFinal, dim);
+
+    int control;
+    control = compA * compB;
+    if(control <= 0){
+        itensInsideAreaNode(tr, no->left, refInicial, refFinal, ls, dim+1);
+        itensInsideAreaNode(tr, no->Right, refInicial, refFinal, ls, dim+1);
+        if(tr->compare(refInicial, no->value, dim+1) * tr->compare(no->value, refFinal, dim+1) <= 0){
+            Lista_insert(ls, no->value);
+        }
+        return;
+    }
+    if(compA < 0){
+        itensInsideAreaNode(tr, no->Right, refInicial, refFinal, ls, dim+1);
+        return;
+    }
+    if(compB > 0){
+        itensInsideAreaNode(tr, no->left, refInicial, refFinal, ls, dim+1);
+        return;
+    }
+
+}
+
+void* itensInsideArea(void* tree, void* refInicial, void* refFinal){
+    Tree *tr;
+    tr = (Tree*) tree;
+    Lista ls = Lista_createLista();
+    itensInsideAreaNode(tr, tr->no, refInicial, refFinal, ls, 0);
+    return ls;
+}

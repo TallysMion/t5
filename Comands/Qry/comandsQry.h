@@ -98,4 +98,9 @@
     /*Cria um Carro*/
     void create_Carro(char* text, Info* info);
 
+    /*Remove um carro*/
+    void remove_Carro(char* text, Info* info);
+
+    void detectColision(char* text, Info* info);
+
 #endif

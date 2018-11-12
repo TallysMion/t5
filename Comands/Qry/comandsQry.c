@@ -2308,3 +2308,40 @@ void create_Carro(char* text, Info* info){
     insert_hashtable(info->bd->carroHash, car);
 
 }
+
+void remove_Carro(char* text, Info* info){
+    char *aux, *placa;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);    
+    placa = (char*) calloc(55, sizeof(char));
+    aux += 4;
+    sscanf(aux, "%s", placa);
+
+    carro car, auxCar;
+    auxCar = createCarro(placa, 0, 0, 0, 0);
+    car = get_hashtable(info->bd->carroHash, auxCar);
+    freeCarro(auxCar);
+    aux = (char*) calloc (155, sizeof(char));
+    void* rec = getRecCarro(car);
+    sprintf(aux, "Removido -> %s (%lf ,%lf)", placa, getXRec(rec), getYRec(rec));
+    insert_Fila(info->respQRY, aux);
+    freeRec(rec);    
+    KDT_remove(info->bd->carroTree, car);
+    remove_hashtable(info->bd->carroHash, car);
+    freeCarro(car);
+    free(placa);
+}
+
+void detectColision(char* text, Info* info){
+    char *aux, *sufixo;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);    
+    sufixo = (char*) calloc(55, sizeof(char));
+    aux += 3;
+    sscanf(aux, "%s", sufixo);
+
+    
+
+}
