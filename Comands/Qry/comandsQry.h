@@ -93,7 +93,14 @@
     void cordToReg(char* text, Info* info);
 
     /*Inlclui no regA, o estab de 'tipo' mais proximo do regB*/
-    void theClosestEstab(char*text, Info*info);
+    void theClosestEstab(char* text, Info* info);
 
+    /*Cria um Carro*/
+    void create_Carro(char* text, Info* info);
+
+    /*Remove um carro*/
+    void remove_Carro(char* text, Info* info);
+
+    void detectColision(char* text, Info* info);
 
 #endif

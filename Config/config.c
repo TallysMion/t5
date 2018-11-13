@@ -154,7 +154,7 @@ Info* configIn(int argc, const char *argv[]){
             strcpy(result->pm, argv[i+1]);
             i++; continue;
         }
-        if(!strcmp(aux, "-via")){
+        if(!strcmp(aux, "-v")){
             result->via = (char*) calloc(strlen(argv[i+1]) + 2, sizeof(char));
             strcpy(result->via, argv[i+1]);
             i++; continue;

@@ -16,6 +16,7 @@
 #include "../../KDTREE/kdtree.h"
 #include "../../HashTable/hashtable.h"
 #include "../../Registrador/registrador.h"
+#include "../../Carro/carro.h"
 
 
 /*Reporta quadras e equipamentos dentro do retanguo*/
@@ -1243,6 +1244,21 @@ void closeQRY(Info* info){
         }
     }
 
+    //imprimir carros
+    Lista carros = KDT_getAll(info->bd->carroTree);
+    t=Lista_getFirst(carros);
+    while(1){
+        temp = Lista_get(carros,t);
+        if(temp){          
+              
+            Item it = Lista_get(carros, t);
+            fprintf(arqSVG_QRY, "%s\n", createCarroSVG(it));
+            t = Lista_getNext(carros, t);
+        }else{
+        break;
+        }
+    }
+
     fprintf(arqSVG_QRY,"</svg>");
 
     fclose(arqSVG_QRY);
@@ -2276,3 +2292,56 @@ void theClosestEstab(char* text, Info* info){
     free(idA);
 }
 
+
+/*Cria um Carro*/
+void create_Carro(char* text, Info* info){
+    char *aux, *placa;
+    double x, y, w, h;
+    aux = text; aux += 3;
+    placa = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %lf %lf %lf %lf", placa, &x, &y, &w, &h);
+
+    carro car = createCarro(placa, x, y, w, h);
+    free(placa);
+
+    KDT_insert(info->bd->carroTree, car);
+    insert_hashtable(info->bd->carroHash, car);
+
+}
+
+void remove_Carro(char* text, Info* info){
+    char *aux, *placa;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);    
+    placa = (char*) calloc(55, sizeof(char));
+    aux += 4;
+    sscanf(aux, "%s", placa);
+
+    carro car, auxCar;
+    auxCar = createCarro(placa, 0, 0, 0, 0);
+    car = get_hashtable(info->bd->carroHash, auxCar);
+    freeCarro(auxCar);
+    aux = (char*) calloc (155, sizeof(char));
+    void* rec = getRecCarro(car);
+    sprintf(aux, "Removido -> %s (%lf ,%lf)", placa, getXRec(rec), getYRec(rec));
+    insert_Fila(info->respQRY, aux);
+    freeRec(rec);    
+    KDT_remove(info->bd->carroTree, car);
+    remove_hashtable(info->bd->carroHash, car);
+    freeCarro(car);
+    free(placa);
+}
+
+void detectColision(char* text, Info* info){
+    char *aux, *sufixo;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);    
+    sufixo = (char*) calloc(55, sizeof(char));
+    aux += 3;
+    sscanf(aux, "%s", sufixo);
+
+    
+
+}

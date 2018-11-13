@@ -29,4 +29,7 @@ void   KDT_remove(KDT tree, KTD_Value reference);
 /*Retorna o item mais proximo da referencia*/
 void* closestNeibord(void* tree, void* reference);
 
+/*Retorna uma lista de itens que estao entre as referencias*/
+void* itensInsideArea(void* tree, void* refInicial, void* refFinal);
+
 #endif
