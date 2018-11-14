@@ -21,4 +21,7 @@ int hashCodeRegistrador(void* Regist, int Modulo);
 //Comparador para Hash
 int HashCompareRegistrador(void* Regist, void* RegistB);
 
+//Set value para reg
+void setValueReg(void* reg, void* value);
+
 #endif
