@@ -5,10 +5,8 @@
 #include "../HashTable/hashtable.h"
 #include "../Lista/lista.h"
 #include "../Config/config.h"
-
-typedef void* GrafoD;   
-typedef void* Aresta;   
-typedef void* Vertice;  
+#include "../Anotacao/anotacao.h"
+#include "../Fila/fila.h" 
 
 typedef struct VerticeV{
     char *id;
@@ -21,6 +19,7 @@ typedef struct VerticeV{
 
 typedef struct ArestaP{
     VerticeV *v2;
+    VerticeV *v1;
     int disable;
     char *nome; 
     char *cepR;
@@ -231,6 +230,8 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
         atual->next = malloc(sizeof(ArestaP));
         atual = atual->next;
     }
+
+    V1->aresta->v1 = V1;
     
     aux->id = vID2;
     atual->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
@@ -252,7 +253,7 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
 }
 
 //função retorna uma lista de adjacentes - destinos
-Lista grafoD_listaAdjacente(Vertice v1){
+void *grafoD_listaAdjacente(Vertice v1){
 
     VerticeV *grafo = (VerticeV *) v1;
 
@@ -276,16 +277,17 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
 
 }
 
-<<<<<<< HEAD
 //print caminho no txt
-void txtCaminho(void *listaArestas, Info *info){
+void txtCaminho(void *listaArestas, void *inform){
 
     void *item;
     ArestaP *aresta;
-    char *str[200];
+    char str[200];
     int i;
-    char strings[4] = {"Siga na rua ", ", depois siga rua ", ", até a rua "};
+    char strings[3][20] = {"Siga na rua ", ", depois siga rua ", ", até a rua "};
+    Info *info;
 
+    info = (Info *) inform;
     item = listaArestas;
  
     strcpy(str, strings[0]);
@@ -315,11 +317,14 @@ void txtCaminho(void *listaArestas, Info *info){
 }
 
 //print caminho no svg
-void svgCaminho(void *listaArestas, Info *info){
+void svgCaminho(void *listaArestas, void *inform){
 
-    void *item, *svg;
+    void *item, *svg, *notation;
     ArestaP *aresta;
+    Info *info;
+    char *svgCode;
 
+    info = (Info *) inform;
     item = listaArestas;
  
     while(item != NULL){
@@ -327,147 +332,15 @@ void svgCaminho(void *listaArestas, Info *info){
         item = Lista_get(listaArestas, item);
         aresta = (ArestaP *) item;
 
-        //criar linha e inserir na fila notation
+        notation = createNotacao("red", -1, -1, -1*aresta->v1->x, -1*aresta->v1->y, NULL);
+        svgCode = createNotacaoSvg(notation);
+        insert_Fila(info->notsQRY, svgCode);
         
         item  = Lista_getNext(listaArestas, item);
-
     }    
-=======
-//seta todos os estados para 0
-void GrafoD_toWhite(void* grafo){
-    Grafo *gr;
-    gr = (Grafo*) grafo;
-    Lista ls;
-
-    ls = KDT_getAll(gr->vertices);
-    void *posic; posic = Lista_getFirst(ls);
-    while(1){
-        void *item; item = Lista_get(ls, posic);
-        if(item){
-            VerticeV *aux;
-            aux = (VerticeV*) item;
-            aux->estado = 0;
-        }else{break;}
-        posic = Lista_getNext(ls, posic);
-    }
-}
-
-//desbloqueia o grafo
-void GrafoD_unlock(void* grafo){
-    Grafo *gr;
-    gr = (Grafo*) grafo;
-    Lista ls;
-
-    ls = KDT_getAll(gr->vertices);
-    void *posic; posic = Lista_getFirst(ls);
-    while(1){
-        void *item; item = Lista_get(ls, posic);
-        if(item){
-            VerticeV *aux;
-            aux = (VerticeV*) item;
-            aux->disable = 0;
-        }else{break;}
-        posic = Lista_getNext(ls, posic);
-    }
-
-    ls = getAll_hashtable(gr->right);
-    posic; posic = Lista_getFirst(ls);
-    while(1){
-        void *item; item = Lista_get(ls, posic);
-        if(item){
-            ArestaP *aux;
-            aux = (ArestaP*) item;
-            aux->disable = 0;
-        }else{break;}
-        posic = Lista_getNext(ls, posic);
-    }
 
 }
 
-//Bloqueia os vertices que estao nessa area
-void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y){
-    Grafo *gr;
-    gr = (Grafo*) grafo;
-    VerticeV *refA; refA = (VerticeV*) calloc(1, sizeof(VerticeV));
-    VerticeV *refB; refB = (VerticeV*) calloc(1, sizeof(VerticeV));
-    refA->x = x;
-    refA->y = y;
-    refB->x = x+w;
-    refB->y = y+h;
-    Lista toBlock = itensInsideArea(gr->vertices, refA, refB);
-    void *posic; posic = Lista_getFirst(toBlock);
-    while(1){
-        void *item; item = Lista_get(toBlock, posic);
-        if(item){
-            VerticeV *aux;
-            aux = (VerticeV*) item;
-            aux->disable = 1;
-        }else{break;}
-        posic = Lista_getNext(toBlock, posic);
-    }
 
-}
 
-int intercept(double alpha, double beta, double w, double h, double x, double y){
-    double x2 = x+w;
-    double y2 = y+h;
-    double fx1, fx2, fy1, fy2;
-
-    fx1 = alpha*x  + beta;
-    fx2 = alpha*x2 + beta;
-    fy1 = (y  - beta)/alpha;
-    fy2 = (y2 - beta)/alpha;
-    
-    if(fx1 >= y && fx1 <= y2) return 1;
-    if(fx2 >= y && fx2 <= y2) return 1;
-    if(fy1 >= x && fy1 <= x2) return 1;
-    if(fy2 >= x && fy2 <= x2) return 1;
-    return 0;
-
-}
-
-void blockArestas(VerticeV *vertA, double w,double h,double x,double y){
-    //se vertA != braco -> retorna
-    if(vertA->estado != 0){return;}
-    vertA->estado = 1;
-    ArestaP *atual;
-    atual = vertA->aresta;
-
-    //percorre arestas
-    while(atual){
-        //verifica se aresta intercepta
-        double alpha, beta;
-        alpha = (atual->v2->y - vertA->y) / (atual->v2->x - vertA->x);
-        beta = vertA->y - (alpha*vertA->x);
-        //se intercepta
-        if(intercept(alpha, beta, w, h, x, y)){
-            //blokeia a aresta
-            atual->disable = 1;
-            //blockArestas no destino
-            blockArestas(atual->v2, w, h, x, y);
-        }
-        atual = atual->next;
-    }
-    //fim percorre
-}
-
-//Bloqueia as arestas que passam por essa area
-void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y){
-    Grafo *gr;
-    gr = (Grafo*) grafo;
-    VerticeV *ref, *inicial, *atual; 
-    ref = (VerticeV*) calloc(1, sizeof(VerticeV));
-    ref->x = x + (h/2);
-    ref->y = y + (w/2);
-    inicial = (VerticeV*) closestNeibord(gr->vertices, ref);
-    freeVerticeV(ref);
-
-    //setar todos os estados para branco
-    GrafoD_toWhite(grafo);
-
-    // blockArestas
-    blockArestas(inicial, w, h, x, y);
->>>>>>> a3c1d5c1019699389b8bbc87f15c3cedcec51a1d
-
-}
 
