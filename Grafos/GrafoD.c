@@ -231,7 +231,7 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
         atual = atual->next;
     }
 
-    V1->aresta->v1 = V1;
+    atual->v1 = V1;
     
     aux->id = vID2;
     atual->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
@@ -332,7 +332,7 @@ void svgCaminho(void *listaArestas, void *inform){
         item = Lista_get(listaArestas, item);
         aresta = (ArestaP *) item;
 
-        notation = createNotacao("red", -1, -1, -1*aresta->v1->x, -1*aresta->v1->y, NULL);
+        notation = createNotacao("RED", -1, -1, -1*aresta->v1->x, -1*aresta->v1->y, NULL);
         svgCode = createNotacaoSvg(notation);
         insert_Fila(info->notsQRY, svgCode);
         
