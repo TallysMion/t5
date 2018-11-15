@@ -269,9 +269,10 @@ void* closestNeibord(void* tree, void* reference){
 void itensInsideAreaNode(Tree* tr,Node* no,void* refInicial,void* refFinal,Lista ls, int dim){
 
     int compA, compB;
+    if(no == NULL) return;
     //Comparadores, testar e verificar
     compA = tr->compare(refInicial, no->value, dim);
-    compB = tr->compare(no->value, refFinal, dim);
+    compB = tr->compare(refFinal, no->value, dim);
 
     int control;
     control = compA * compB;

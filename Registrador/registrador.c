@@ -18,6 +18,12 @@ void* create_Reg(char* id, void* value){
     return (void*) rg;
 }
 
+void setValueReg(void* reg, void* value){
+    Reg* rg;
+    rg = (Reg*) reg;
+    rg->value = value;
+}
+
 void free_Reg(void* reg){
     Reg* rg;
     rg = (Reg*) reg;

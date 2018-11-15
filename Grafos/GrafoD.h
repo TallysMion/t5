@@ -39,6 +39,7 @@ int hashFunction(void *String, int n);
 //da Free no grafo
 void freeGrafoD(void* grafo);
 
+<<<<<<< HEAD
 //retorna o nome da rua da resta passada
 void *getRua(void *aresta);
 
@@ -47,5 +48,15 @@ void txtCaminho(void *listaArestas, Info *info);
 
 //print caminho no svg
 void svgCaminho(void *listaArestas, Info *info);
+=======
+//Desbloqueia os itens do grafo
+void GrafoD_unlock(void* grafo);
+
+//Bloqueia os vertices que estao nessa area
+void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y);
+
+//Bloqueia as arestas que passam por essa area
+void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y);
+>>>>>>> a3c1d5c1019699389b8bbc87f15c3cedcec51a1d
 
 #endif

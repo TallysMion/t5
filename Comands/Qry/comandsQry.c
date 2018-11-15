@@ -2102,8 +2102,16 @@ void pessoaToReg(char* text, Info* info){
     }
     double* cord;
     cord = Pessoa_getCordGeo(pes, info);
-    regis reg = create_Reg(id, cord);
-    insert_hashtable(info->bd->Reg, reg);
+    
+    regis auxReg = create_Reg(id, cord);
+    regis regt = get_hashtable(info->bd->Reg, auxReg);
+    if(regt == NULL){
+        insert_hashtable(info->bd->Reg, auxReg);
+    }else{
+        setValueReg(regt, cord);
+        free_Reg(auxReg);
+    }
+
     char* result;
     result = (char*) calloc(110, sizeof(char));
     sprintf(result, "%s  <--  %s - (Cord: [%lf , %lf])\n", id, cpf, cord[0], cord[1]);
@@ -2152,8 +2160,15 @@ void enderecoToReg(char* text, Info* info){
         cord[0] += getWRec(getRecQuad(quad));
     }
 
-    regis reg = create_Reg(id, cord);
-    insert_hashtable(info->bd->Reg, reg);
+    regis auxR = create_Reg(id, cord);
+    regis regt = get_hashtable(info->bd->Reg, auxR);
+    if(regt == NULL){
+        insert_hashtable(info->bd->Reg, auxR);
+    }else{
+        setValueReg(regt, cord);
+        free_Reg(auxR);
+    }
+
     char* result;
     result = (char*) calloc(155, sizeof(char));
     sprintf(result, "%s  <--  %s %s nº %lf - (Cord: [%lf , %lf])\n", id, cep, face, num, cord[0], cord[1]);
@@ -2202,8 +2217,16 @@ void equipUrbanToReg(char* text, Info* info){
         free(id); free(item);
         return;
     }
-    regis reg = create_Reg(id, cord);
-    insert_hashtable(info->bd->Reg, reg);
+    
+    regis auxR = create_Reg(id, cord);
+    regis regt = get_hashtable(info->bd->Reg, auxR);
+    if(regt == NULL){
+        insert_hashtable(info->bd->Reg, auxR);
+    }else{
+        setValueReg(regt, cord);
+        free_Reg(auxR);
+    }
+
     char *result = (char*) calloc(155, sizeof(char));
     sprintf(result, "%s  <-- %s (Cord: [%lf , %lf])\n", id, item , cord[0], cord[1]);
     insert_Fila(info->respQRY, result);
@@ -2223,8 +2246,18 @@ void cordToReg(char* text, Info* info){
     sscanf(aux, "%s %lf %lf", id, &x, &y);
     cord[0] = x;
     cord[1] = y;
-    regis reg = create_Reg(id, cord);
-    insert_hashtable(info->bd->Reg, reg);
+    
+    
+    regis auxR = create_Reg(id, cord);
+    regis regt = get_hashtable(info->bd->Reg, auxR);
+    if(regt == NULL){
+        insert_hashtable(info->bd->Reg, auxR);
+    }else{
+        setValueReg(regt, cord);
+        free_Reg(auxR);
+    }
+
+    
     char *result = (char*) calloc(155, sizeof(char));
     sprintf(result, "%s  <-- (Cord: [%lf , %lf])\n", id, cord[0], cord[1]);
     insert_Fila(info->respQRY, result);
@@ -2280,8 +2313,17 @@ void theClosestEstab(char* text, Info* info){
     void* closestEstab = closestNeibord(estabskdt, reference);
     Estab_Free(reference);
     cord = Estab_getCordGeo(closestEstab);
-    regis regt = create_Reg(idA, cord);
-    insert_hashtable(info->bd->Reg, regt);
+    
+    regis auxR = create_Reg(idA, cord);
+    regis regt = get_hashtable(info->bd->Reg, auxR);
+    if(regt == NULL){
+        insert_hashtable(info->bd->Reg, auxR);
+    }else{
+        setValueReg(regt, cord);
+        free_Reg(auxR);
+    }
+
+
     char *result = (char*) calloc(155, sizeof(char));
     if(cord == NULL){
         sprintf(result, "Error\n");    
@@ -2324,7 +2366,7 @@ void remove_Carro(char* text, Info* info){
     freeCarro(auxCar);
     aux = (char*) calloc (155, sizeof(char));
     void* rec = getRecCarro(car);
-    sprintf(aux, "Removido -> %s (%lf ,%lf)", placa, getXRec(rec), getYRec(rec));
+    sprintf(aux, "Removido -> %s (%lf ,%lf)\n", placa, getXRec(rec), getYRec(rec));
     insert_Fila(info->respQRY, aux);
     freeRec(rec);    
     KDT_remove(info->bd->carroTree, car);
@@ -2342,6 +2384,194 @@ void detectColision(char* text, Info* info){
     aux += 3;
     sscanf(aux, "%s", sufixo);
 
-    
+    GrafoD_unlock(info->bd->grafo);
+    Fila acidentes = Lista_createLista();
+    Notation nt;
+    char *result;
+
+    //while para carros{
+    Lista cars = KDT_getAll(info->bd->carroTree);
+    void* posic = Lista_getFirst(cars);
+    while(1){
+        void*item = Lista_get(cars, posic);
+        if(item){
+
+            //detecta se esse carro esta colidido
+            void* closestCar = closestNeibord(info->bd->carroTree, item);
+            Item ij = createItem(getRecCarro(item), 0);
+            Item ik = createItem(getRecCarro(closestCar), 0);
+            if(Item_overlap(ij, ik) != 1 || item == closestCar){
+                freeRec(ij);
+                freeRec(ik);
+                posic = Lista_getNext(cars, posic);
+                continue;
+            }
+            Lista_remove(cars, closestCar);
+            //cria um retangulo na area do acidente
+            double x = Item_Xi(ij) < Item_Xi(ik) ? Item_Xi(ij) : Item_Xi(ik);
+            double y = Item_Yi(ij) < Item_Yi(ik) ? Item_Yi(ij) : Item_Yi(ik);
+            double w = Item_Xf(ij) > Item_Xf(ik) ? Item_Xf(ij) : Item_Xf(ik);
+            double h = Item_Yf(ij) > Item_Yf(ik) ? Item_Yf(ij) : Item_Yf(ik);
+            w -= x;
+            h -= y;
+            char *placaA, *placaB;
+            placaA = getPlacaCarro(item);
+            placaB = getPlacaCarro(closestCar);
+
+            //imprime o relatorio do TXT
+            result = (char*) calloc(strlen(placaA) + strlen(placaB) + 55, sizeof(char));
+            sprintf(result, "Carros Colididos -> %s / %s", placaA, placaB);
+            insert_Fila(info->respQRY, result);
+
+            //imprime o relatorio do SVG
+            result = (char*) calloc(255, sizeof(char));
+            sprintf(result, "<rect x=\"%f\" y=\"%f\" width=\"%f\" height=\"%f\" stroke=\"RED\" stroke-width=\"5\"/>\n", x-5, y-5, w+10, h+10);
+            insert_Fila(acidentes, result);
+            
+            //Bloqueia os vertices que estao nessa area
+            GrafoD_blockVertices(info->bd->grafo, w, h, x, y);
+            //Bloqueia as arestas que passam por essa area
+            GrafoD_blockArestas(info->bd->grafo, w, h, x, y);
+        }else{break;}
+        posic = Lista_getNext(cars, posic);
+    }
+    //}
+
+    //imprimir o arquivo-sufixo
+    char *path, *aux2;
+    FILE *arqSVG_QRY;
+    void *t, *temp, *auxF, *auxN;
+
+    //configurar path e abrir arquivo
+    path = (char*) calloc (255, sizeof(char));
+    sprintf(path, "%s/%s", info->o, info->f);
+    if(*path == '/') path++;
+    aux = path;
+    aux += strlen(path);
+    while(*aux != '.')aux--;
+    *aux = 0;
+    aux = info->q;
+    while(*aux){
+        if(*aux == '/'){
+            aux2 = aux+1;
+        }
+        aux++;
+    }
+    sprintf(path, "%s-%s", path, aux2);
+    aux = path;
+    aux += strlen(path);
+    while(*aux != '.')aux--;
+    *aux = 0;
+    strcat(path, "-");
+    strcat(path, sufixo);
+    strcat(aux, ".svg");
+    arqSVG_QRY = fopen(path, "w");
+
+    fprintf(arqSVG_QRY,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+
+    //imprimir circulos e retangulos
+    t=Lista_getFirst(info->bd->Drawer);
+    while(1){
+        temp = Lista_get(info->bd->Drawer,t);
+        if(temp){
+            
+            Item it = Lista_get(info->bd->Drawer, t);
+            fprintf(arqSVG_QRY, "%s\n", createSvg(it));
+            t = Lista_getNext(info->bd->Drawer, t);
+        }else{
+        break;
+        }
+    }
+
+    //Imprimir notas GEO
+    auxF = create_Fila();
+    while(!empty_Fila(info->notsGeo)){
+        auxN = (void*) remove_Fila(info->notsGeo);
+        insert_Fila(auxF,(void*) auxN);
+        fprintf(arqSVG_QRY, "%s\n", createNotacaoSvg(auxN));
+    }
+    free(info->notsGeo);
+    info->notsGeo = auxF;
+
+    //imprimir notas QRY
+    auxF = create_Fila();
+    while(!empty_Fila(info->notsQRY)){
+        auxN = (void*) remove_Fila(info->notsQRY);
+        insert_Fila(auxF,(void*) auxN);
+        fprintf(arqSVG_QRY, "%s\n", createNotacaoSvg(auxN));
+    }
+    free(info->notsQRY);
+    info->notsQRY = auxF;
+
+    //imprimir notas Sufixo
+    while(!empty_Fila(acidentes)){
+        char* auxChar = (char*) remove_Fila(acidentes);
+        fprintf(arqSVG_QRY, "%s\n", auxChar);
+    }
+    free(acidentes);
+
+    //imprimir quadras
+    Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+    t=Lista_getFirst(quadras);
+    while(1){
+        temp = Lista_get(quadras,t);
+        if(temp){            
+            Item it = Lista_get(quadras, t);
+            fprintf(arqSVG_QRY, "%s\n", createQuadraSvg(it));
+            t = Lista_getNext(quadras, t);
+        }else{break;}
+    }
+
+    //imprimir semaforos
+    Lista semaforos = KDT_getAll(info->bd->SemaforosTree);
+    t=Lista_getFirst(semaforos);
+    while(1){
+        temp = Lista_get(semaforos,t);
+        if(temp){
+            Item it = Lista_get(semaforos, t);
+            fprintf(arqSVG_QRY, "%s\n", createSemaforoSvg(it));
+            t = Lista_getNext(semaforos, t);
+        }else{break;}
+    }
+
+    //imprimir hidrantes
+    Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+    t=Lista_getFirst(hidrantes);
+    while(1){
+        temp = Lista_get(hidrantes,t);
+        if(temp){
+            Item it = Lista_get(hidrantes, t);
+            fprintf(arqSVG_QRY, "%s\n", createHidranteSvg(it));
+            t = Lista_getNext(hidrantes, t);
+        }else{break;}
+    }
+
+    //imprimir torres-base
+    Lista radios = KDT_getAll(info->bd->RadioBaseTree);
+    t=Lista_getFirst(radios);
+    while(1){
+        temp = Lista_get(radios,t);
+        if(temp){
+            Item it = Lista_get(radios, t);
+            fprintf(arqSVG_QRY, "%s\n", createRadioBSvg(it));
+            t = Lista_getNext(radios, t);
+        }else{break;}
+    }
+
+    //imprimir carros
+    Lista carros = KDT_getAll(info->bd->carroTree);
+    t=Lista_getFirst(carros);
+    while(1){
+        temp = Lista_get(carros,t);
+        if(temp){          
+            Item it = Lista_get(carros, t);
+            fprintf(arqSVG_QRY, "%s\n", createCarroSVG(it));
+            t = Lista_getNext(carros, t);
+        }else{break;}
+    }
+
+    fprintf(arqSVG_QRY,"</svg>");
+    fclose(arqSVG_QRY);
+    free(path);
 
 }
