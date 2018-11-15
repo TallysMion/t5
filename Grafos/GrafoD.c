@@ -341,6 +341,118 @@ void svgCaminho(void *listaArestas, void *inform){
 
 }
 
+void GrafoD_toWhite(void* grafo){
+    Grafo *gr;
+    gr = (Grafo*) grafo;
+    Lista ls;
+     ls = KDT_getAll(gr->vertices);
+    void *posic; posic = Lista_getFirst(ls);
+    while(1){
+        void *item; item = Lista_get(ls, posic);
+        if(item){
+            VerticeV *aux;
+            aux = (VerticeV*) item;
+            aux->estado = 0;
+        }else{break;}
+        posic = Lista_getNext(ls, posic);
+    }
+}
+
+//desbloqueia o grafo
+void GrafoD_unlock(void* grafo){
+    Grafo *gr;
+    gr = (Grafo*) grafo;
+    Lista ls;
+     ls = KDT_getAll(gr->vertices);
+    void *posic; posic = Lista_getFirst(ls);
+    while(1){
+        void *item; item = Lista_get(ls, posic);
+        if(item){
+            VerticeV *aux;
+            aux = (VerticeV*) item;
+            aux->disable = 0;
+        }else{break;}
+        posic = Lista_getNext(ls, posic);
+    }
+}
+
+//Bloqueia os vertices que estao nessa area
+void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y){
+    Grafo *gr;
+    gr = (Grafo*) grafo;
+    VerticeV *refA; refA = (VerticeV*) calloc(1, sizeof(VerticeV));
+    VerticeV *refB; refB = (VerticeV*) calloc(1, sizeof(VerticeV));
+    refA->x = x;
+    refA->y = y;
+    refB->x = x+w;
+    refB->y = y+h;
+    Lista toBlock = itensInsideArea(gr->vertices, refA, refB);
+    void *posic; posic = Lista_getFirst(toBlock);
+    while(1){
+        void *item; item = Lista_get(toBlock, posic);
+        if(item){
+            VerticeV *aux;
+            aux = (VerticeV*) item;
+            aux->disable = 1;
+        }else{break;}
+        posic = Lista_getNext(toBlock, posic);
+    }
+}
+
+int intercept(double alpha, double beta, double w, double h, double x, double y){
+    double x2 = x+w;
+    double y2 = y+h;
+    double fx1, fx2, fy1, fy2;
+    fx1 = alpha*x  + beta;
+    fx2 = alpha*x2 + beta;
+    fy1 = (y  - beta)/alpha;
+    fy2 = (y2 - beta)/alpha;
+    
+    if(fx1 >= y && fx1 <= y2) return 1;
+    if(fx2 >= y && fx2 <= y2) return 1;
+    if(fy1 >= x && fy1 <= x2) return 1;
+    if(fy2 >= x && fy2 <= x2) return 1;
+    return 0;
+ }
+
+void blockArestas(VerticeV *vertA, double w,double h,double x,double y){
+    //se vertA != braco -> retorna
+    if(vertA->estado != 0){return;}
+    vertA->estado = 1;
+    ArestaP *atual;
+    atual = vertA->aresta;
+     //percorre arestas
+    while(atual){
+        //verifica se aresta intercepta
+        double alpha, beta;
+        alpha = (atual->v2->y - vertA->y) / (atual->v2->x - vertA->x);
+        beta = vertA->y - (alpha*vertA->x);
+        //se intercepta
+        if(intercept(alpha, beta, w, h, x, y)){
+            //blokeia a aresta
+            atual->disable = 1;
+            //blockArestas no destino
+            blockArestas(atual->v2, w, h, x, y);
+        }
+        atual = atual->next;
+     }
+    //fim percorre
+}
+
+void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y){
+    Grafo *gr;
+    gr = (Grafo*) grafo;
+    VerticeV *ref, *inicial, *atual; 
+    ref = (VerticeV*) calloc(1, sizeof(VerticeV));
+    ref->x = x + (h/2);
+    ref->y = y + (w/2);
+    inicial = (VerticeV*) closestNeibord(gr->vertices, ref);
+    freeVerticeV(ref);
+    
+    GrafoD_toWhite(grafo);
+        
+    blockArestas(inicial, w, h, x, y);
+}
 
 
 
