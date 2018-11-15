@@ -3,6 +3,8 @@
 #include <string.h>
 #include "../KDTREE/kdtree.h"
 #include "../HashTable/hashtable.h"
+#include "../Lista/lista.h"
+#include "../Config/config.h"
 
 typedef void* GrafoD;   
 typedef void* Aresta;   
@@ -256,5 +258,61 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
 
 }
 
+//print caminho no txt
+void txtCaminho(void *listaArestas, Info *info){
 
+    void *item;
+    ArestaP *aresta;
+    char *str[200];
+    int i;
+    char strings[4] = {"Siga na rua ", ", depois siga rua ", ", até a rua "};
+
+    item = listaArestas;
+ 
+    strcpy(str, strings[0]);
+    i = 1;
+    while(item != NULL){
+
+        item = Lista_get(listaArestas, item);
+        aresta = (ArestaP *) item;
+
+        strcat(str,aresta->nome);
+        insert_Fila(info->respQRY, str);
+
+        item  = Lista_getNext(listaArestas, item);
+
+        strcpy(str, strings[i]);
+
+        if(i==2){
+            i = 1;
+            strcpy(str, "\n");
+            strcat(str, strings[i]);
+            strcat(str,aresta->nome);
+            insert_Fila(info->respQRY, str);
+            i = 2;
+        }
+
+    }
+}
+
+//print caminho no svg
+void svgCaminho(void *listaArestas, Info *info){
+
+    void *item, *svg;
+    ArestaP *aresta;
+
+    item = listaArestas;
+ 
+    while(item != NULL){
+
+        item = Lista_get(listaArestas, item);
+        aresta = (ArestaP *) item;
+
+        //criar linha e inserir na fila notation
+        
+        item  = Lista_getNext(listaArestas, item);
+
+    }    
+
+}
 

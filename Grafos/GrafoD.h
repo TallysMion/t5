@@ -39,4 +39,13 @@ int hashFunction(void *String, int n);
 //da Free no grafo
 void freeGrafoD(void* grafo);
 
+//retorna o nome da rua da resta passada
+void *getRua(void *aresta);
+
+//print caminho no txt
+void txtCaminho(void *listaArestas, Info *info);
+
+//print caminho no svg
+void svgCaminho(void *listaArestas, Info *info);
+
 #endif
