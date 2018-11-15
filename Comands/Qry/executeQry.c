@@ -164,6 +164,7 @@ int executeQry(char* text, Info *info){
         remove_Carro(text, info);
         return 1;
     }
+    
     free(cmd);
     return 0;
 }

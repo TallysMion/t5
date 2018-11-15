@@ -9,7 +9,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/siguel",
+<<<<<<< HEAD
+            "args": ["-e", "../entrada", "-o", "../saida", "-f", "entrada.geo", "-v", "entrada.via"],
+=======
             "args": ["-q", "c1/qcol1_2.qry", "-e", "Teste2", "-o", "Teste/out", "-f", "c1.geo", "-ec", "c1.ec", "-pm", "c1.pm", "-v", "c1-v.via"],
+>>>>>>> a3c1d5c1019699389b8bbc87f15c3cedcec51a1d
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
