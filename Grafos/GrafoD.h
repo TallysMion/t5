@@ -48,4 +48,14 @@ void txtCaminho(void *listaArestas, void *inform);
 //print caminho no svg
 void svgCaminho(void *listaArestas, void *inform);
 
+//Desbloqueia os itens do grafo
+void GrafoD_unlock(void* grafo);
+
+ //Bloqueia os vertices que estao nessa area
+void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y);
+
+ //Bloqueia as arestas que passam por essa area
+void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y);
+
+
 #endif
