@@ -231,7 +231,7 @@ void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char
         atual = atual->next;
     }
 
-    V1->aresta->v1 = V1;
+    atual->v1 = V1;
     
     aux->id = vID2;
     atual->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
@@ -319,24 +319,27 @@ void txtCaminho(void *listaArestas, void *inform){
 //print caminho no svg
 void svgCaminho(void *listaArestas, void *inform){
 
-    void *item, *svg, *notation;
-    ArestaP *aresta;
+    void *itemA, *itemB, *svg, *notation;
+    ArestaP *ar1, *ar2;
     Info *info;
     char *svgCode;
 
     info = (Info *) inform;
-    item = listaArestas;
- 
-    while(item != NULL){
+    itemA = listaArestas;
+    
+    itemA = Lista_get(listaArestas, itemA);
+    while(itemA != NULL){
 
-        item = Lista_get(listaArestas, item);
-        aresta = (ArestaP *) item;
+        itemB  = Lista_getNext(listaArestas, itemA);
 
-        notation = createNotacao("red", -1, -1, -1*aresta->v1->x, -1*aresta->v1->y, NULL);
+        ar1 = (ArestaP *) itemA;
+        ar2 = (ArestaP *) itemB;
+        
+        notation = createNotacao("red", ar1->v1->x*(-1), ar1->v1->y*(-1), ar2->v1->x*(-1), ar2->v1->y*(-1), NULL);
         svgCode = createNotacaoSvg(notation);
         insert_Fila(info->notsQRY, svgCode);
         
-        item  = Lista_getNext(listaArestas, item);
+        itemA  = Lista_getNext(listaArestas, itemB);
     }    
 
 }
