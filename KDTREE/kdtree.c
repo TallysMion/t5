@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "../Lista/lista.h"
 #include <math.h>
+#include "../Grafos/GrafoD.h"
 
 typedef struct No{
     void* value;
@@ -302,3 +304,85 @@ void* itensInsideArea(void* tree, void* refInicial, void* refFinal){
     itensInsideAreaNode(tr, tr->no, refInicial, refFinal, ls, 0);
     return ls;
 }
+
+////////////////////////////////////////////////////////////////////////////
+
+double pontos_dist(double x1, double x2, double y1, double y2){
+
+    return  sqrt(pow(abs(x2 - x1),2)+pow(abs(y2 - y1),2));
+}
+
+void* getEsq(Node *no){
+    if(no->left != NULL){
+        return no->left->value;
+    }else{
+        return NULL;
+    }
+}
+
+void* getDir(Node *no){
+    if(no->Right != NULL){
+        return no->Right->value;
+    }else{
+        return NULL;
+    }
+}
+
+void* getValue(Node *no){
+    return no->value;
+}
+
+void* getBranch(Node *no, int id){
+
+    if(id==1){
+        return no->left;
+    }else{
+        return no->Right;
+    }
+
+}
+
+void* getNo(Tree *tree){
+    return tree->no;
+}
+
+void closestEqualNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* dis, int dim){
+    if(n == NULL)
+    return;
+    double distAtual = distKDT(tr, reference, n->value);
+    if (distAtual < *dis){
+        *dis = distAtual;
+        *item = n->value;
+    }
+    if(tr->compare(n->value, reference, dim+1) < 0){
+        closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
+            closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        }
+    }else{
+        closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
+        if(abs(tr->compare(n->value, reference, dim)) < *dis){
+            closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
+        }
+    }
+
+}
+
+void* closestEqualNeibord(void* tree, void* reference){
+    Tree *tr;
+    tr = (Tree*) tree;
+    Node *n;
+    n = (Node*) tr->no;
+    if(n == NULL){
+        return NULL;
+    } 
+    void** item;
+    item = (void**) calloc(1, sizeof(void*));
+    *item = n->value;
+    double *dis;
+    dis = (double*) calloc(1, sizeof(double));
+    *dis = distKDT(tr, reference, n->value);
+    closestEqualNeibordNode(n, tr, reference , item, dis, 0);
+    return *item;
+}
+

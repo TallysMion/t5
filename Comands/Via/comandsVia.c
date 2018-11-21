@@ -20,11 +20,11 @@ void criarAresta(char* text,Info *info){
     char *aux, *idA, *idB, *leftCep, *rightCep, *nome;
     double size, speed;
     aux = text; aux += 2;
-    idA = (char*) calloc(55, sizeof(char));
-    idB = (char*) calloc(55, sizeof(char));
-    leftCep = (char*) calloc(55, sizeof(char));
+    idA =      (char*) calloc(55, sizeof(char));
+    idB =      (char*) calloc(55, sizeof(char));
+    leftCep =  (char*) calloc(55, sizeof(char));
     rightCep = (char*) calloc(55, sizeof(char));
-    nome = (char*) calloc(55, sizeof(char));
+    nome =     (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s %s %s %s %lf %lf %s", idA, idB, rightCep, leftCep, &size, &speed, nome);
     grafoD_insereAresta(info->bd->grafo, idA, idB, leftCep, rightCep, size, speed, nome);
     free(idA);
