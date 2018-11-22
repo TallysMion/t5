@@ -2578,56 +2578,200 @@ void detectColision(char* text, Info* info){
 
 
 
- //separar text em tokens
- void simpleRout(char* text, Info*info){
-    
-    
-    
-    
-    
-    char *tokens;
-    void *item, *lista, *itemB, *rs, *KDT, *closestInit;
-    lista = NULL;
+//separar text em tokens
+void simpleRout(char* text, Info*info){  
+    char *aux, *saida, *sufixo, *tipo, *inic, *end, *cor, *path, *aux2;
+    FILE *arqTXT, *arqSVG;
+    aux = (char*) calloc (155, sizeof(char));
+    strcpy(aux, text);
+    insert_Fila(info->respQRY, aux);   
+    aux += 3;
+    saida   = (char*) calloc(55, sizeof(char));
+    sufixo  = (char*) calloc(55, sizeof(char));
+    tipo    = (char*) calloc(55, sizeof(char));
+    inic    = (char*) calloc(55, sizeof(char));
+    end     = (char*) calloc(55, sizeof(char));
+    cor     = (char*) calloc(55, sizeof(char));
+    sscanf(aux, "%s %s %s %s %s %s", saida, sufixo, tipo, inic, end, cor);
 
-    KDT = getKDT(info->bd->grafo);
+    double *inicio, *fim;
+    void *auxReg, *temp;
 
-    tokens = strtok(&text[3]," ");
-    while(tokens[0]!='R'){
-        tokens = strtok(NULL," ");
+    temp = create_Reg(inic, NULL);
+    auxReg = get_hashtable(info->bd->Reg, temp);
+    free_Reg(temp);
+    if(auxReg == NULL){
+        insert_Fila(info->respQRY, "Registrador Inicial não encontrado"); 
+        return;
+    } 
+    inicio = getValue_Reg(auxReg);
+
+    temp = create_Reg(end, NULL);
+    auxReg = get_hashtable(info->bd->Reg, temp);
+    free_Reg(temp);
+    if(auxReg == NULL){
+        insert_Fila(info->respQRY, "Registrador Final não encontrado"); 
+        return;
+    } 
+    fim = getValue_Reg(auxReg);
+
+    int mod;
+    mod = strcmp(tipo, "D")==0? 0 : 1;
+    Lista rota = caminho(info->bd->grafo, inicio, fim, mod);
+    if(rota == NULL){
+        insert_Fila(info->respQRY, "Rota não encontrada"); 
+        return;
     }
-
-    while(tokens!=NULL){
-        //buscar r
-        rs = create_Reg(tokens, NULL);
-        item = get_hashtable(info->bd->Reg, rs);
-
-        if(item == NULL){
-            break;
+    Fila result;
+    path = (char*) calloc (255, sizeof(char));
+    sprintf(path, "%s/%s", info->o, info->f);
+    if(*path == '/') path++;
+    aux = path;
+    aux += strlen(path);
+    while(*aux != '.')aux--;
+    *aux = 0;
+    aux = info->q;
+    while(*aux){
+        if(*aux == '/'){
+            aux2 = aux+1;
         }
-
-        item = getValue_Reg(item);
-
-        tokens = strtok(NULL," ");
-
-        rs = create_Reg(tokens, NULL);
-        itemB = get_hashtable(info->bd->Reg, rs);
-        if(itemB == NULL){
-            break;
-        }
-        itemB = getValue_Reg(itemB);
-        //iterar gerando caminho
+        aux++;
+    }
+    sprintf(path, "%s-%s", path, aux2);
+    aux = path;
+    aux += strlen(path);
+    while(*aux != '.')aux--;
+    strcpy(aux, "-");
+    strcat(aux, sufixo);
+    
+    if(strcmp(saida, "t")){      
         
-            
-            lista = getCaminho(info->bd->grafo, item, itemB);
-    }
-    //print resultado
-    if(lista != NULL){
-        if(text[3] == 't'){
-            txtCaminho(lista, info);
-        }else{
-            svgCaminho(lista, info, "RED");
+        strcat(aux, ".txt");
+        arqTXT = fopen(path, "w");
+        
+        result = txtCaminho(rota);
+        //imprimir resultado no txt
+        
+        while(!empty_Fila(result)){
+            fprintf(arqTXT, "\n%s", (char*) remove_Fila(result));
         }
+
+        fclose(arqTXT);
+
+    }else{
+        void *auxF, *auxN, *t;
+        strcat(aux, ".svg");
+        arqSVG = fopen(path, "w");
+
+        result = svgCaminho(rota, cor, inicio, fim);
+        //imprimir resultado no SVG
+
+
+        fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+
+        //imprimir circulos e retangulos
+        t=Lista_getFirst(info->bd->Drawer);
+        while(1){
+            temp = Lista_get(info->bd->Drawer,t);
+            if(temp){
+                
+                Item it = Lista_get(info->bd->Drawer, t);
+                fprintf(arqSVG, "%s\n", createSvg(it));
+                t = Lista_getNext(info->bd->Drawer, t);
+            }else{
+            break;
+            }
+        }
+
+        //Imprimir notas GEO
+        auxF = create_Fila();
+        while(!empty_Fila(info->notsGeo)){
+            auxN = (void*) remove_Fila(info->notsGeo);
+            insert_Fila(auxF,(void*) auxN);
+            fprintf(arqSVG, "%s\n", createNotacaoSvg(auxN));
+        }
+        free(info->notsGeo);
+        info->notsGeo = auxF;
+
+        //imprimir notas QRY
+        auxF = create_Fila();
+        while(!empty_Fila(info->notsQRY)){
+            auxN = (void*) remove_Fila(info->notsQRY);
+            insert_Fila(auxF,(void*) auxN);
+            fprintf(arqSVG, "%s\n", createNotacaoSvg(auxN));
+        }
+        free(info->notsQRY);
+        info->notsQRY = auxF;
+
+
+        //imprimir quadras
+        Lista quadras = KDT_getAll(info->bd->QuadrasTree);
+        t=Lista_getFirst(quadras);
+        while(1){
+            temp = Lista_get(quadras,t);
+            if(temp){            
+                Item it = Lista_get(quadras, t);
+                fprintf(arqSVG, "%s\n", createQuadraSvg(it));
+                t = Lista_getNext(quadras, t);
+            }else{break;}
+        }
+
+        //imprimir semaforos
+        Lista semaforos = KDT_getAll(info->bd->SemaforosTree);
+        t=Lista_getFirst(semaforos);
+        while(1){
+            temp = Lista_get(semaforos,t);
+            if(temp){
+                Item it = Lista_get(semaforos, t);
+                fprintf(arqSVG, "%s\n", createSemaforoSvg(it));
+                t = Lista_getNext(semaforos, t);
+            }else{break;}
+        }
+
+        //imprimir hidrantes
+        Lista hidrantes = KDT_getAll(info->bd->HidrantesTree);
+        t=Lista_getFirst(hidrantes);
+        while(1){
+            temp = Lista_get(hidrantes,t);
+            if(temp){
+                Item it = Lista_get(hidrantes, t);
+                fprintf(arqSVG, "%s\n", createHidranteSvg(it));
+                t = Lista_getNext(hidrantes, t);
+            }else{break;}
+        }
+
+        //imprimir torres-base
+        Lista radios = KDT_getAll(info->bd->RadioBaseTree);
+        t=Lista_getFirst(radios);
+        while(1){
+            temp = Lista_get(radios,t);
+            if(temp){
+                Item it = Lista_get(radios, t);
+                fprintf(arqSVG, "%s\n", createRadioBSvg(it));
+                t = Lista_getNext(radios, t);
+            }else{break;}
+        }
+
+        //imprimir carros
+        Lista carros = KDT_getAll(info->bd->carroTree);
+        t=Lista_getFirst(carros);
+        while(1){
+            temp = Lista_get(carros,t);
+            if(temp){          
+                Item it = Lista_get(carros, t);
+                fprintf(arqSVG, "%s\n", createCarroSVG(it));
+                t = Lista_getNext(carros, t);
+            }else{break;}
+        }
+
+        while(!empty_Fila(result)){
+            fprintf(arqTXT, "\n%s", (char*) remove_Fila(result));
+        }
+
+        fprintf(arqSVG,"</svg>");
+        
     }
+
 }
 
 void multRout(char* text, Info*info){
