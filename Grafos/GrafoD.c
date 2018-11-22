@@ -514,14 +514,22 @@ void* getCaminho(void* Hid, double *inicio, double *fim){
     double valor, v1[2];
     void *aux, *item, *vid, *list;
     ArestaP *auxi;
-    VerticeV * itemAux, *closestInit;
+    VerticeV * itemAux, *closestInit, *closestEnd;
     Grafo *gr; gr = (Grafo*) Hid;
 
     itemAux = (VerticeV*) calloc(1, sizeof(VerticeV));
     itemAux->x = *(inicio);
     itemAux->y = *(inicio+1);
     closestInit = closestEqualNeibord(gr->vertices , itemAux);
-    
+    itemAux = (VerticeV*) calloc(1, sizeof(VerticeV));
+    itemAux->x = *(fim);
+    itemAux->y = *(fim+1);
+    closestEnd = closestEqualNeibord(gr->vertices , itemAux);
+    buscaProfundidade(gr, closestInit);
+    if(closestEnd->estado == 0){
+        printf("Nenhuma rota existente");
+        return NULL;
+    }
     list = Lista_createLista();
 
 
@@ -609,20 +617,19 @@ void* getAresta(void *v){
 
 
 void buscaProfundidade(Grafo* grafo, VerticeV* inicio){
+    GrafoD_toWhite(grafo);
     Fila fila = create_Fila();
     insert_Fila(fila, inicio);
     while(!empty_Fila(fila)){
         VerticeV* atual = remove_Fila(fila);
-        atual->estado = 1;
+        atual->estado = 2;
         ArestaP* percorre = atual->aresta;
-        do{
+        while(percorre != NULL){
             if(percorre->v2->estado == 0){
-                
+                insert_Fila(fila, percorre->v2);
+                percorre->v2->estado = 1;
             }
+            percorre = percorre->next;
         }
-
-
     }
-
-
 }

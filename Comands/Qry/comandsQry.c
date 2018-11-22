@@ -2587,6 +2587,7 @@ void detectColision(char* text, Info* info){
     
     char *tokens;
     void *item, *lista, *itemB, *rs, *KDT, *closestInit;
+    lista = NULL;
 
     KDT = getKDT(info->bd->grafo);
 
