@@ -2644,6 +2644,7 @@ void simpleRout(char* text, Info*info){
     strcpy(aux, "-");
     strcat(aux, sufixo);
     
+    void *auxF, *auxN, *t;
     if(strcmp(saida, "t")){      
         
         strcat(aux, ".txt");
@@ -2652,14 +2653,25 @@ void simpleRout(char* text, Info*info){
         result = txtCaminho(rota);
         //imprimir resultado no txt
         
-        while(!empty_Fila(result)){
-            fprintf(arqTXT, "\n%s", (char*) remove_Fila(result));
+
+        t=Lista_getFirst(result);
+        while(1){
+            temp = Lista_get(result,t);
+            if(temp){                
+                Item it = Lista_get(result, t);
+                fprintf(arqTXT, "\n%s", (char*) it);
+                auxN = Lista_getNext(result, t);
+                Lista_remove(result, t);
+                t = auxN;
+            }else{
+            break;
+            }
         }
+
 
         fclose(arqTXT);
 
     }else{
-        void *auxF, *auxN, *t;
         strcat(aux, ".svg");
         arqSVG = fopen(path, "w");
 
@@ -2764,8 +2776,18 @@ void simpleRout(char* text, Info*info){
             }else{break;}
         }
 
-        while(!empty_Fila(result)){
-            fprintf(arqTXT, "\n%s", (char*) remove_Fila(result));
+        t=Lista_getFirst(result);
+        while(1){
+            temp = Lista_get(result,t);
+            if(temp){                
+                Item it = Lista_get(result, t);
+                fprintf(arqSVG, "\n%s", (char*) it);
+                auxN = Lista_getNext(result, t);
+                Lista_remove(result, t);
+                t = auxN;
+            }else{
+            break;
+            }
         }
 
         fprintf(arqSVG,"</svg>");

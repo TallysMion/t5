@@ -136,6 +136,7 @@ void* Lista_get(void* lista, void* p){
 
     Item *it;
     it = (Item*) pos->it;
+    if(it == NULL) return NULL;
     return it->value;
 }
 

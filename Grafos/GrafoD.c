@@ -8,6 +8,7 @@
 #include "../Anotacao/anotacao.h"
 #include "../Fila/fila.h"
 #include "../Registrador/registrador.h"
+#include <limits.h>
 
 typedef struct VerticeV{
     char *id;
@@ -603,8 +604,48 @@ double **timeTable(ArestaP ***arestas, int sizeVertices){
     return result;
 }
 
-Lista dijkstra(ArestaP*** arestas, double** pesos, int inicial, int final){
-    return NULL;
+int minDistance(int dist[], int sptSet[], int qtd) 
+{ 
+    int min, min_index; 
+    min = INT_MAX;
+
+    for (int v = 0; v < qtd; v++) 
+        if (sptSet[v] == 0 && dist[v] <= min) 
+            min = dist[v], min_index = v; 
+
+    return min_index; 
+} 
+
+void* dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
+{
+	int dist[qtd];
+	int sptSet[qtd];
+    void *list;
+    list = Lista_createLista();
+
+	for (int i = 0; i < qtd; i++) 
+		dist[i] = INT_MAX, sptSet[i] = 0; 
+
+	dist[inicial] = 0; 
+
+	for (int count = 0; count < qtd-1; count++)                                   
+	{ 
+	    int u = minDistance(dist, sptSet, qtd);
+        if(u == final){
+            break;
+        }
+        sptSet[u] = 1; 
+        for (int v = 0; v < qtd; v++){
+            if (!sptSet[v] && pesos[u][v] && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]){
+                if(u == final){
+                    Lista_insertLista(list, arestas[u][v]);
+                }
+                dist[v] = dist[u] + pesos[u][v];                          
+            }
+        }
+        
+    }
+    return list;
 }
 
 
@@ -639,7 +680,7 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     auxV = (VerticeV*) closestNeibord(gr->vertices, &aux);
     final = auxV->idDijkstra;
 
-    return dijkstra(arestas, pesos, inicial, final);
+    return dijkstra((void***)arestas, pesos, inicial, final, size);
 }
 
 
