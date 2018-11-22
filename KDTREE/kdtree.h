@@ -32,4 +32,18 @@ void* closestNeibord(void* tree, void* reference);
 /*Retorna uma lista de itens que estao entre as referencias*/
 void* itensInsideArea(void* tree, void* refInicial, void* refFinal);
 
+double pontos_dist(double x1, double x2, double y1, double y2);
+
+void* closestEqualNeibord(void* tree, void* reference);
+
+void* getEsq(void* no);
+
+void* getDir(void* no);
+
+void* getValue(void* no);
+
+void* getBranch(void* no, int id);
+
+void* getNo(void *tree);
+
 #endif

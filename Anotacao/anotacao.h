@@ -13,4 +13,7 @@ char* createNotacaoSvg(Notation anot);
 /*libera a memoria da anotacao*/
 void freeAnotacao(Notation anot);
 
+/*cria e retorna o codigo svg da linha passada*/
+char* createLine(Notation anot);
+
 #endif

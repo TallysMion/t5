@@ -70,3 +70,14 @@ void freeAnotacao(Notation anot){
     free(value->text);
     free(value);   
 }
+
+char* createLine(Notation anot){
+
+    Anotacao *value;
+    char *result;
+    value = (Anotacao *) anot;
+    result = (char*) calloc(555, sizeof(char));
+
+    sprintf(result, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke-width=\"5\" stroke=\"%s\" stroke-dasharray=\"5,5\"/>\n", value->w, value->h, value->x, value->y, value->cor1);    
+    return result;
+}

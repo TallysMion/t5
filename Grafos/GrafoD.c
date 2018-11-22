@@ -6,12 +6,13 @@
 #include "../Lista/lista.h"
 #include "../Config/config.h"
 #include "../Anotacao/anotacao.h"
-#include "../Fila/fila.h" 
+#include "../Fila/fila.h"
+#include "../Registrador/registrador.h"
 
 typedef struct VerticeV{
     char *id;
-    float x;
-    float y;
+    double x;
+    double y;
     struct ArestaP *aresta;
     int disable;
     int estado;
@@ -24,8 +25,8 @@ typedef struct ArestaP{
     char *nome; 
     char *cepR;
     char *cepL;
-    float tam;
-    float speed;
+    double tam;
+    double speed;
     struct ArestaP *next;
 }ArestaP;
 
@@ -187,7 +188,7 @@ void* GRAFO_CREATE(int n){
 }
 
 //cria e insere vertice
-void *grafoD_criar(GrafoD gd, char *id, float x, float y){
+void *grafoD_criar(GrafoD gd, char *id, double x, double y){
 
     Grafo *gr;
     gr = (Grafo*)gd;
@@ -199,53 +200,61 @@ void *grafoD_criar(GrafoD gd, char *id, float x, float y){
     grafo->disable = 0;
     grafo->x = x;
     grafo->y = y;
+    grafo->aresta = NULL;
 
     KDT_insert(gr->vertices, grafo);
-    gr = (Grafo *) gd;
     insert_hashtable(gr->ID, grafo);
 
     return (void *) gd;
 }
 
 //função insere uma aresta
-void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, float size, float speed, char* nome){
+void grafoD_insereAresta(GrafoD gd, char *vID1,  char *vID2, char *leftCEP, char *rightCEP, double size, double speed, char* nome){
 
     VerticeV *V1, *aux;
     Grafo *GD;
 
     GD = (Grafo *) gd;
+
     aux = calloc(1, sizeof(VerticeV));
-    aux->id = vID1;
+    aux->id = calloc(strlen(vID1)+2, sizeof(char));
+    strcpy(aux->id, vID1);
     V1 = (VerticeV *) get_hashtable(GD->ID, aux);
+    freeVerticeV(aux);
+
 
     ArestaP *atual;
     if(V1->aresta == NULL){
-        V1->aresta = malloc(sizeof(ArestaP));
+        V1->aresta = calloc(1, sizeof(ArestaP));
         atual = V1->aresta;
     }else{
         atual = V1->aresta;
         while(atual->next != NULL){
             atual = atual->next;
         }
-        atual->next = malloc(sizeof(ArestaP));
+        atual->next = calloc(1, sizeof(ArestaP));
         atual = atual->next;
     }
 
     atual->v1 = V1;
     
-    aux->id = vID2;
+    aux = calloc(1, sizeof(VerticeV));
+    aux->id = calloc(strlen(vID2)+2, sizeof(char));
+    strcpy(aux->id, vID2);
     atual->v2 = (VerticeV *) get_hashtable(GD->ID, aux);
+    freeVerticeV(aux);
 
     atual->disable = 0;
-    atual->nome = malloc(strlen(nome)*sizeof(char));
+    atual->nome = calloc(strlen(nome)+2, sizeof(char));
     strcpy(atual->nome, nome);
-    atual->cepR = malloc(strlen(rightCEP)*sizeof(char));
+    atual->cepR = calloc(strlen(rightCEP)+2,sizeof(char));
     strcpy(atual->cepR, rightCEP);
-    atual->cepL = malloc(strlen(leftCEP)*sizeof(char));
+    atual->cepL = calloc(strlen(leftCEP)+2,sizeof(char));
     strcpy(atual->cepL, leftCEP);
     atual->tam = size;
     atual->speed = speed;
     atual->next = NULL;
+
 
     insert_hashtable(GD->left, atual);
     insert_hashtable(GD->right, atual);
@@ -288,15 +297,16 @@ void txtCaminho(void *listaArestas, void *inform){
     Info *info;
 
     info = (Info *) inform;
-    item = listaArestas;
+    item = Lista_getFirst(listaArestas);
  
     strcpy(str, strings[0]);
     i = 1;
+
     while(item != NULL){
 
-        item = Lista_get(listaArestas, item);
         aresta = (ArestaP *) item;
 
+        printf("1\n");
         strcat(str,aresta->nome);
         insert_Fila(info->respQRY, str);
 
@@ -309,36 +319,44 @@ void txtCaminho(void *listaArestas, void *inform){
             strcpy(str, "\n");
             strcat(str, strings[i]);
             strcat(str,aresta->nome);
+            printf("%s", str);
             insert_Fila(info->respQRY, str);
             i = 2;
         }
-
+        item = Lista_getNext(listaArestas, item);
     }
 }
 
 //print caminho no svg
-void svgCaminho(void *listaArestas, void *inform){
+void svgCaminho(void *listaArestas, void *inform, char *cor){
 
-    void *item, *svg, *notation;
-    ArestaP *aresta;
+    void *itemA, *itemB, *svg, *notation, *posic;
+    ArestaP *ar1, *ar2;
     Info *info;
     char *svgCode;
 
+    FILE* test; //TESTE
+    test = fopen("../saida/teste.svg", "w"); //TESTE
+    fprintf(test, "%s\n", "<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">"); //TESTE
+
     info = (Info *) inform;
-    item = listaArestas;
- 
-    while(item != NULL){
+    
+    posic = Lista_getFirst(listaArestas);
+    
+    while(posic != NULL){
 
-        item = Lista_get(listaArestas, item);
-        aresta = (ArestaP *) item;
+        ar1 = (ArestaP *) Lista_get(listaArestas, posic);
+        if(ar1){
+            notation = createNotacao("red", ar1->v1->x, ar1->v1->y, ar1->v2->x, ar1->v2->y, "");
+            svgCode = createLine(notation);
+            //insert_Fila(info->notsQRY, svgCode);
 
-        notation = createNotacao("RED", -1, -1, -1*aresta->v1->x, -1*aresta->v1->y, NULL);
-        svgCode = createNotacaoSvg(notation);
-        insert_Fila(info->notsQRY, svgCode);
-        
-        item  = Lista_getNext(listaArestas, item);
+            fprintf(test, "%s", svgCode); //TESTE
+        }
+        posic  = Lista_getNext(listaArestas, posic);
     }    
-
+    fprintf(test, "%s", "</svg>"); //TESTE
+    fclose(test); //TESTE
 }
 
 void GrafoD_toWhite(void* grafo){
@@ -454,5 +472,103 @@ void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y){
     blockArestas(inicial, w, h, x, y);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void* getMINdist(void *inicio, void *fim){
 
+    double v1[2], v2[2], menorD, *end, menor, ar2x, ar2y;
+    ArestaP *aux, *Hid;
+    VerticeV *v;
+    Grafo *gd;
+
+    end = (double *) fim;
+
+    v1[0] = getPos(inicio, 0);  
+    v1[1] = getPos(inicio, 1);
+    
+    v = (VerticeV *) inicio;
+    Hid = v->aresta;
+
+    menorD = -1;
+    do{
+        ar2x = Hid->v2->x;
+        ar2y = Hid->v2->y;
+
+        menor = pontos_dist(ar2x, end[0], ar2y, end[1]);
+
+        if(menorD == -1 || menor < menorD){
+            menorD = menor;
+            aux = Hid;
+        }
+        Hid = Hid->next;   
+    }while(Hid != NULL);
+
+    
+    return (void *) aux;
+}
+
+void* getCaminho(void* Hid, void *inicio, double *fim){
+
+    double valor, v1[2];
+    void *aux, *item, *vid, *list;
+    ArestaP *auxi;
+
+    
+    list = Lista_createLista();
+
+    v1[0] = getPos(inicio, 0);  
+    v1[1] = getPos(inicio, 1);
+
+    double *end = (double *) fim;
+
+    Grafo *gd = (Grafo *) Hid;
+
+    while(1){
+        item = getMINdist(inicio, fim);
+        auxi = (ArestaP *) item;
+        Lista_insert(list, item);  
+        //parada: fim, contido em, v1 e v2 - aresta
+        if( v1[0] <= end[0] <= auxi->v2->x && v1[1] <= end[1] <= auxi->v2->y ){
+            vid = Lista_getLast(list);
+            auxi = (ArestaP *) Lista_get(list, vid);
+            auxi->v2->x = end[0];
+            auxi->v2->y = end[1];
+
+            vid = Lista_getFirst(list);
+            auxi = (ArestaP *) Lista_get(list, vid);
+            auxi->v1->x = v1[0];
+            auxi->v1->y = v1[1];
+            return list;
+        }
+        inicio = auxi->v2;
+    }
+
+}
+
+double getPos(void *ar, int i){
+
+    VerticeV *vert;
+
+    vert = (VerticeV *) ar;
+
+    if(i==0){
+        return vert->x;
+    }else if(i==1){
+        return vert->y;
+    }
+}
+
+void* getKDT(void *grafo){
+
+    Grafo *gd;
+
+    gd = (Grafo *) grafo;
+
+    return gd->vertices;
+}
+
+void* getAresta(void *v){
+    VerticeV *ver;
+    ver = (VerticeV*) v;
+    return ver->aresta;
+}
