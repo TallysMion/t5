@@ -182,6 +182,7 @@ int executeQry(char* text, Info *info){
             //iterar gerando caminho
             
                 closestInit = closestEqualNeibord(KDT, item);
+                
                 lista = getCaminho(info->bd->grafo, closestInit, itemB);
         }
         //print resultado
