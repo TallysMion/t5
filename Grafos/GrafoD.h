@@ -58,7 +58,7 @@ void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y);
  //Bloqueia as arestas que passam por essa area
 void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y);
 
-void* getCaminho(void* Hid, void *inicio, double *fim);
+void* getCaminho(void* Hid, double *inicio, double *fim);
 
 void *GrafoD_caminho(void *tree, double *init, double *fim);
 

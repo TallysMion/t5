@@ -2575,3 +2575,60 @@ void detectColision(char* text, Info* info){
     free(path);
 
 }
+
+
+
+ //separar text em tokens
+ void simpleRout(char* text, Info*info){
+    
+    
+    
+    
+    
+    char *tokens;
+    void *item, *lista, *itemB, *rs, *KDT, *closestInit;
+
+    KDT = getKDT(info->bd->grafo);
+
+    tokens = strtok(&text[3]," ");
+    while(tokens[0]!='R'){
+        tokens = strtok(NULL," ");
+    }
+
+    while(tokens!=NULL){
+        //buscar r
+        rs = create_Reg(tokens, NULL);
+        item = get_hashtable(info->bd->Reg, rs);
+
+        if(item == NULL){
+            break;
+        }
+
+        item = getValue_Reg(item);
+
+        tokens = strtok(NULL," ");
+
+        rs = create_Reg(tokens, NULL);
+        itemB = get_hashtable(info->bd->Reg, rs);
+        if(itemB == NULL){
+            break;
+        }
+        itemB = getValue_Reg(itemB);
+        //iterar gerando caminho
+        
+            
+            lista = getCaminho(info->bd->grafo, item, itemB);
+    }
+    //print resultado
+    if(lista != NULL){
+        if(text[3] == 't'){
+            txtCaminho(lista, info);
+        }else{
+            svgCaminho(lista, info, "RED");
+        }
+    }
+}
+
+void multRout(char* text, Info*info){
+
+}

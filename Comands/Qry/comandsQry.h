@@ -101,6 +101,13 @@
     /*Remove um carro*/
     void remove_Carro(char* text, Info* info);
 
+    //Detecta colisões de carros
     void detectColision(char* text, Info* info);
+
+    //Rota simples
+    void simpleRout(char* text, Info*info);
+
+    //Rota com paradas
+    void multRout(char* text, Info*info);
 
 #endif
