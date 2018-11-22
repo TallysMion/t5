@@ -44,10 +44,10 @@ void freeGrafoD(void* grafo);
 void *getRua(void *aresta);
 
 //print caminho no txt
-void txtCaminho(void *listaArestas, void *inform);
+void* txtCaminho(void *listaArestas);
 
 //print caminho no svg
-void svgCaminho(void *listaArestas, void *inform, char* cor);
+void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end);
 
 //Desbloqueia os itens do grafo
 void GrafoD_unlock(void* grafo);
@@ -58,14 +58,12 @@ void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y);
  //Bloqueia as arestas que passam por essa area
 void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y);
 
-void* getCaminho(void* Hid, double *inicio, double *fim);
-
-void *GrafoD_caminho(void *tree, double *init, double *fim);
-
 double getPos(void *ar, int i);
 
 void* getKDT(void *grafo);
 
 void* getAresta(void *v);
+
+void* caminho(void* grafo,double* Start, double* idEnd, int mod);
 
 #endif
