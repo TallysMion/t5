@@ -81,16 +81,15 @@ int compareGD(Vertice v1, Vertice v2, int dim){
 
     VerticeV *V1;
     VerticeV *V2;
-    int cmp;
 
     V1 = (VerticeV *) v1;
     V2 = (VerticeV *) v2;
-    cmp = dim % 2;
+    dim = dim % 2;
 
     if(dim==0){
-       return V1->x > V2->x ? 1 : (V1->x < V2->x ? -1 : 0);
+       return V1->x - V2->x;
     }else{
-        return V1->y > V2->y ? 1 : (V1->y < V2->y ? -1 : 0);
+        return V1->y - V2->y;
     }
 }
 
@@ -336,7 +335,7 @@ void svgCaminho(void *listaArestas, void *inform, char *cor){
     char *svgCode;
 
     FILE* test; //TESTE
-    test = fopen("../saida/teste.svg", "w"); //TESTE
+    test = fopen("Teste/out/teste.svg", "w"); //TESTE
     fprintf(test, "%s\n", "<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">"); //TESTE
 
     info = (Info *) inform;
@@ -478,6 +477,7 @@ void* getMINdist(void *inicio, void *fim){
 
     double v1[2], v2[2], menorD, *end, menor, ar2x, ar2y;
     ArestaP *aux, *Hid;
+    aux = NULL;
     VerticeV *v;
     Grafo *gd;
 
@@ -491,14 +491,16 @@ void* getMINdist(void *inicio, void *fim){
 
     menorD = -1;
     do{
-        ar2x = Hid->v2->x;
-        ar2y = Hid->v2->y;
+        if(Hid->disable == 0 && Hid->v2->disable == 0){
+            ar2x = Hid->v2->x;
+            ar2y = Hid->v2->y;
 
-        menor = pontos_dist(ar2x, end[0], ar2y, end[1]);
+            menor = pontos_dist(ar2x, end[0], ar2y, end[1]);
 
-        if(menorD == -1 || menor < menorD){
-            menorD = menor;
-            aux = Hid;
+            if(menorD == -1 || menor < menorD){
+                menorD = menor;
+                aux = Hid;
+            }
         }
         Hid = Hid->next;   
     }while(Hid != NULL);
@@ -507,28 +509,60 @@ void* getMINdist(void *inicio, void *fim){
     return (void *) aux;
 }
 
-void* getCaminho(void* Hid, void *inicio, double *fim){
+void* getCaminho(void* Hid, double *inicio, double *fim){
 
     double valor, v1[2];
     void *aux, *item, *vid, *list;
     ArestaP *auxi;
+    VerticeV * itemAux, *closestInit;
+    Grafo *gr; gr = (Grafo*) Hid;
 
+    itemAux = (VerticeV*) calloc(1, sizeof(VerticeV));
+    itemAux->x = *(inicio);
+    itemAux->y = *(inicio+1);
+    closestInit = closestEqualNeibord(gr->vertices , itemAux);
     
     list = Lista_createLista();
 
-    v1[0] = getPos(inicio, 0);  
-    v1[1] = getPos(inicio, 1);
 
     double *end = (double *) fim;
 
     Grafo *gd = (Grafo *) Hid;
 
     while(1){
-        item = getMINdist(inicio, fim);
+        item = getMINdist(closestInit, fim);
+        if(item == NULL){
+            void* auxRepair = Lista_getLast(list);
+            auxi = (ArestaP*) Lista_get(list, auxRepair);
+            if(auxi == NULL){
+                printf("Caminho não encontrado");
+                return NULL;
+            }
+            auxi->v2->disable = 1;
+            auxi->disable = 1;
+            closestInit = auxi->v1;
+            Lista_remove(list, auxRepair);
+            continue;
+        }
+
         auxi = (ArestaP *) item;
         Lista_insert(list, item);  
         //parada: fim, contido em, v1 e v2 - aresta
-        if( v1[0] <= end[0] <= auxi->v2->x && v1[1] <= end[1] <= auxi->v2->y ){
+        double xi, xf, yi, yf;
+        xi = auxi->v1->x < auxi->v2->x ? auxi->v1->x : auxi->v2->x;  
+        xf = auxi->v1->x < auxi->v2->x ? auxi->v2->x : auxi->v1->x;
+        yi = auxi->v1->y < auxi->v2->y ? auxi->v1->y : auxi->v2->y;
+        yf = auxi->v1->y < auxi->v2->y ? auxi->v2->y : auxi->v1->y;
+
+        if(pontos_dist(auxi->v2->x, end[0], auxi->v2->y, end[1]) >= pontos_dist(auxi->v1->x, end[0], auxi->v1->y, end[1])){
+            auxi->v2->disable = 1;
+            auxi->disable = 1;
+            Lista_remove(list, item);
+            continue;
+        }
+
+
+        if( xi <= end[0] && end[0] <= xf && yi <= end[1] && end[1] <= yf ){
             vid = Lista_getLast(list);
             auxi = (ArestaP *) Lista_get(list, vid);
             auxi->v2->x = end[0];
@@ -540,7 +574,7 @@ void* getCaminho(void* Hid, void *inicio, double *fim){
             auxi->v1->y = v1[1];
             return list;
         }
-        inicio = auxi->v2;
+        closestInit = auxi->v2;
     }
 
 }
@@ -571,4 +605,64 @@ void* getAresta(void *v){
     VerticeV *ver;
     ver = (VerticeV*) v;
     return ver->aresta;
+}
+
+
+/*void buscaProfundidade(Grafo* grafo, VerticeV* inicio){
+    Fila fila = create_Fila();
+    insert_Fila(fila, inicio);
+    while(!empty_Fila(fila)){
+        VerticeV* atual = remove_Fila(fila);
+        atual->estado = 1;
+        ArestaP* percorre = atual->aresta;
+        do{
+            if(percorre->v2->estado == 0){
+                
+            }
+        }
+
+
+    }
+
+
+}*/
+
+int minDistance(int dist[], int sptSet[], int INT_MAX, int qtd) 
+{ 
+    int min, min_index; 
+    int min = INT_MAX;
+
+    for (int v = 0; v < qtd; v++) 
+        if (sptSet[v] == 0) 
+            min = dist[v], min_index = v; 
+
+    return min_index; 
+} 
+
+void* Djikstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
+{
+	int dist[qtd];
+	int sptSet[qtd];
+    void *list;
+    int INT_MAX;
+
+    INT_MAX = -1;
+    list = Lista_createLista();
+
+	for (int i = 0; i < qtd; i++) 
+		dist[i] = INT_MAX, sptSet[i] = 0; 
+
+	dist[inicial] = 0; 
+
+	for (int count = 0; count < qtd-1; count++)                                   
+	{ 
+	int u = minDistance(dist, sptSet, INT_MAX, qtd);
+
+	sptSet[u] = 1; 
+    if(u == final){
+        for (int v = 0; v < qtd; v++) 
+            if (!sptSet[v] && pesos[u][v] && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]) 
+                Lista_insertLista(list, arestas[u][v]), dist[v] = dist[u] + pesos[u][v];                          
+	} 
+    return list;
 }

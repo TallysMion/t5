@@ -148,52 +148,11 @@ int executeQry(char* text, Info *info){
         return 1;
     }
     if(!strcmp(cmd, "p?")){
-        //(text, info);
-         //separar text em tokens
-        char *tokens;
-        void *item, *lista, *itemB, *rs, *KDT, *closestInit;
-
-        KDT = getKDT(info->bd->grafo);
-
-        tokens = strtok(&text[3]," ");
-        while(tokens[0]!='R'){
-            tokens = strtok(NULL," ");
-        }
-
-        while(tokens!=NULL){
-            //buscar r
-            rs = create_Reg(tokens, NULL);
-            item = get_hashtable(info->bd->Reg, rs);
-
-            if(item == NULL){
-                break;
-            }
-
-            item = getValue_Reg(item);
-
-            tokens = strtok(NULL," ");
-
-            rs = create_Reg(tokens, NULL);
-            itemB = get_hashtable(info->bd->Reg, rs);
-            if(itemB == NULL){
-                break;
-            }
-            itemB = getValue_Reg(itemB);
-            //iterar gerando caminho
-            
-                closestInit = closestEqualNeibord(KDT, item);
-                
-                lista = getCaminho(info->bd->grafo, closestInit, itemB);
-        }
-        //print resultado
-        if(text[3] == 't'){
-            txtCaminho(lista, info);
-        }else{
-            svgCaminho(lista, info, "RED");
-        }
+        simpleRout(text, info);
         return 1;
     }
     if(!strcmp(cmd, "sp?")){
+        multRout(text, info);
         return 1;
     }
     if(!strcmp(cmd, "au")){
