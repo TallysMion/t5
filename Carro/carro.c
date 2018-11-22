@@ -34,7 +34,7 @@ char* createCarroSVG(void* car){
     carro* c;
     c = (carro*) car;
     retangulo rt = createRetangulo(0, "BLUE", "YELLOW", c->w, c->h, c->x, c->y);
-    Notation nt = createNotacao("Black", 0, 0, (c->x+5), (c->y + c->h/2 + 5), c->placa);
+    Notation nt = createNotacao("Black", -1, 1, (c->x+5), (c->y + c->h/2 + 5), c->placa);
     char *rec, *not, *result;
     rec = createRetanguloSvg(rt);
     not = createNotacaoSvg(nt);

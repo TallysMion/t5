@@ -47,5 +47,5 @@ int main(int argc, const char *argv[]){
 
     freeFila(comandos);
     freeConfig(info);       
-    return 1;
+    return 0;
 }
