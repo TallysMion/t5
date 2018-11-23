@@ -2593,6 +2593,12 @@ void simpleRout(char* text, Info*info){
     end     = (char*) calloc(55, sizeof(char));
     cor     = (char*) calloc(55, sizeof(char));
     sscanf(aux, "%s %s %s %s %s %s", saida, sufixo, tipo, inic, end, cor);
+    if(strcmp(saida, "t") == 0){
+        cor = end;
+        end = inic;
+        inic = tipo;
+        tipo = sufixo;
+    }
 
     double *inicio, *fim;
     void *auxReg, *temp;
@@ -2623,46 +2629,22 @@ void simpleRout(char* text, Info*info){
 
     if(rota == NULL){
         insert_Fila(info->respQRY, "\nRota não encontrada"); 
-        return;
+        // return; //Comentar durante texte
     }
     Lista result;
-    path = (char*) calloc (255, sizeof(char));
-    sprintf(path, "%s/%s", info->o, info->f);
-    if(*path == '/') path++;
-    aux = path;
-    aux += strlen(path);
-    while(*aux != '.')aux--;
-    *aux = 0;
-    aux = info->q;
-    while(*aux){
-        if(*aux == '/'){
-            aux2 = aux+1;
-        }
-        aux++;
-    }
-    sprintf(path, "%s-%s", path, aux2);
-    aux = path;
-    aux += strlen(path);
-    while(*aux != '.')aux--;
-    strcpy(aux, "-");
-    strcat(aux, sufixo);
     
     void *auxF, *auxN, *t;
     if(strcmp(saida, "t") == 0){      
         
-        strcat(aux, ".txt");
-        arqTXT = fopen(path, "w");
-        
         result = txtCaminho(rota);
         //imprimir resultado no txt
-        
 
         t=Lista_getFirst(result);
         while(1){
             temp = Lista_get(result,t);
             if(temp){                
                 Item it = Lista_get(result, t);
-                fprintf(arqTXT, "\n%s", (char*) it);
+                insert_Fila(info->respQRY, it);
                 auxN = Lista_getNext(result, t);
                 Lista_remove(result, t);
                 t = auxN;
@@ -2671,10 +2653,27 @@ void simpleRout(char* text, Info*info){
             }
         }
 
-
-        fclose(arqTXT);
-
     }else{
+        path = (char*) calloc (255, sizeof(char));
+        sprintf(path, "%s/%s", info->o, info->f);
+        if(*path == '/') path++;
+        aux = path;
+        aux += strlen(path);
+        while(*aux != '.')aux--;
+        *aux = 0;
+        aux = info->q;
+        while(*aux){
+            if(*aux == '/'){
+                aux2 = aux+1;
+            }
+            aux++;
+        }
+        sprintf(path, "%s-%s", path, aux2);
+        aux = path;
+        aux += strlen(path);
+        while(*aux != '.')aux--;
+        strcpy(aux, "-");
+        strcat(aux, sufixo);
         strcat(aux, ".svg");
         arqSVG = fopen(path, "w");
 
@@ -2683,6 +2682,15 @@ void simpleRout(char* text, Info*info){
 
 
         fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+
+        //Texte
+        circulo circ;
+        circ = createCirculo(0, "GREEN", "GREEN", 20, *inicio, *(inicio+1));
+        fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
+        freeCirculo(circ);
+        circ = createCirculo(0, "RED", "GREEN", 20, *fim, *(fim+1));
+        fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
+        freeCirculo(circ);
 
         //imprimir circulos e retangulos
         t=Lista_getFirst(info->bd->Drawer);
@@ -2815,7 +2823,15 @@ void multRout(char* text, Info*info){
     cor     = (char**) calloc(2, sizeof(char*));
     cor[0]  = (char*) calloc(55, sizeof(char));
     cor[1]  = (char*) calloc(55, sizeof(char));
-    sscanf(aux, "%s %s %s %d", saida, sufixo, tipo, &n);
+    sscanf(aux, "%s", saida);
+
+    if(strcmp(saida, "t") == 0){
+        sscanf(aux, "%s %s %d", saida, tipo, &n);
+        strcpy(sufixo, "");
+    }else{
+        sscanf(aux, "%s %s %s %d", saida, sufixo, tipo, &n);
+    }
+
     aux += strlen(saida) + strlen(sufixo) + strlen(tipo) + 3;
     while(*aux != ' ') aux++;
     aux++;
@@ -2858,32 +2874,11 @@ void multRout(char* text, Info*info){
     }
 
     Lista result = Lista_createLista();
-    path = (char*) calloc (255, sizeof(char));
-    sprintf(path, "%s/%s", info->o, info->f);
-    if(*path == '/') path++;
-    aux = path;
-    aux += strlen(path);
-    while(*aux != '.')aux--;
-    *aux = 0;
-    aux = info->q;
-    while(*aux){
-        if(*aux == '/'){
-            aux2 = aux+1;
-        }
-        aux++;
-    }
-    sprintf(path, "%s-%s", path, aux2);
-    aux = path;
-    aux += strlen(path);
-    while(*aux != '.')aux--;
-    strcpy(aux, "-");
-    strcat(aux, sufixo);
-    
+        
     void *auxF, *auxN, *t;
     if(strcmp(saida, "t") == 0){      
         
-        strcat(aux, ".txt");
-        arqTXT = fopen(path, "w");
+        
         
         for(i=0; i < n - 1; i++){
             Lista_insertLista(result, txtCaminho(rota[i]));
@@ -2896,7 +2891,7 @@ void multRout(char* text, Info*info){
             temp = Lista_get(result,t);
             if(temp){                
                 Item it = Lista_get(result, t);
-                fprintf(arqTXT, "\n%s", (char*) it);
+                insert_Fila(info->respQRY, it);
                 auxN = Lista_getNext(result, t);
                 Lista_remove(result, t);
                 t = auxN;
@@ -2909,6 +2904,26 @@ void multRout(char* text, Info*info){
         fclose(arqTXT);
 
     }else{
+        path = (char*) calloc (255, sizeof(char));
+        sprintf(path, "%s/%s", info->o, info->f);
+        if(*path == '/') path++;
+        aux = path;
+        aux += strlen(path);
+        while(*aux != '.')aux--;
+        *aux = 0;
+        aux = info->q;
+        while(*aux){
+            if(*aux == '/'){
+                aux2 = aux+1;
+            }
+            aux++;
+        }
+        sprintf(path, "%s-%s", path, aux2);
+        aux = path;
+        aux += strlen(path);
+        while(*aux != '.')aux--;
+        strcpy(aux, "-");
+        strcat(aux, sufixo);
         strcat(aux, ".svg");
         arqSVG = fopen(path, "w");       
 

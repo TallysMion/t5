@@ -386,3 +386,26 @@ void* closestEqualNeibord(void* tree, void* reference){
     return *item;
 }
 
+
+
+void* closest(void* tree, void* reference){
+    Tree* tr;
+    tr = (Tree*) tree;
+    Lista ls = KDT_getAll(tree);
+    void* posic;
+    posic = Lista_getFirst(ls);
+    double dist;
+    void* prox = Lista_get(ls, posic);
+    dist = distKDT(tr, reference, prox);
+    while(posic){
+        void* atual = Lista_get(ls, posic);
+        double distAtual = distKDT(tr, reference, atual);
+        if(distAtual < dist){
+            dist = distAtual;
+            prox = atual;
+        }
+        posic = Lista_getNext(ls, posic);
+    }
+    return prox;
+
+}

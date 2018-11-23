@@ -347,7 +347,7 @@ void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
 
     
     ar2 = Lista_get(listaArestas, Lista_getFirst(listaArestas));    
-    notation = createNotacao(cor, *inic, *(inic+1), ar2->v2->x, ar2->v2->y, "");
+    notation = createNotacao(cor, *inic, *(inic+1), ar2->v1->x, ar2->v1->y, "");
     svgCode = createLine(notation);
     Lista_insert(result, svgCode);
 
@@ -364,7 +364,7 @@ void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
     }    
 
     ar1 = Lista_get(listaArestas, Lista_getLast(listaArestas));    
-    notation = createNotacao(cor, ar1->v2->x, ar1->v2->y, *end, *(end-1), "");
+    notation = createNotacao(cor, ar1->v2->x, ar1->v2->y, *end, *(end+1), "");
     svgCode = createLine(notation);
     Lista_insert(result, svgCode);
 
@@ -445,18 +445,19 @@ int intercept(double alpha, double beta, double w, double h, double x, double y)
     return 0;
  }
 
-void blockArestas(VerticeV *vertA, double w,double h,double x,double y){
-    //se vertA != braco -> retorna
-    if(vertA->estado != 0){return;}
-    vertA->estado = 1;
-    ArestaP *atual;
-    atual = vertA->aresta;
-     //percorre arestas
-    while(atual){
+void blockArestas(void *grafo, double w,double h,double x,double y){
+    Grafo *gr;
+    gr = (Grafo*) grafo;
+    Lista ls = getAll_hashtable(gr->right);
+    void* posic;
+    
+    posic = Lista_getFirst(ls);
+    while(posic){
+        ArestaP *atual = (ArestaP*) Lista_get(ls, posic);
         //verifica se aresta intercepta
         double alpha, beta;
-        alpha = (atual->v2->y - vertA->y) / (atual->v2->x - vertA->x);
-        beta = vertA->y - (alpha*vertA->x);
+        alpha = (atual->v2->y - atual->v1->y) / (atual->v2->x - atual->v1->x);
+        beta = atual->v1->y - (alpha* atual->v1->x);
         //se intercepta
         if(intercept(alpha, beta, w, h, x, y)){
             //blokeia a aresta
@@ -464,24 +465,13 @@ void blockArestas(VerticeV *vertA, double w,double h,double x,double y){
             //blockArestas no destino
             blockArestas(atual->v2, w, h, x, y);
         }
-        atual = atual->next;
+        posic = Lista_getNext(ls, posic);
      }
     //fim percorre
 }
 
-void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y){
-    Grafo *gr;
-    gr = (Grafo*) grafo;
-    VerticeV *ref, *inicial, *atual; 
-    ref = (VerticeV*) calloc(1, sizeof(VerticeV));
-    ref->x = x + (h/2);
-    ref->y = y + (w/2);
-    inicial = (VerticeV*) closestNeibord(gr->vertices, ref);
-    freeVerticeV(ref);
-    
-    GrafoD_toWhite(grafo);
-        
-    blockArestas(inicial, w, h, x, y);
+void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y){  
+    blockArestas(grafo, w, h, x, y);
 }
 
 double getPos(void *ar, int i){
@@ -517,7 +507,39 @@ void* getAresta(void *v){
 //------------------------------------------------------------------------------------------------------------------------------------------
 
 //Recebe uma lista de Vertices, e retorna uma tabela de arestas
-ArestaP ***arestTable(Lista vertices){
+
+ArestaP*** arestaTable(void* grafo, int size){
+    int i, j;
+    Grafo* gr;
+    gr = (Grafo*) grafo;
+    
+    Lista ls = getAll_hashtable(gr->right);
+    size = Lista_lenght(ls);
+    ArestaP ***result;
+    result = (ArestaP***) calloc(size, sizeof(ArestaP**));
+    for(i = 0; i < size; i++){
+        result[i] = (ArestaP**) calloc(size, sizeof(ArestaP*));
+    }
+
+    for(i = 0; i < size; i++){
+        for(j = 0; j<size; j++){
+            result[i][j] = NULL;
+        }
+    }
+
+    void* posic;
+    posic = Lista_getFirst(ls);
+    while(posic){
+        ArestaP* item = Lista_get(ls, posic);
+        result[item->v1->idDijkstra][item->v2->idDijkstra] = item;
+        posic = Lista_getNext(ls, posic);
+    }
+
+    return result;
+
+}
+
+void* inicListVert(Lista vertices){
     void *posic, *item;
     ArestaP *atual;
     int i, j;
@@ -537,31 +559,8 @@ ArestaP ***arestTable(Lista vertices){
         }
         posic = Lista_getNext(vertices, posic);
     }
-    
-    ArestaP ***result;
-    result = (ArestaP***) calloc(size, sizeof(ArestaP**));
-    for(i=0; i<size; i++)
-        result[i] = (ArestaP**) calloc(size, sizeof(ArestaP*));
-
-    for(i = 0; i < size; i++){
-        for(j = 0; j < size; j++){
-            result[i][j] = NULL;
-        }
-    }
-    
-    for(i = 0; i < size; i++){
-        atual = verts[i]->aresta;
-        while(atual!=NULL){
-            if(atual->disable == 0 && atual->v2->disable == 0){
-                result[i][atual->v2->idDijkstra] = atual;
-            }
-            atual = atual->next;
-        }
-    }
-
-    return result;
-
 }
+
 
 //Recebe uma tabela de arestas e o numero de vertices, retorna uma tabela do tamanho das arestas
 double **distTable(ArestaP ***arestas, int sizeVertices){
@@ -621,7 +620,7 @@ int minDistance(int dist[], int sptSet[], int qtd)
     min = INT_MAX;
 
     for (int v = 0; v < qtd; v++) 
-        if (sptSet[v] == 0 && dist[v] <= min) 
+        if (sptSet[v] == 0 && dist[v] < min) 
             min = dist[v], min_index = v; 
 
     return min_index; 
@@ -646,12 +645,16 @@ void dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
         }
         sptSet[u] = 1; 
         for (int v = 0; v < qtd; v++){
-            if (!sptSet[v] && pesos[u][v] >= 0 && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]){
-                
-                ArestaP *ar = (ArestaP*) arestas[u][v];
-                ar->v2->anteriorDijkstra = ar;
-                
-                dist[v] = dist[u] + pesos[u][v];                          
+            if (!sptSet[v]){
+                if(pesos[u][v] >= 0 ){
+                    if(dist[u] != INT_MAX){
+                        if(dist[u]+pesos[u][v] < dist[v]){
+                            ArestaP *ar = (ArestaP*) arestas[u][v];
+                            ar->v2->anteriorDijkstra = ar;
+                            dist[v] = dist[u] + pesos[u][v];      
+                        }
+                    }
+                }                    
             }
         }
     }
@@ -690,33 +693,40 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     int size = Lista_lenght(vertices);
     //chamar rota -> requisitos
     //tabela de arestas
-    arestas = arestTable(vertices);
+    inicListVert(vertices);
+
+    arestas = arestaTable(grafo, size);
     //tabela de pesos
     int i,j;
 
     pesos = mod == 0 ? distTable(arestas, size) : timeTable(arestas, size);
     
-    VerticeV aux;
+    VerticeV *aux;
     VerticeV* auxV;
 
-    //indice do vertice inicial
-    aux.x = *(idStart);
-    aux.y = *(idStart+1);
-    auxV = (VerticeV*) closestNeibord(gr->vertices, &aux);
+    //indice do vertice inicia
+    aux = (VerticeV*) calloc(1, sizeof(VerticeV));
+    aux->id = "";
+    aux->x = *(idStart);
+    aux->y = *(idStart+1);
+    auxV = (VerticeV*) closest(gr->vertices, aux);
     inicial = auxV->idDijkstra; 
-    
+
     //indice do vertice final
-    aux.x = *(idEnd);
-    aux.y = *(idEnd+1);
-    auxV = (VerticeV*) closestNeibord(gr->vertices, &aux);
+    aux = (VerticeV*) calloc(1, sizeof(VerticeV));
+    aux->id = "";
+    aux->x = *(idEnd);
+    aux->y = *(idEnd+1);
+    auxV = (VerticeV*) closest(gr->vertices, aux);
     final = auxV->idDijkstra;
+
     limparAnterior(grafo);
 
     if(inicial == final){
         return Lista_createLista();
     }
 
-    dijkstra((void***)arestas, pesos, inicial, final, size);
+    dijkstra((void***)arestas, pesos, inicial, final, size);//textando
 
     if(auxV->anteriorDijkstra == NULL){
         return NULL;
@@ -746,14 +756,14 @@ char* grafoToSvg(void* grafo){
     char* temp;
     char* result;
     
-    result = (char*) calloc(Lista_lenght(aux)*150 + Lista_lenght(aux2)*150,sizeof(char));
+    result = (char*) calloc(Lista_lenght(aux)*150 + Lista_lenght(aux2)*300,sizeof(char));
     strcpy(result, "");
 
     posic = Lista_getFirst(aux);
     while(posic){
         VerticeV *itVert = (VerticeV*) Lista_get(aux, posic);
         temp = (char*) calloc(150, sizeof(char));
-        sprintf(temp, "<circle cx=\"%f\" cy=\"%f\" r=\"5\" fill=\"BLACK\"/>\n", itVert->x, itVert->y);
+        sprintf(temp, "<circle cx=\"%f\" cy=\"%f\" r=\"10\" fill=\"BLACK\"/>\n", itVert->x, itVert->y);
         strcat(result, temp);
         posic = Lista_getNext(aux, posic);
     }
@@ -761,8 +771,8 @@ char* grafoToSvg(void* grafo){
     posic = Lista_getFirst(aux2);
     while(posic){
         ArestaP *itArest = (ArestaP*) Lista_get(aux2, posic);
-        temp = (char*) calloc(150, sizeof(char));
-        sprintf(temp, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke-width=\"5\" stroke=\"BLACK\"/>\n", itArest->v1->x, itArest->v1->y, itArest->v2->x, itArest->v2->y);
+        temp = (char*) calloc(300, sizeof(char));
+        sprintf(temp, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke-width=\"1\" stroke=\"BLACK\"/>\n<circle cx=\"%f\" cy=\"%f\" r=\"5\" fill=\"RED\"/>\n", itArest->v1->x, itArest->v1->y, itArest->v2->x, itArest->v2->y, (itArest->v2->x - (itArest->v2->x - itArest->v1->x)/10) , (itArest->v2->y - (itArest->v2->y - itArest->v1->y)/10) );
         strcat(result, temp);
         posic = Lista_getNext(aux2, posic);
     }
