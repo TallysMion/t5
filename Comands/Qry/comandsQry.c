@@ -2629,7 +2629,7 @@ void simpleRout(char* text, Info*info){
 
     if(rota == NULL){
         insert_Fila(info->respQRY, "\nRota não encontrada"); 
-        // return; //Comentar durante texte
+        return; //Comentar durante texte
     }
     Lista result;
     
@@ -2850,6 +2850,7 @@ void multRout(char* text, Info*info){
 
     void *temp, *auxReg;
     double *inicio, *fim;
+    int ctr = 0;
     for(i=0; i < n - 1 ; i++){
 
         temp = create_Reg(regs[i], NULL);
@@ -2871,8 +2872,14 @@ void multRout(char* text, Info*info){
         fim = getValue_Reg(auxReg);
 
         rota[i] = caminho(info->bd->grafo, inicio, fim, mod);
+        if(rota[i] != NULL){
+            ctr = 1;
+        }
     }
-
+    if(ctr == 0){
+        insert_Fila(info->respQRY, "\nRota não encontrada"); 
+        return; //Comentar durante texte
+    }
     Lista result = Lista_createLista();
         
     void *auxF, *auxN, *t;
