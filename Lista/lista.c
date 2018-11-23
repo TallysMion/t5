@@ -72,6 +72,8 @@ void Lista_insertLista(void* list, void* list2){
     Lista *lista, *lista2;
     lista = (Lista*) list;
     lista2= (Lista*) list2;
+    if(list2 == NULL) return;
+    if(list == NULL){list = list2; return;}
     if(lista->size == 0){
         lista->size = lista2->size;
         lista->inicio = lista2->inicio;

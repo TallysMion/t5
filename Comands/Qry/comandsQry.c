@@ -2622,7 +2622,7 @@ void simpleRout(char* text, Info*info){
     
 
     if(rota == NULL){
-        insert_Fila(info->respQRY, "Rota não encontrada"); 
+        insert_Fila(info->respQRY, "\nRota não encontrada"); 
         return;
     }
     Lista result;
@@ -2648,7 +2648,7 @@ void simpleRout(char* text, Info*info){
     strcat(aux, sufixo);
     
     void *auxF, *auxN, *t;
-    if(strcmp(saida, "t")){      
+    if(strcmp(saida, "t") == 0){      
         
         strcat(aux, ".txt");
         arqTXT = fopen(path, "w");
@@ -2792,6 +2792,8 @@ void simpleRout(char* text, Info*info){
             break;
             }
         }
+        char *util = grafoToSvg(info->bd->grafo);
+        fprintf(arqSVG, "%s", util);//em texte
 
         fprintf(arqSVG,"</svg>");
         
@@ -2878,7 +2880,7 @@ void multRout(char* text, Info*info){
     strcat(aux, sufixo);
     
     void *auxF, *auxN, *t;
-    if(strcmp(saida, "t")){      
+    if(strcmp(saida, "t") == 0){      
         
         strcat(aux, ".txt");
         arqTXT = fopen(path, "w");
@@ -2908,12 +2910,11 @@ void multRout(char* text, Info*info){
 
     }else{
         strcat(aux, ".svg");
-        arqSVG = fopen(path, "w");
-
-        
+        arqSVG = fopen(path, "w");       
 
         for(i=0; i < n - 1; i++){
-            Lista_insertLista(result, svgCaminho(rota, cor[i%2], inicio, fim));
+            if(rota[i] != NULL)
+                Lista_insertLista(result, svgCaminho(rota[i], cor[i%2], inicio, fim));
         }
         //imprimir resultado no SVG
 
@@ -3028,6 +3029,9 @@ void multRout(char* text, Info*info){
             break;
             }
         }
+
+        char *util = grafoToSvg(info->bd->grafo);
+        fprintf(arqSVG, "%s", util);//em texte
 
         fprintf(arqSVG,"</svg>");
         
