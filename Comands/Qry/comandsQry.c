@@ -2618,6 +2618,9 @@ void simpleRout(char* text, Info*info){
     int mod;
     mod = strcmp(tipo, "D")==0? 0 : 1;
     Lista rota = caminho(info->bd->grafo, inicio, fim, mod);
+
+    
+
     if(rota == NULL){
         insert_Fila(info->respQRY, "Rota não encontrada"); 
         return;

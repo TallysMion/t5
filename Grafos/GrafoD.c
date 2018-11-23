@@ -624,26 +624,27 @@ void* dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd
     list = Lista_createLista();
 
 	for (int i = 0; i < qtd; i++) 
-		dist[i] = INT_MAX, sptSet[i] = 0; 
+	    dist[i] = INT_MAX, sptSet[i] = 0; 
 
 	dist[inicial] = 0; 
 
 	for (int count = 0; count < qtd-1; count++)                                   
 	{ 
 	    int u = minDistance(dist, sptSet, qtd);
-        if(u == final){
-            break;
-        }
         sptSet[u] = 1; 
         for (int v = 0; v < qtd; v++){
             if (!sptSet[v] && pesos[u][v] && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]){
-                if(u == final){
-                    Lista_insertLista(list, arestas[u][v]);
-                }
+                Lista_insertLista(list, arestas[u][v]);
                 dist[v] = dist[u] + pesos[u][v];                          
             }
         }
-        
+
+        if(u == final){
+            break;
+        }else{
+            free(list);
+            list = Lista_createLista();
+        }
     }
     return list;
 }
@@ -681,47 +682,4 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     final = auxV->idDijkstra;
 
     return dijkstra((void***)arestas, pesos, inicial, final, size);
-}
-
-
-}
-
-int minDistance(int dist[], int sptSet[], int INT_MAX, int qtd) 
-{ 
-    int min, min_index; 
-    int min = INT_MAX;
-
-    for (int v = 0; v < qtd; v++) 
-        if (sptSet[v] == 0) 
-            min = dist[v], min_index = v; 
-
-    return min_index; 
-} 
-
-void* Djikstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
-{
-	int dist[qtd];
-	int sptSet[qtd];
-    void *list;
-    int INT_MAX;
-
-    INT_MAX = -1;
-    list = Lista_createLista();
-
-	for (int i = 0; i < qtd; i++) 
-		dist[i] = INT_MAX, sptSet[i] = 0; 
-
-	dist[inicial] = 0; 
-
-	for (int count = 0; count < qtd-1; count++)                                   
-	{ 
-	int u = minDistance(dist, sptSet, INT_MAX, qtd);
-
-	sptSet[u] = 1; 
-    if(u == final){
-        for (int v = 0; v < qtd; v++) 
-            if (!sptSet[v] && pesos[u][v] && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]) 
-                Lista_insertLista(list, arestas[u][v]), dist[v] = dist[u] + pesos[u][v];                          
-	} 
-    return list;
 }

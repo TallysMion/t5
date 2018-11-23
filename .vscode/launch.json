@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/siguel",
-            "args": ["-e", "../entrada", "-o", "../saida", "-f", "c1.geo", "-v", "c1-v.via", "-q", "q06.qry", "-pm", "c1.pm", "-ec", "c1.ec"],
+            "args": ["-e", "../entrada", "-o", "../saida", "-f", "c1.geo", "-v", "c1-v.via", "-q", "q03.qry", "-pm", "c1.pm", "-ec", "c1.ec"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
