@@ -66,4 +66,6 @@ void* getAresta(void *v);
 
 void* caminho(void* grafo,double* Start, double* idEnd, int mod);
 
+char* grafoToSvg(void* grafo);
+
 #endif
