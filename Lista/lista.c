@@ -311,7 +311,7 @@ void freeLista(void* lista){
     a = ls->inicio;
     while(a != NULL){
         p = a->next;
-        free(a->value);
+        free(a);
         a = p;
     }
 }

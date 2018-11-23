@@ -290,7 +290,7 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
 //print caminho no txt
 void* txtCaminho(void *listaArestas){
     if(listaArestas == NULL)    return NULL;
-    Fila result = create_Fila();
+    Lista result = Lista_createLista();
     void *item;
     ArestaP *aresta;
     char str[200];
@@ -308,7 +308,7 @@ void* txtCaminho(void *listaArestas){
 
         printf("1\n");
         strcat(str,aresta->nome);
-        insert_Fila(result, str);
+        Lista_insert(result, str);
 
         item  = Lista_getNext(listaArestas, item);
 
@@ -320,11 +320,12 @@ void* txtCaminho(void *listaArestas){
             strcat(str, strings[i]);
             strcat(str,aresta->nome);
             printf("%s", str);
-            insert_Fila(result, str);
+            Lista_insert(result, str);
             i = 2;
         }
         item = Lista_getNext(listaArestas, item);
     }
+    return result;
 }
 
 //print caminho no svg
@@ -334,12 +335,12 @@ void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
     ArestaP *ar1, *ar2;
     char *svgCode;
 
-    Fila result = create_Fila();
+    Lista result = Lista_createLista();
     
     ar2 = Lista_get(listaArestas, Lista_getFirst(listaArestas));    
     notation = createNotacao(cor, *inic, *(inic+1), ar2->v2->x, ar2->v2->y, "");
     svgCode = createLine(notation);
-    insert_Fila(result, svgCode);
+    Lista_insert(result, svgCode);
 
     posic = Lista_getFirst(listaArestas);    
     while(posic != NULL){
@@ -348,7 +349,7 @@ void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
         if(ar1){
             notation = createNotacao(cor, ar1->v1->x, ar1->v1->y, ar1->v2->x, ar1->v2->y, "");
             svgCode = createLine(notation);
-            insert_Fila(result, svgCode);
+            Lista_insert(result, svgCode);
         }
         posic  = Lista_getNext(listaArestas, posic);
     }    
@@ -356,7 +357,7 @@ void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
     ar1 = Lista_get(listaArestas, Lista_getLast(listaArestas));    
     notation = createNotacao(cor, ar1->v2->x, ar1->v2->y, *end, *(end-1), "");
     svgCode = createLine(notation);
-    insert_Fila(result, svgCode);
+    Lista_insert(result, svgCode);
 
     return result;
 }
