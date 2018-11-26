@@ -225,7 +225,7 @@ void* Lista_insertAfter(void* lista, void* p, void* item){
 void* Lista_getFirst(void* lista){
     Lista *list;
     list = (Lista*)lista;
-
+    if(list == NULL) return NULL;
     if(list->size == 0){
         return NULL;
     }
