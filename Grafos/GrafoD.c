@@ -579,7 +579,7 @@ double **distTable(ArestaP ***arestas, int sizeVertices){
             if(arestas[i][j] == NULL){
                 result[i][j] = -1.0;
             }else{
-                double aux = arestas[i][j]->tam;
+                double aux = (arestas[i][j]->tam)<0.0?(arestas[i][j]->tam)*(-1.0):(arestas[i][j]->tam);
                 result[i][j] = aux;
             }
             
@@ -606,7 +606,10 @@ double **timeTable(ArestaP ***arestas, int sizeVertices){
             if(arestas[i][j] == NULL){
                 result[i][j] = -1.0;
             }else{
-                result[i][j] = (arestas[i][j]->tam / arestas[i][j]->speed);
+                double a = (arestas[i][j]->tam)<0.0?(arestas[i][j]->tam)*(-1.0):(arestas[i][j]->tam);
+                double b = arestas[i][j]->speed;
+                double aux = b!=0?(a/b):0.0;
+                result[i][j] = aux;
             }
             
         }

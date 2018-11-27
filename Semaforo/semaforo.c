@@ -86,6 +86,7 @@ void setColorStrokeSemaf(void* semaf, char* color){
 
 /*Libera Memoria*/
 void freeSemaf(void* semaf){
+    if(semaf == NULL) return;
     Semaforo *sm;
     sm = (Semaforo*) semaf;
     free(sm->id);

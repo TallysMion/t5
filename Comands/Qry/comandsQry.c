@@ -2109,7 +2109,11 @@ void pessoaToReg(char* text, Info* info){
     }
     double* cord;
     cord = Pessoa_getCordGeo(pes, info);
-    
+    if(cord == NULL){
+        insert_Fila(info->respQRY, "Pessoa Não Possui Endereco\n");
+        free(id); free(cpf);
+        return;
+    }
     regis auxReg = create_Reg(id, cord);
     regis regt = get_hashtable(info->bd->Reg, auxReg);
     if(regt == NULL){
@@ -2314,6 +2318,11 @@ void theClosestEstab(char* text, Info* info){
     regAux  = create_Reg(idB, NULL);
     reg = get_hashtable(info->bd->Reg, regAux);
     free_Reg(regAux);
+
+    if(reg == NULL){
+        insert_Fila(info->respQRY, "Registrador não Encontrado!\n");
+        return;
+    }
 
     double* cordB = (double*) getValue_Reg(reg);
     void* reference = createEstabCord(cordB[0], cordB[1]);

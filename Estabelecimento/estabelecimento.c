@@ -110,7 +110,8 @@ Estab* Estab_create(Info* info, char* cnpj, void* tip, char* cep, char* face, ch
     result->tipo = tipo;
     result->ende = end;
     result->ende->estab = result;
-    result->cord = calcCord(result, info);
+    if(result->tipo != NULL)
+        result->cord = calcCord(result, info);
 
     return (void*) result;
 
