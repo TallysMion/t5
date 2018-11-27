@@ -1,0 +1,6 @@
+dc engav--3
+Carros Colididos -> br.AAA2B10 / br.AAA2B09Carros Colididos -> br.AAA2B20 / br.AAA2B09rau br.AAA2B09
+Removido -> br.AAA2B09 (347.500000 ,293.590000)
+rau br.AAA2B10
+Removido -> br.AAA2B10 (347.725000 ,294.715000)
+dc engav--3rem

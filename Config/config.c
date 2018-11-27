@@ -314,6 +314,7 @@ Fila getCommandsForGEO(Info* info){
     path = (char*) calloc(200, sizeof(char));
     sprintf(path, "%s%s", format(info->e), format(info->f));
     if(*path == '/')path++;
+    printf("%s\n",path);
     arq = fopen(path, "r");
     if(!arq){
         printf("I AM GROOT\n");
@@ -344,6 +345,7 @@ Fila getCommandsForQRY(Info* info){
     }
     sprintf(path, "%s%s", format(info->e), format(info->q));
     if(*path == '/')path++;
+     printf("%s\n",path);
     arq = fopen(path, "r");
     if(!arq){
         printf("I AM GROOT\n");
@@ -374,6 +376,7 @@ Fila getCommandsForEC(Info* info){
     }
     sprintf(path, "%s%s", format(info->e), format(info->ec));
     if(*path == '/')path++;
+     printf("%s\n",path);
     arq = fopen(path, "r");
     if(!arq){
         printf("I AM GROOT\n");
@@ -404,6 +407,7 @@ Fila getCommandsForPM(Info* info){
     }
     sprintf(path, "%s%s", format(info->e), format(info->pm));
     if(*path == '/')path++;
+    printf("%s\n",path);
     arq = fopen(path, "r");
     if(!arq){
         printf("I AM GROOT\n");
@@ -434,6 +438,7 @@ Fila getCommandsForVIA(Info* info){
     }
     sprintf(path, "%s%s", format(info->e), format(info->via));
     if(*path == '/')path++;
+    printf("%s\n",path);
     arq = fopen(path, "r");
     if(!arq){
         printf("I AM GROOT\n");

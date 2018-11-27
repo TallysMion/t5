@@ -641,18 +641,19 @@ void dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
 	for (int count = 0; count < qtd; count++)                                   
 	{ 
 	    int u = minDistance(dist, sptSet, qtd);
-        if(u == final){
-            break;
-        }
         sptSet[u] = 1; 
         for (int v = 0; v < qtd; v++){
             if (!sptSet[v] && pesos[u][v] >= 0 && dist[u] != INT_MAX && dist[u]+pesos[u][v] < dist[v]){
                 
                 ArestaP *ar = (ArestaP*) arestas[u][v];
+    
                 ar->v2->anteriorDijkstra = ar;
-                
+               
                 dist[v] = dist[u] + pesos[u][v];                          
             }
+        }
+        if(u == final){
+            break;
         }
     }
 }

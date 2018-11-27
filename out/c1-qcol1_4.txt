@@ -1,0 +1,8 @@
+dc engav--4
+Carros Colididos -> br.AAA2C74 / br.AAA2C73Carros Colididos -> br.AAA2C84 / br.AAA2C73Carros Colididos -> br.AAA2C94 / br.AAA2C73rau br.AAA2C73
+Removido -> br.AAA2C73 (752.500000 ,296.940000)
+rau br.AAA2C74
+Removido -> br.AAA2C74 (752.725000 ,298.065000)
+rau br.AAA2C84
+Removido -> br.AAA2C84 (752.725000 ,298.065000)
+dc engav--4rem

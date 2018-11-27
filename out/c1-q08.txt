@@ -1,0 +1,6 @@
+@xy R6 778.500000 598.500000
+R6  <-- (Cord: [778.500000 , 598.500000])
+@g? R7 hob03.2
+R7  <-- hob03.2 (Cord: [340.000000 , 315.000000])
+p? t T R6 R7
+Registrador Final não encontrado

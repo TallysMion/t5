@@ -1,0 +1,4 @@
+dc engav--2
+Carros Colididos -> br.AAA6A51 / br.AAA6A50rau br.AAA6A50
+Removido -> br.AAA6A50 (752.500000 ,124.730000)
+dc engav--2rem
