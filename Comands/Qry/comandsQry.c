@@ -1525,6 +1525,7 @@ void whatHaveInThisArea(char* text, Info* info){
     insert_Fila(info->respQRY, temp);
     insert_Fila(info->respQRY, "\n");
     char *aux, *tipo;
+    int ctrl;
     double x, y , w, h;
     double xi, yi, xf, yf;
     void* i;
@@ -1532,7 +1533,13 @@ void whatHaveInThisArea(char* text, Info* info){
     tipo = (char*) calloc(55, sizeof(char));
 
     aux = text; aux += 5;
-    sscanf(aux, "%s %lf %lf %lf %lf", tipo, &x, &y, &w, &h);
+    sscanf(aux, "%s", tipo);
+    if(strlen(aux) - strlen(tipo) > 5){
+        ctrl = 0;
+        sscanf(aux, "%s %lf %lf %lf %lf", tipo, &x, &y, &w, &h);
+    }else{
+        ctrl = 1;
+    }
 
     /*info->quadras*/
     Lista quadras = KDT_getAll(info->bd->QuadrasTree);
@@ -1549,7 +1556,7 @@ void whatHaveInThisArea(char* text, Info* info){
             yi = getYRec(rc);
             yf = yi + getHRec(rc);
 
-            if(xi >= x && yi >= y && xf <= x+w && yf <= y+h){
+            if((ctrl == 1) || (xi >= x && yi >= y && xf <= x+w && yf <= y+h)){
                 char* result;
                 result = estabsQuadra(getCepQuad(it), info, tipo);
                 insert_Fila(info->respQRY, result);

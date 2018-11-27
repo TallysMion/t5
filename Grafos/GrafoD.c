@@ -90,9 +90,9 @@ int compareGD(Vertice v1, Vertice v2, int dim){
     dim = dim % 2;
 
     if(dim==0){
-       return V1->x - V2->x;
+       return V2->x - V1->x;
     }else{
-        return V1->y - V2->y;
+        return V2->y - V1->y;
     }
 }
 
@@ -709,7 +709,8 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     aux->id = "";
     aux->x = *(idStart);
     aux->y = *(idStart+1);
-    auxV = (VerticeV*) closest(gr->vertices, aux);
+    auxV = (VerticeV*) closestNeibord(gr->vertices,(void*)  aux);
+    // auxV = (VerticeV*) closest(gr->vertices, aux);
     inicial = auxV->idDijkstra; 
 
     //indice do vertice final
@@ -717,7 +718,8 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     aux->id = "";
     aux->x = *(idEnd);
     aux->y = *(idEnd+1);
-    auxV = (VerticeV*) closest(gr->vertices, aux);
+    auxV = (VerticeV*) closestNeibord(gr->vertices,(void*) aux);
+    // auxV = (VerticeV*) closest(gr->vertices, aux);
     final = auxV->idDijkstra;
 
     limparAnterior(grafo);
