@@ -2623,7 +2623,7 @@ void simpleRout(char* text, Info*info){
     auxReg = get_hashtable(info->bd->Reg, temp);
     free_Reg(temp);
     if(auxReg == NULL){
-        insert_Fila(info->respQRY, "Registrador Inicial não encontrado"); 
+        insert_Fila(info->respQRY, "Registrador Inicial não encontrado\n"); 
         return;
     } 
     inicio = getValue_Reg(auxReg);
@@ -2632,7 +2632,7 @@ void simpleRout(char* text, Info*info){
     auxReg = get_hashtable(info->bd->Reg, temp);
     free_Reg(temp);
     if(auxReg == NULL){
-        insert_Fila(info->respQRY, "Registrador Final não encontrado"); 
+        insert_Fila(info->respQRY, "Registrador Final não encontrado\n"); 
         return;
     } 
     fim = getValue_Reg(auxReg);
@@ -2644,7 +2644,7 @@ void simpleRout(char* text, Info*info){
     
 
     if(rota == NULL){
-        insert_Fila(info->respQRY, "\nRota não encontrada"); 
+        insert_Fila(info->respQRY, "Rota não encontrada\n"); 
         return; //Comentar durante texte
     }
     Lista result;

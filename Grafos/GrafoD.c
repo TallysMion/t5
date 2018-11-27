@@ -288,13 +288,64 @@ int grafoD_Adjacente(Vertice a1, Vertice a2){
 
 }
 
+double orientation(ArestaP *A, ArestaP *B){
+    double x1, x2, x3;
+    double y1, y2, y3;
+    x1 =    A->v1->x;
+    x2 =    B->v1->x;
+    x3 =    B->v2->x;
+    y1 =    A->v1->y;
+    y2 =    B->v1->y;
+    y3 =    B->v2->y;
+    return (y2 - y1)*(x3 - x2) - (y3 - y2)*(x2 - x1);
+}
+
+
 //print caminho no txt
 void* txtCaminho(void *listaArestas){
     if(listaArestas == NULL)    return NULL;
     Lista result = Lista_createLista();
     void *item;
     ArestaP *aresta;
-    char str[200];
+    char *str;
+    int i;
+    ArestaP *ctrl;
+
+    item = Lista_getFirst(listaArestas);
+    str = (char*) calloc(255, sizeof(char));
+    aresta = (ArestaP *) Lista_get(listaArestas, item);
+    sprintf(str,"Siga pela rua %s,\n",aresta->nome);
+    Lista_insert(result, str);
+    ctrl = aresta;
+
+    while(item != NULL){
+
+        aresta = (ArestaP *) Lista_get(listaArestas, item);
+        if(strcmp(aresta->nome, ctrl->nome)){
+            str = (char*) calloc(255, sizeof(char));
+            if(orientation(ctrl, aresta) < 0){
+                sprintf(str,"Vire a esquerda na rua %s,\n",aresta->nome);
+            }else if(orientation(ctrl, aresta) > 0){
+                sprintf(str,"Vire a direita na rua %s,\n",aresta->nome);
+            }else{
+                sprintf(str,"Siga em Frente na rua %s,\n",aresta->nome);
+            }
+            Lista_insert(result, str);
+            ctrl = aresta;
+        }
+        item = Lista_getNext(listaArestas, item);
+    }
+    Lista_insert(result, "Voce Alcançou seu destino!!\n");
+    return result;
+}
+
+//print caminho no txt
+void* txtCaminhoOLD(void *listaArestas){
+    if(listaArestas == NULL)    return NULL;
+    Lista result = Lista_createLista();
+    void *item;
+    ArestaP *aresta;
+    char *str;
     int i;
     char strings[3][20] = {"Siga na rua ", ", depois siga rua ", ", até a rua "};
 
@@ -306,21 +357,19 @@ void* txtCaminho(void *listaArestas){
     while(item != NULL){
 
         aresta = (ArestaP *) Lista_get(listaArestas, item);
-
-        printf("1\n");
+        str = (char*) calloc(255, sizeof(char));
         strcat(str,aresta->nome);
         Lista_insert(result, str);
 
         strcpy(str, strings[i]);
 
-        if(i==2){
-            i = 1;
+        if(i==1){
+            i = 2;
             strcpy(str, "\n");
             strcat(str, strings[i]);
             strcat(str,aresta->nome);
-            printf("%s", str);
             Lista_insert(result, str);
-            i = 2;
+            i = 1;
         }
         strcpy(str, "\n");
         strcat(str, strings[i]);
