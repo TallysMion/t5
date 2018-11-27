@@ -339,45 +339,6 @@ void* txtCaminho(void *listaArestas){
     return result;
 }
 
-//print caminho no txt
-void* txtCaminhoOLD(void *listaArestas){
-    if(listaArestas == NULL)    return NULL;
-    Lista result = Lista_createLista();
-    void *item;
-    ArestaP *aresta;
-    char *str;
-    int i;
-    char strings[3][20] = {"Siga na rua ", ", depois siga rua ", ", até a rua "};
-
-    item = Lista_getFirst(listaArestas);
- 
-    strcpy(str, strings[0]);
-    i = 1;
-
-    while(item != NULL){
-
-        aresta = (ArestaP *) Lista_get(listaArestas, item);
-        str = (char*) calloc(255, sizeof(char));
-        strcat(str,aresta->nome);
-        Lista_insert(result, str);
-
-        strcpy(str, strings[i]);
-
-        if(i==1){
-            i = 2;
-            strcpy(str, "\n");
-            strcat(str, strings[i]);
-            strcat(str,aresta->nome);
-            Lista_insert(result, str);
-            i = 1;
-        }
-        strcpy(str, "\n");
-        strcat(str, strings[i]);
-        item = Lista_getNext(listaArestas, item);
-    }
-    Lista_insert(result, "\nLocal Encontrado");
-    return result;
-}
 
 //print caminho no svg
 void* svgCaminho(void *listaArestas, char *cor, double* inic, double* end){
