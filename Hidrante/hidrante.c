@@ -84,6 +84,7 @@ void setColorStrokeHidr(void* semaf, char* color){
 
 /*Libera Memoria*/
 void freeHidr(void* hidr){
+    if(hidr == NULL) return;
     Hidrante *hid;
     hid = (Hidrante*) hidr;
     free(hid->id);
