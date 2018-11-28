@@ -230,7 +230,7 @@ void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* d
         *dis = distAtual;
         *item = n->value;
     }
-    if(tr->compare(n->value, reference, dim+1) < 0){
+    if(tr->compare(n->value, reference, dim) < 0){
         closestNeibordNode(n->left, tr, reference, item, dis, dim+1);
         if(abs(tr->compare(n->value, reference, dim)) < *dis){
             closestNeibordNode(n->Right, tr, reference, item, dis, dim+1);
@@ -386,3 +386,26 @@ void* closestEqualNeibord(void* tree, void* reference){
     return *item;
 }
 
+
+
+void* closest(void* tree, void* reference){
+    Tree* tr;
+    tr = (Tree*) tree;
+    Lista ls = KDT_getAll(tree);
+    void* posic;
+    posic = Lista_getFirst(ls);
+    double dist;
+    void* prox = Lista_get(ls, posic);
+    dist = distKDT(tr, reference, prox);
+    while(posic){
+        void* atual = Lista_get(ls, posic);
+        double distAtual = distKDT(tr, reference, atual);
+        if(distAtual < dist){
+            dist = distAtual;
+            prox = atual;
+        }
+        posic = Lista_getNext(ls, posic);
+    }
+    return prox;
+
+}
