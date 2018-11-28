@@ -86,6 +86,17 @@ void freeNode(void* node, Tree* tr){
     tr->freeFunc(n->value);
     free(node);
 }
+void freeNodeSimple(void* node, Tree* tr){
+    Node *n;
+    n = (Node*) node;
+    if(n->left != NULL){
+        freeNodeSimple(n->left, tr);
+    }
+    if(n->Right != NULL){
+        freeNodeSimple(n->Right, tr);
+    }
+    free(node);
+}
 
 void freeKDTree(void* tree){
     Tree *tr;
@@ -97,7 +108,16 @@ void freeKDTree(void* tree){
     tr->dimension=0;
     free(tree);
 }
-
+void freeKDTreeSimple(void* tree){
+    Tree *tr;
+    tr = (Tree*) tree;
+    if(tr->no != NULL)
+    freeNodeSimple(tr->no, tr);
+    tr->compare = NULL;
+    tr->size=0;
+    tr->dimension=0;
+    free(tree);
+}
 Lista getAllNode(void* node, void* Lista){
     Node* no;
     no = (Node*) node;
@@ -223,7 +243,7 @@ double distKDT(Tree* tr, void* valueA, void* valueB){
 }
 
 void closestNeibordNode(Node *n, Tree* tr,void* reference ,void** item,double* dis, int dim){
-    if(n == NULL)
+    if(n == NULL || n->value == NULL)
     return;
     double distAtual = distKDT(tr, reference, n->value);
     if (distAtual < *dis && distAtual > 0){

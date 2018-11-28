@@ -33,6 +33,9 @@ typedef struct config{
     char *colorMud;
     char *colorMudec;
 
+    double x;
+    double y;
+
 }Config;
 
 typedef struct database{
@@ -204,6 +207,8 @@ Info* configIn(int argc, const char *argv[]){
     result->conf->colorMudec = (void*) calloc(255, sizeof(char));
     strcpy(result->conf->colorMudec, "pink");
 
+    result->conf->x = 0;
+    result->conf->y = 0;
     
     //LISTAS
     result->bd->Drawer  = Lista_createLista();
