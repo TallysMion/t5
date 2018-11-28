@@ -1149,7 +1149,7 @@ void closeQRY(Info* info){
     arqSVG_QRY = fopen(path, "w");
 
     //imprimir circulos e retangulos
-    fprintf(arqSVG_QRY,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+    fprintf(arqSVG_QRY,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
 
     t=Lista_getFirst(info->bd->Drawer);
     while(1){
@@ -2436,7 +2436,7 @@ void detectColision(char* text, Info* info){
 
             //imprime o relatorio do TXT
             result = (char*) calloc(strlen(placaA) + strlen(placaB) + 55, sizeof(char));
-            sprintf(result, "Carros Colididos -> %s / %s", placaA, placaB);
+            sprintf(result, "Carros Colididos -> %s / %s\n", placaA, placaB);
             insert_Fila(info->respQRY, result);
 
             //imprime o relatorio do SVG
@@ -2483,7 +2483,7 @@ void detectColision(char* text, Info* info){
     strcat(aux, ".svg");
     arqSVG_QRY = fopen(path, "w");
 
-    fprintf(arqSVG_QRY,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+    fprintf(arqSVG_QRY,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
 
     //imprimir circulos e retangulos
     t=Lista_getFirst(info->bd->Drawer);
@@ -2697,14 +2697,14 @@ void simpleRout(char* text, Info*info){
         //imprimir resultado no SVG
 
 
-        fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+        fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
 
         //Texte
         circulo circ;
         circ = createCirculo(0, "GREEN", "GREEN", 20, *inicio, *(inicio+1));
         fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
         freeCirculo(circ);
-        circ = createCirculo(0, "RED", "GREEN", 20, *fim, *(fim+1));
+        circ = createCirculo(0, "GREEN", "RED", 20, *fim, *(fim+1));
         fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
         freeCirculo(circ);
 
@@ -2816,8 +2816,8 @@ void simpleRout(char* text, Info*info){
             break;
             }
         }
-        char *util = grafoToSvg(info->bd->grafo);
-        fprintf(arqSVG, "%s", util);//em texte
+        // char *util = grafoToSvg(info->bd->grafo);
+        // fprintf(arqSVG, "%s", util);//em texte
 
         fprintf(arqSVG,"</svg>");
         
@@ -2863,26 +2863,27 @@ void multRout(char* text, Info*info){
 
     int mod;
     mod = strcmp(tipo, "D")==0? 0 : 1;
-
     void *temp, *auxReg;
     double *inicio, *fim;
     int ctr = 0;
+    double** paradas = (double**) calloc(n-1, sizeof(double*));
     for(i=0; i < n - 1 ; i++){
 
         temp = create_Reg(regs[i], NULL);
         auxReg = get_hashtable(info->bd->Reg, temp);
         free_Reg(temp);
         if(auxReg == NULL){
-            insert_Fila(info->respQRY, "Registrador não encontrado"); 
+            insert_Fila(info->respQRY, "Registrador não encontrado\n"); 
             return;
         } 
         inicio = getValue_Reg(auxReg);
+        paradas[i] = inicio;
 
         temp = create_Reg(regs[i+1], NULL);
         auxReg = get_hashtable(info->bd->Reg, temp);
         free_Reg(temp);
         if(auxReg == NULL){
-            insert_Fila(info->respQRY, "Registrador não encontrado"); 
+            insert_Fila(info->respQRY, "Registrador não encontrado\n"); 
             return;
         } 
         fim = getValue_Reg(auxReg);
@@ -2893,7 +2894,7 @@ void multRout(char* text, Info*info){
         }
     }
     if(ctr == 0){
-        insert_Fila(info->respQRY, "\nRota não encontrada"); 
+        insert_Fila(info->respQRY, "Rota não encontrada\n"); 
         return; //Comentar durante texte
     }
     Lista result = Lista_createLista();
@@ -2952,12 +2953,33 @@ void multRout(char* text, Info*info){
 
         for(i=0; i < n - 1; i++){
             if(rota[i] != NULL)
-                Lista_insertLista(result, svgCaminho(rota[i], cor[i%2], inicio, fim));
+                if(i == n-2){
+                    Lista_insertLista(result, svgCaminho(rota[i], cor[i%2], paradas[i], fim));
+                }else{
+                    Lista_insertLista(result, svgCaminho(rota[i], cor[i%2], paradas[i], paradas[i+1]));
+                }
+                
         }
         //imprimir resultado no SVG
 
 
-        fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+        fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
+
+
+        circulo circ;
+        circ = createCirculo(0, "GREEN", "GREEN", 20, *paradas[0], *(paradas[0]+1));
+        fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
+        freeCirculo(circ);
+
+        for(i=1; i<n-1;i++){
+            circ = createCirculo(0, "GREEN", "BLUE", 10, *paradas[i], *(paradas[i]+1));
+            fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
+            freeCirculo(circ);    
+        }
+
+        circ = createCirculo(0, "GREEN", "RED", 20, *fim, *(fim+1));
+        fprintf(arqSVG, "%s\n", createCirculoSvg(circ));
+        freeCirculo(circ);
 
         //imprimir circulos e retangulos
         t=Lista_getFirst(info->bd->Drawer);
@@ -3068,8 +3090,8 @@ void multRout(char* text, Info*info){
             }
         }
 
-        char *util = grafoToSvg(info->bd->grafo);
-        fprintf(arqSVG, "%s", util);//em texte
+        // char *util = grafoToSvg(info->bd->grafo);
+        // fprintf(arqSVG, "%s", util);//em texte
 
         fprintf(arqSVG,"</svg>");
         

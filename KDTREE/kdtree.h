@@ -49,4 +49,6 @@ void* getBranch(void* no, int id);
 
 void* getNo(void *tree);
 
+void freeKDTreeSimple(void* tree);
+
 #endif

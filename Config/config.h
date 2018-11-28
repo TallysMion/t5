@@ -24,6 +24,9 @@ typedef struct config{
     char *colorMud;
     char *colorMudec;
 
+    double x;
+    double y;
+
 }Config;
 
 typedef struct database{

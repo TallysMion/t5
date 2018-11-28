@@ -44,7 +44,7 @@ char* createNotacaoSvg(Notation anot){
             value->x, value->y-5, value->cor1, value->text);
         }else{
             if(value->w == -1 && value->h == 1){
-                sprintf(result, "<text x=\"%f\" y=\"%f\" style=\"font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:2; fill:'%s';\">%s</text>",
+                sprintf(result, "<text x=\"%f\" y=\"%f\" style=\"font-family: Helvetica,Arial,sans-serif;font-weight:bolf;font-size:2px; fill:'%s';\">%s</text>",
                 value->x, value->y-5, value->cor1, value->text);
             }else{
                 if(value->h == 0){

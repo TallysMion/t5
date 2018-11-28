@@ -50,6 +50,8 @@ int drawCircle(char *text, Info *info){
     free(cor2);
     Lista_insert(info->bd->Drawer, item);
     
+    if(x + r > info->conf->x) { info->conf->x = x+r;}
+    if(y + r > info->conf->y) { info->conf->y = y+r;}
     
     return 1;
 }
@@ -79,6 +81,9 @@ int drawRectangle(char *text, Info *info){
     free(cor1);
     free(cor2);
     Lista_insert(info->bd->Drawer, item);
+
+    if(x+w > info->conf->x) { info->conf->x = x+w;}
+    if(y+h > info->conf->y) { info->conf->y = y+h;}
 
     return 1;
 }
@@ -282,7 +287,7 @@ int drawSufixo(char *text, Info *info){
     strcpy(aux, "-"); strcat(aux, suf); 
     strcat(aux, ".svg");
     arqSVG = fopen(path, "w");
-    fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+    fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
 
 
     t=Lista_getFirst(info->bd->Drawer);
@@ -459,7 +464,7 @@ int close(Info *info){
     strcpy(aux, ".svg");
     arqSVG = fopen(path, "w");
     
-    fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"5000\" height = \"5000\">\n");
+    fprintf(arqSVG,"<svg xmlns=\"http://www.w3.org/2000/svg\" width = \"%lf\" height = \"%lf\">\n", info->conf->x, info->conf->y);
 
     t=Lista_getFirst(info->bd->Drawer);
     while(1){
@@ -591,6 +596,10 @@ int drawQuad(char *text, Info *info){
     KDT_insert(info->bd->QuadrasTree, quad);
     insert_hashtable(info->bd->cepQuadraHash, quad);
     free(cep);
+
+    if(x+w > info->conf->x) { info->conf->x = x+w;}
+    if(y+h > info->conf->y) { info->conf->y = y+h;}
+
     return 1;
 }
 
@@ -611,6 +620,8 @@ int drawHidr(char *text, Info *info){
     KDT_insert(info->bd->HidrantesTree, hidr);
     insert_hashtable(info->bd->HidrantesHash, hidr);
     free(id);
+    if(x+5 > info->conf->x) { info->conf->x = x+5;}
+    if(y+5 > info->conf->y) { info->conf->y = y+5;}
     return 1;
 }
 
@@ -631,6 +642,8 @@ int drawSemaf(char *text, Info *info){
     KDT_insert(info->bd->SemaforosTree, semaf);
     insert_hashtable(info->bd->SemaforosHash, semaf);
     free(id);
+    if(x+5 > info->conf->x) { info->conf->x = x+5;}
+    if(y+5 > info->conf->y) { info->conf->y = y+5;}
     return 1;
 }
 
@@ -651,6 +664,8 @@ int drawRBase(char *text, Info *info){
     KDT_insert(info->bd->RadioBaseTree, rb);
     insert_hashtable(info->bd->RadioBaseHash, rb);
     free(id);
+    if(x+5 > info->conf->x) { info->conf->x = x+5;}
+    if(y+5 > info->conf->y) { info->conf->y = y+5;}
     return 1;
 }
 
