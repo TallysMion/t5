@@ -69,7 +69,7 @@ void freeCarro(void* car){
     carro* c;
     c = (carro*) car;
     free(c->placa);
-    free(c);
+    free(car);
 }
 
 char* reportCarro(void* car){

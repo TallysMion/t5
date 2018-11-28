@@ -2387,7 +2387,7 @@ void remove_Carro(char* text, Info* info){
     freeRec(rec);    
     KDT_remove(info->bd->carroTree, car);
     remove_hashtable(info->bd->carroHash, car);
-    freeCarro(car);
+    //freeCarro(car);
     free(placa);
 }
 
@@ -2422,7 +2422,6 @@ void detectColision(char* text, Info* info){
                 posic = Lista_getNext(cars, posic);
                 continue;
             }
-            Lista_remove(cars, closestCar);
             //cria um retangulo na area do acidente
             double x = Item_Xi(ij) < Item_Xi(ik) ? Item_Xi(ij) : Item_Xi(ik);
             double y = Item_Yi(ij) < Item_Yi(ik) ? Item_Yi(ij) : Item_Yi(ik);
