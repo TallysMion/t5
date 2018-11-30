@@ -9,6 +9,7 @@
 #include "../Fila/fila.h"
 #include "../Registrador/registrador.h"
 #include <limits.h>
+#include <math.h>
 
 typedef struct VerticeV{
     char *id;
@@ -31,6 +32,7 @@ typedef struct ArestaP{
     double tam;
     double speed;
     struct ArestaP *next;
+    double peso;
 }ArestaP;
 
 typedef struct Grafo{
@@ -483,6 +485,12 @@ void blockArestas(void *grafo, double w,double h,double x,double y){
         alpha = (atual->v2->y - atual->v1->y) / (atual->v2->x - atual->v1->x);
         beta = atual->v1->y - (alpha* atual->v1->x);
         //se intercepta
+        if((atual->v2->x > x+w && atual->v1->x > x+h) || (atual->v2->x < x && atual->v1->x < x)){
+            posic = Lista_getNext(ls, posic); continue;    
+        } 
+        if((atual->v2->y > y+h && atual->v1->y > y+h) || (atual->v2->y < y && atual->v1->y < y)){
+            posic = Lista_getNext(ls, posic); continue;    
+        } 
         if(intercept(alpha, beta, w, h, x, y)){
             //blokeia a aresta
             atual->disable = atual->tam;
@@ -531,7 +539,7 @@ void* getAresta(void *v){
 
 //Recebe uma lista de Vertices, e retorna uma tabela de arestas
 
-ArestaP*** arestaTable(void* grafo, int size){
+ArestaP*** arestaTable(void* grafo, int size, int mod){
     int i, j;
     Grafo* gr;
     gr = (Grafo*) grafo;
@@ -543,19 +551,16 @@ ArestaP*** arestaTable(void* grafo, int size){
     for(i = 0; i < size; i++){
         result[i] = (ArestaP**) calloc(size, sizeof(ArestaP*));
     }
-
-    for(i = 0; i < size; i++){
-        for(j = 0; j<size; j++){
-            result[i][j] = NULL;
-        }
-    }
-
     void* posic;
+    size = Lista_lenght(ls);
+    i=0;
     posic = Lista_getFirst(ls);
     while(posic){
         ArestaP* item = Lista_get(ls, posic);
         result[item->v1->idDijkstra][item->v2->idDijkstra] = item;
+        item->peso = mod==0 ? (item->tam) : (item->speed==0? 0 : item->tam/item->speed);
         posic = Lista_getNext(ls, posic);
+        i++;
     }
 
     return result;
@@ -634,7 +639,6 @@ double **timeTable(ArestaP ***arestas, int sizeVertices){
                 double aux = b!=0?(a/b):0.0;
                 result[i][j] = aux;
             }
-            
         }
     }
     return result;
@@ -645,14 +649,17 @@ int minDistance(int dist[], int sptSet[], int qtd)
     int min, min_index; 
     min = INT_MAX;
 
-    for (int v = 0; v < qtd; v++) 
-        if (sptSet[v] == 0 && dist[v] < min) 
+    for (int v = 0; v < qtd; v++){
+        if (sptSet[v] == 0 && dist[v] < min){
             min = dist[v], min_index = v; 
-
+        }
+    }
     return min_index; 
 } 
 
-void dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
+
+
+void dijkstra(ArestaP*** arestas, int inicial, int final, int qtd)
 {
 	int dist[qtd];
 	int sptSet[qtd];
@@ -672,12 +679,73 @@ void dijkstra(void*** arestas, double ** pesos, int inicial, int final, int qtd)
         sptSet[u] = 1; 
         for (int v = 0; v < qtd; v++){
             if (!sptSet[v]){
-                if(pesos[u][v] >= 0 ){
+                if(arestas[u][v] != NULL){
                     if(dist[u] != INT_MAX){
-                        if(dist[u]+pesos[u][v] < dist[v]){
+                        if(dist[u]+arestas[u][v]->peso < dist[v]){
                             ArestaP *ar = (ArestaP*) arestas[u][v];
                             ar->v2->anteriorDijkstra = ar;
-                            dist[v] = dist[u] + pesos[u][v];      
+                            dist[v] = dist[u] + arestas[u][v]->peso;      
+                        }
+                    }
+                }                    
+            }
+        }
+    }
+}
+
+int minDistanceA(int dist[], int sptSet[], int qtd, VerticeV* vFinal[], int u) 
+{ 
+    int min, min_index; 
+    min = INT_MAX;
+
+    for (int v = 0; v < qtd; v++){
+
+        double distCalc = dist[v]==INT_MAX?INT_MAX:(dist[v] + sqrt( pow(vFinal[u]->x - vFinal[v]->x, 2) + pow(vFinal[u]->y - vFinal[v]->y, 2) ) );
+        if (sptSet[v] == 0 && distCalc < min){
+            min = distCalc;
+            min_index = v; 
+        }
+    }
+    return min_index; 
+} 
+
+void dijkstraA(ArestaP*** arestas, int inicial, int final, int qtd,  Lista vertices)
+{
+	int dist[qtd];
+	int sptSet[qtd];
+    void *list;
+
+    VerticeV* vFinal[qtd];
+    void* Posic = Lista_getFirst(vertices);
+    while(Posic){
+        VerticeV* aux = (VerticeV*) Lista_get(vertices, Posic);
+        if(aux->disable == 0){
+            vFinal[aux->idDijkstra] = aux;
+        }
+        Posic = Lista_getNext(vertices, Posic);
+    }
+
+
+	for (int i = 0; i < qtd; i++) 
+	    dist[i] = INT_MAX, sptSet[i] = 0; 
+
+	dist[inicial] = 0; 
+
+	for (int count = 0; count < qtd; count++)                                   
+	{ 
+	    int u = minDistanceA(dist, sptSet, qtd, vFinal, final);
+        if(u == final){
+            break;
+        }
+        sptSet[u] = 1; 
+        for (int v = 0; v < qtd; v++){
+            if (!sptSet[v]){
+                if(arestas[u][v] != NULL){
+                    if(dist[u] != INT_MAX){
+                        if(dist[u]+arestas[u][v]->peso < dist[v]){
+                            ArestaP *ar = (ArestaP*) arestas[u][v];
+                            ar->v2->anteriorDijkstra = ar;
+                            dist[v] = dist[u] + arestas[u][v]->peso;      
                         }
                     }
                 }                    
@@ -722,12 +790,9 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     //chamar rota -> requisitos
     //tabela de arestas
     inicListVert(vertices);
-
-    arestas = arestaTable(grafo, size);
+    arestas = arestaTable(grafo, size, mod);
     //tabela de pesos
-    int i,j;
-
-    pesos = mod == 0 ? distTable(arestas, size) : timeTable(arestas, size);
+    
     
     VerticeV *aux;
     VerticeV* auxV;
@@ -772,8 +837,8 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     if(inicial == final){
         return Lista_createLista();
     }
-
-    dijkstra((void***)arestas, pesos, inicial, final, size);//textando
+    //dijkstra(arestas, inicial, final, size);//textando
+    dijkstraA(arestas, inicial, final, size, vertices);//textando
 
     if(auxV->anteriorDijkstra == NULL){
         return NULL;
