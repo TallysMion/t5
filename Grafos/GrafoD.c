@@ -32,7 +32,8 @@ typedef struct ArestaP{
     double tam;
     double speed;
     struct ArestaP *next;
-    double peso;
+    double peso0;
+    double peso1;
 }ArestaP;
 
 typedef struct Grafo{
@@ -539,11 +540,12 @@ void* getAresta(void *v){
 
 //Recebe uma lista de Vertices, e retorna uma tabela de arestas
 
+
+
 ArestaP*** arestaTable(void* grafo, int size, int mod){
     int i, j;
     Grafo* gr;
     gr = (Grafo*) grafo;
-    
     Lista ls = getAll_hashtable(gr->right);
     size = Lista_lenght(ls);
     ArestaP ***result;
@@ -558,7 +560,8 @@ ArestaP*** arestaTable(void* grafo, int size, int mod){
     while(posic){
         ArestaP* item = Lista_get(ls, posic);
         result[item->v1->idDijkstra][item->v2->idDijkstra] = item;
-        item->peso = mod==0 ? (item->tam) : (item->speed==0? 0 : item->tam/item->speed);
+        item->peso0 = (item->tam);
+        item->peso1 = (item->speed==0? 0 : item->tam/item->speed);
         posic = Lista_getNext(ls, posic);
         i++;
     }
@@ -589,6 +592,14 @@ void* inicListVert(Lista vertices){
     }
 }
 
+void *** GrafoD_arestaTable(void* grafo,int mod){
+    Grafo *gr; gr = (Grafo*)grafo;
+    Lista vertices;
+    vertices = KDT_getAll(gr->vertices);
+    int size = Lista_lenght(vertices);
+    inicListVert(vertices);
+    return (void***) arestaTable(grafo, size, mod);
+}
 
 //Recebe uma tabela de arestas e o numero de vertices, retorna uma tabela do tamanho das arestas
 double **distTable(ArestaP ***arestas, int sizeVertices){
@@ -659,7 +670,7 @@ int minDistance(int dist[], int sptSet[], int qtd)
 
 
 
-void dijkstra(ArestaP*** arestas, int inicial, int final, int qtd)
+void dijkstra(ArestaP*** arestas, int inicial, int final, int qtd, int mod)
 {
 	int dist[qtd];
 	int sptSet[qtd];
@@ -681,10 +692,11 @@ void dijkstra(ArestaP*** arestas, int inicial, int final, int qtd)
             if (!sptSet[v]){
                 if(arestas[u][v] != NULL){
                     if(dist[u] != INT_MAX){
-                        if(dist[u]+arestas[u][v]->peso < dist[v]){
+                        double peso = mod?arestas[u][v]->peso1:arestas[u][v]->peso0;
+                        if(dist[u]+peso < dist[v]){
                             ArestaP *ar = (ArestaP*) arestas[u][v];
                             ar->v2->anteriorDijkstra = ar;
-                            dist[v] = dist[u] + arestas[u][v]->peso;      
+                            dist[v] = dist[u] + peso;      
                         }
                     }
                 }                    
@@ -709,7 +721,7 @@ int minDistanceA(int dist[], int sptSet[], int qtd, VerticeV* vFinal[], int u)
     return min_index; 
 } 
 
-void dijkstraA(ArestaP*** arestas, int inicial, int final, int qtd,  Lista vertices)
+void dijkstraA(ArestaP*** arestas, int inicial, int final, int qtd, int mod, Lista vertices)
 {
 	int dist[qtd];
 	int sptSet[qtd];
@@ -742,10 +754,11 @@ void dijkstraA(ArestaP*** arestas, int inicial, int final, int qtd,  Lista verti
             if (!sptSet[v]){
                 if(arestas[u][v] != NULL){
                     if(dist[u] != INT_MAX){
-                        if(dist[u]+arestas[u][v]->peso < dist[v]){
+                        double peso = mod?arestas[u][v]->peso1:arestas[u][v]->peso0;
+                        if(dist[u]+peso < dist[v]){
                             ArestaP *ar = (ArestaP*) arestas[u][v];
                             ar->v2->anteriorDijkstra = ar;
-                            dist[v] = dist[u] + arestas[u][v]->peso;      
+                            dist[v] = dist[u] + peso;      
                         }
                     }
                 }                    
@@ -766,7 +779,6 @@ void limparAnterior(void* grafo){
         item = (VerticeV*) Lista_get(ls, posic);
         if(item){
             item->anteriorDijkstra = NULL;
-            item->idDijkstra = 0;
             posic = Lista_getNext(ls, posic);
         }else{
             break;
@@ -776,7 +788,7 @@ void limparAnterior(void* grafo){
 }
 
 
-Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
+Lista caminho(void* grafo,double* idStart,double* idEnd, int mod, void*** ar){
     limparAnterior(grafo);
     Grafo* gr;
     ArestaP*** arestas;
@@ -789,8 +801,13 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     int size = Lista_lenght(vertices);
     //chamar rota -> requisitos
     //tabela de arestas
-    inicListVert(vertices);
-    arestas = arestaTable(grafo, size, mod);
+    
+    if(ar==NULL){
+        inicListVert(vertices);
+        arestas = arestaTable(grafo, size, mod);
+    }else{
+        arestas = (ArestaP***) ar;
+    }
     //tabela de pesos
     
     
@@ -837,8 +854,8 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
     if(inicial == final){
         return Lista_createLista();
     }
-    //dijkstra(arestas, inicial, final, size);//textando
-    dijkstraA(arestas, inicial, final, size, vertices);//textando
+    //dijkstra(arestas, inicial, final, size, mod);//textando
+    dijkstraA(arestas, inicial, final, size, mod, vertices);//textando
 
     if(auxV->anteriorDijkstra == NULL){
         return NULL;
@@ -853,6 +870,14 @@ Lista caminho(void* grafo,double* idStart,double* idEnd, int mod){
             Lista_insertAfter(ls, auxPosic, auxV->anteriorDijkstra);
         }
         auxV = auxV->anteriorDijkstra->v1;
+    }
+    if(ar==NULL){
+        int i;
+        for(i = 0; i < size; i++){
+            free(arestas[i]);
+        }
+        free(arestas);
+        freeLista(vertices);
     }
     return ls;
 }
