@@ -13,6 +13,8 @@ void criarVertice(char* text,Info *info){
     sscanf(aux, "%s %lf %lf", id, &x, &y);
     grafoD_criar(info->bd->grafo, id, x, y);
     free(id);
+    if(x+5 > info->conf->x) { info->conf->x = x+5;}
+    if(y+5 > info->conf->y) { info->conf->y = y+5;}
 }
 
 /*comando 'e' do EC*/

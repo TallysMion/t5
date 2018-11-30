@@ -58,14 +58,14 @@ void GrafoD_blockVertices(void* grafo,double w,double h,double x,double y);
  //Bloqueia as arestas que passam por essa area
 void GrafoD_blockArestas(void* grafo,double w,double h,double x,double y);
 
-double getPos(void *ar, int i);
+//double getPos(void *ar, int i);
+//void* getKDT(void *grafo);
+//void* getAresta(void *v);
 
-void* getKDT(void *grafo);
-
-void* getAresta(void *v);
-
+//retorna o caminho mais rapido ou curto entre start e idEnd
 void* caminho(void* grafo,double* Start, double* idEnd, int mod);
 
+//gera svg do grafo
 char* grafoToSvg(void* grafo);
 
 #endif
