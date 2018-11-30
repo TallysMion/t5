@@ -30,6 +30,7 @@ typedef struct config{
 }Config;
 
 typedef struct database{
+    void*** ar0;
     int maxDrawerSize;
     Lista   *Drawer;
 

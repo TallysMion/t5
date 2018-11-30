@@ -64,8 +64,10 @@ void* getKDT(void *grafo);
 
 void* getAresta(void *v);
 
-void* caminho(void* grafo,double* Start, double* idEnd, int mod);
+void* caminho(void* grafo,double* Start, double* idEnd, int mod, void*** ar);
 
 char* grafoToSvg(void* grafo);
+
+void *** GrafoD_arestaTable(void* grafo,int mod);
 
 #endif

@@ -48,7 +48,6 @@ void startPm(Fila comandos, Info *info){
     int i = 0;
     while(!empty_Fila(comandos)){
         char* aux; aux = (char*) remove_Fila(comandos);
-        printf("%s", aux);
         if(!executePm(aux, info)){
             return;
         }

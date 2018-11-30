@@ -39,6 +39,7 @@ typedef struct config{
 }Config;
 
 typedef struct database{
+    void*** ar0;
     int maxDrawerSize;
     Lista   *Drawer;
 
@@ -119,6 +120,7 @@ Info* configIn(int argc, const char *argv[]){
     result       = (Info*) calloc(1, sizeof(Info));
     result->bd   = (Database*) calloc(1, sizeof(Database));
     result->conf = (Config*)   calloc(1, sizeof(Config));
+    result->bd->ar0 = NULL;
 
     result->size = 1000;
 

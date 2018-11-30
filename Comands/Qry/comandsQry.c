@@ -2638,7 +2638,14 @@ void simpleRout(char* text, Info*info){
 
     int mod;
     mod = strcmp(tipo, "D")==0? 0 : 1;
-    Lista rota = caminho(info->bd->grafo, inicio, fim, mod);
+
+    void ***ar;
+    if(info->bd->ar0 == NULL){
+        info->bd->ar0 = GrafoD_arestaTable(info->bd->grafo, 0);
+    }
+    ar = info->bd->ar0;
+
+    Lista rota = caminho(info->bd->grafo, inicio, fim, mod, ar);
 
     
 
@@ -2866,6 +2873,15 @@ void multRout(char* text, Info*info){
     double *inicio, *fim;
     int ctr = 0;
     double** paradas = (double**) calloc(n-1, sizeof(double*));
+
+    void ***ar;
+    if(info->bd->ar0 == NULL){
+        info->bd->ar0 = GrafoD_arestaTable(info->bd->grafo, 0);
+    }
+    ar = info->bd->ar0;
+
+
+
     for(i=0; i < n - 1 ; i++){
 
         temp = create_Reg(regs[i], NULL);
@@ -2887,7 +2903,10 @@ void multRout(char* text, Info*info){
         } 
         fim = getValue_Reg(auxReg);
 
-        rota[i] = caminho(info->bd->grafo, inicio, fim, mod);
+
+        printf("Calculando rota de %s até %s\n", regs[i], regs[i+1]);
+        rota[i] = caminho(info->bd->grafo, inicio, fim, mod, ar);
+        printf("Rota de %s até %s concluida\n", regs[i], regs[i+1]);
         if(rota[i] != NULL){
             ctr = 1;
         }
